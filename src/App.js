@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Projects from './pages/Projects';
 import Resume from './pages/Resume';
 import Contact from './pages/Contact';
+import LandingPage from './pages/LandingPage';
 import { ThemeProvider, createTheme, CssBaseline, Box, Container, Paper, Divider } from '@mui/material';
 import { motion } from 'framer-motion';
 
@@ -75,7 +76,40 @@ const theme = createTheme({
 });
 
 function App() {
-  console.log('App is rendering');
+  const [navbarStyle, setNavbarStyle] = useState({
+    position: 'fixed',
+    width: '100%',
+    top: 0,
+    left: 0,
+    opacity: 0,
+    transform: 'translateY(-100%) rotateX(20deg)',
+    transition: 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
+    transformOrigin: 'top',
+    zIndex: 1100,
+  });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      if (scrollPosition > window.innerHeight / 2) {
+        setNavbarStyle((prevStyle) => ({
+          ...prevStyle,
+          opacity: 1,
+          transform: 'translateY(0) rotateX(0deg)',
+        }));
+      } else {
+        setNavbarStyle((prevStyle) => ({
+          ...prevStyle,
+          opacity: 0,
+          transform: 'translateY(-100%) rotateX(20deg)',
+        }));
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -84,19 +118,23 @@ function App() {
           minHeight: '100vh', 
           display: 'flex', 
           flexDirection: 'column',
-          background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+          background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
           backgroundAttachment: 'fixed',
         }}
       >
-        <Navbar />
-        <Container maxWidth="lg" sx={{ flexGrow: 1, py: 3 }}>
+        <div style={navbarStyle}>
+          <Navbar />
+        </div>
+        <LandingPage />
+        <Container id="main-content" maxWidth="lg" sx={{ flexGrow: 1, py: 3 }}>
           <Paper
             elevation={3}
             sx={{
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
               borderRadius: 4,
               overflow: 'hidden',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
             }}
           >
             <Box 
@@ -112,19 +150,19 @@ function App() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
               >
-                <section id="home" style={{ scrollMarginTop: '100px' }}>
+                <section id="home" style={{ scrollMarginTop: '120px', paddingTop: '2rem' }}>
                   <Home />
                 </section>
                 <Divider sx={{ my: 6 }} />
-                <section id="cv" style={{ scrollMarginTop: '100px' }}>
+                <section id="cv" style={{ scrollMarginTop: '64px' }}>
                   <Resume />
                 </section>
                 <Divider sx={{ my: 6 }} />
-                <section id="projects" style={{ scrollMarginTop: '100px' }}>
+                <section id="projects" style={{ scrollMarginTop: '64px' }}>
                   <Projects />
                 </section>
                 <Divider sx={{ my: 6 }} />
-                <section id="contact" style={{ scrollMarginTop: '100px' }}>
+                <section id="contact" style={{ scrollMarginTop: '64px' }}>
                   <Contact />
                 </section>
               </motion.div>

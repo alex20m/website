@@ -60,7 +60,7 @@ function Home() {
             fontWeight: 500,
           }}
         >
-          I'm Alex Mecklin, a Software Engineering student at Aalto University
+          I'm Alex Mecklin, a Computer Science Master's student at Aalto University
         </Typography>
       </motion.div>
 
@@ -79,10 +79,8 @@ function Home() {
             lineHeight: 1.8,
           }}
         >
-          With a strong foundation in software development and a passion for creating efficient solutions,
-          I specialize in web development and software engineering. Currently pursuing my studies while
-          actively engaging in practical projects, I combine academic knowledge with hands-on experience
-          to deliver innovative solutions.
+          Specializing in Big Data and Large Scale Computing, with a background in Automation and Robotics. 
+          I'm passionate about creating efficient solutions at the intersection of AI, automation and software development.
         </Typography>
       </motion.div>
     </Box>

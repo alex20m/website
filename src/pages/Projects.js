@@ -5,27 +5,27 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 function Projects() {
   const projects = [
     {
-      title: "Portfolio Website",
-      description: "A modern, responsive portfolio website built with React and Material-UI. Features include smooth animations, component-based architecture, and responsive design.",
-      technologies: ["React", "TypeScript", "Material-UI", "Node.js"],
+      title: "Personal Website",
+      description: "Personal website built using Cursor AI, trying out its AI capabilities.",
+      technologies: ["JavaScript", "React.js"],
       github: "https://github.com/alex20m/website",
     },
     {
       title: "Test Project 1",
-      description: "This is a test project to demonstrate the horizontal scrolling layout. It shows how projects would appear in the portfolio.",
-      technologies: ["React", "Node.js", "Example Tech", "Demo"],
+      description: "Coming soon...",
+      technologies: ["Coming", "Soon"],
       github: "https://github.com/alex20m/test1",
     },
     {
       title: "Test Project 2",
-      description: "Another example project showcasing the card layout and hover effects. Not a real project, just for demonstration.",
-      technologies: ["Demo", "Test", "Example", "Layout"],
+      description: "Coming soon...",
+      technologies: ["Coming", "Soon"],
       github: "https://github.com/alex20m/test2",
     },
     {
       title: "Test Project 3",
-      description: "A third test project to show how multiple projects appear in the horizontal scroll view. This is just for demonstration purposes.",
-      technologies: ["Sample", "Demo", "Test", "Layout"],
+      description: "Coming soon...",
+      technologies: ["Coming", "Soon"],
       github: "https://github.com/alex20m/test3",
     },
   ];
@@ -75,7 +75,6 @@ function Projects() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.2 }}
-            whileHover={{ y: -5 }}
           >
             <Box
               sx={{
@@ -88,10 +87,11 @@ function Projects() {
                 backgroundColor: 'rgba(255,255,255,0.7)',
                 borderRadius: 2,
                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                transition: 'all 0.3s ease',
+                transform: 'translateY(0)',
+                transition: 'all 0.2s ease-out',
                 '&:hover': {
-                  backgroundColor: 'rgba(255,255,255,0.9)',
-                  boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
+                  transform: 'translateY(-4px)',
+                  boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
                 },
               }}
             >
