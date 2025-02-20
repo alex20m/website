@@ -6,21 +6,23 @@ function Navbar() {
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'  // This ensures the top of the section is visible
+      const offset = 120; // Increased offset for more space
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
       });
     }
   };
 
   return (
     <AppBar 
-      position="sticky" 
       sx={{ 
         mb: 2,
-        backgroundColor: '#1976d2', // Bright blue
+        backgroundColor: '#1976d2',
         boxShadow: 3,
-        zIndex: 1100  // Ensure navbar stays on top
       }}
     >
       <Toolbar>

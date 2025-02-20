@@ -43,7 +43,7 @@ function Contact() {
           <PhoneIcon color="primary" />
           <Typography variant="h6">
             Phone: <Link href="tel:+358442046661" underline="hover">
-              +358 44 204 6661
+              +358 442046661
             </Link>
           </Typography>
         </Box>
@@ -52,7 +52,7 @@ function Contact() {
           <LinkedInIcon color="primary" />
           <Typography variant="h6">
             LinkedIn: <Link href="https://www.linkedin.com/in/alex-mecklin" target="_blank" rel="noopener noreferrer" underline="hover">
-              alex-mecklin
+            linkedin.com/in/alex-mecklin
             </Link>
           </Typography>
         </Box>
@@ -61,7 +61,7 @@ function Contact() {
           <GitHubIcon color="primary" />
           <Typography variant="h6">
             GitHub: <Link href="https://github.com/alex20m" target="_blank" rel="noopener noreferrer" underline="hover">
-              alex20m
+            github.com/alex20m
             </Link>
           </Typography>
         </Box>
