@@ -32,7 +32,7 @@ function LandingPage() {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+        background: 'transparent',
         textAlign: 'center',
         padding: 4,
         position: 'relative',
@@ -149,7 +149,7 @@ function LandingPage() {
               color: '#bdc3c7',
             }}
           >
-            I'm a computer science student at Aalto University
+            A computer science student at Aalto University
           </Typography>
           <Button
             variant="contained"

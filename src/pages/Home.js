@@ -29,42 +29,6 @@ function Home() {
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.8 }}
-      >
-        <Typography 
-          variant="h2" 
-          gutterBottom 
-          color="primary"
-          sx={{ 
-            fontWeight: 700,
-            textAlign: 'center',
-          }}
-        >
-          Welcome
-        </Typography>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
-      >
-        <Typography 
-          variant="h5" 
-          color="text.secondary"
-          sx={{ 
-            mt: 2, 
-            textAlign: 'center',
-            fontWeight: 500,
-          }}
-        >
-          I'm Alex Mecklin, a Computer Science Master's student at Aalto University
-        </Typography>
-      </motion.div>
-
-      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.7, duration: 0.8 }}
@@ -77,10 +41,11 @@ function Home() {
             maxWidth: '800px', 
             textAlign: 'center', 
             lineHeight: 1.8,
+            fontSize: '1.5rem',
           }}
         >
-          Specializing in Big Data and Large Scale Computing, with a background in Automation and Robotics. 
-          I'm passionate about creating efficient solutions at the intersection of AI, automation and software development.
+          I'm Alex Mecklin, a computer science master's student at Aalto University, specializing in big data and large-scale computing.
+          I have a background in automation and robotics, and most of my work experience is in test automation and embedded systems.          
         </Typography>
       </motion.div>
     </Box>

@@ -11,6 +11,12 @@ function Projects() {
       github: "https://github.com/alex20m/website",
     },
     {
+      title: "Salary Predictor",
+      description: "Machine learning model used to predict salaries for employees.",
+      technologies: ["Python", "Machine Learning"],
+      github: "https://github.com/alex20m/Salary_predictor",
+    },
+    {
       title: "Test Project 1",
       description: "Coming soon...",
       technologies: ["Coming", "Soon"],
@@ -21,12 +27,6 @@ function Projects() {
       description: "Coming soon...",
       technologies: ["Coming", "Soon"],
       github: "https://github.com/alex20m/test2",
-    },
-    {
-      title: "Test Project 3",
-      description: "Coming soon...",
-      technologies: ["Coming", "Soon"],
-      github: "https://github.com/alex20m/test3",
     },
   ];
 
