@@ -10,7 +10,6 @@
 /coverage
 
 # Production
-/build
 /dist
 
 # Environment files
