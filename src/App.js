@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
+import About from './pages/About';
 import Projects from './pages/Projects';
 import Resume from './pages/Resume';
 import Contact from './pages/Contact';
@@ -150,8 +150,8 @@ function App() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
               >
-                <section id="home" style={{ scrollMarginTop: '120px', paddingTop: '2rem' }}>
-                  <Home />
+                <section id="about" style={{ scrollMarginTop: '120px', paddingTop: '2rem' }}>
+                  <About />
                 </section>
                 <Divider sx={{ my: 6 }} />
                 <section id="cv" style={{ scrollMarginTop: '64px' }}>

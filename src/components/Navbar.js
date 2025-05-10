@@ -39,10 +39,10 @@ function Navbar() {
         <Box sx={{ flexGrow: 1, display: 'flex', gap: 2 }}>
           <Button 
             color="inherit"
-            onClick={() => scrollToSection('home')}
+            onClick={() => scrollToSection('about')}
             sx={{ color: 'white' }}
           >
-            Home
+            About me
           </Button>
           <Button 
             color="inherit"

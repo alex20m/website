@@ -2,7 +2,7 @@ import { Container, Typography, Box, Avatar } from '@mui/material';
 import { motion } from 'framer-motion';
 import ProfilePhoto from '../assets/profile.png'; // Changed from .jpg to .png
 
-function Home() {
+function About() {
   return (
     <Box sx={{ 
       display: 'flex',
@@ -21,11 +21,29 @@ function Home() {
           sx={{
             width: 200,
             height: 200,
-            mb: 4,
+            mb: 2,
             border: '4px solid white',
             boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
           }}
         />
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+      >
+        <Typography 
+          variant="h2" 
+          color="primary"
+          sx={{ 
+            //mb: 2,
+            //mt: 6,
+            fontWeight: 'bold'
+          }}
+        >
+          About me
+        </Typography>
       </motion.div>
 
       <motion.div
@@ -37,7 +55,7 @@ function Home() {
           variant="body1" 
           color="text.secondary"
           sx={{ 
-            mt: 4, 
+            mt: 2, 
             maxWidth: '800px', 
             textAlign: 'center', 
             lineHeight: 1.8,
@@ -52,4 +70,4 @@ function Home() {
   );
 }
 
-export default Home; 
+export default About; 

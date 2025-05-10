@@ -11,10 +11,10 @@ function LandingPage() {
   }, []);
 
   const handleScroll = () => {
-    const homeSection = document.getElementById('home');
-    if (homeSection) {
+    const aboutSection = document.getElementById('about');
+    if (aboutSection) {
       const offset = 120;
-      const elementPosition = homeSection.getBoundingClientRect().top;
+      const elementPosition = aboutSection.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
       
       window.scrollTo({
