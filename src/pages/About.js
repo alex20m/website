@@ -58,8 +58,7 @@ function About() {
             mt: 2, 
             maxWidth: '800px', 
             textAlign: 'center', 
-            lineHeight: 1.8,
-            fontSize: '1.5rem',
+            lineHeight: 1.6,
           }}
         >
           I'm Alex Mecklin, a computer science master's student at Aalto University, specializing in big data and large scale computing.
