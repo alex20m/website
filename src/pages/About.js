@@ -62,7 +62,7 @@ function About() {
             fontSize: '1.5rem',
           }}
         >
-          I'm Alex Mecklin, a computer science master's student at Aalto University, specializing in big data and large-scale computing.
+          I'm Alex Mecklin, a computer science master's student at Aalto University, specializing in big data and large scale computing.
           I have a background in automation and robotics, and most of my work experience is in test automation and embedded systems.          
         </Typography>
       </motion.div>
