@@ -65,7 +65,7 @@ function Projects() {
           mb: 4
         }}
       >
-        My Projects
+        My projects
       </Typography>
 
       <Box sx={{ position: 'relative' }}>
