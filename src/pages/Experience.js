@@ -58,7 +58,7 @@ function Experience() {
           transition={{ delay: 0.2, duration: 0.8 }}
         >
           {experiences.map((exp, index) => (
-            <Box key={index} sx={{ mb: 4 }}>
+            <Box key={index} sx={{ mb: index === experiences.length - 1 ? 0 : 4 }}>
               <Typography 
                 variant="h5" 
                 color="primary"

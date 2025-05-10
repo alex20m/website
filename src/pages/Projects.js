@@ -109,7 +109,6 @@ function Projects() {
             display: 'flex',
             gap: 3,
             overflowX: 'auto',
-            pb: 2,
             px: 2,
             '::-webkit-scrollbar': {
               height: 8,
