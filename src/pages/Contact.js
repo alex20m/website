@@ -21,7 +21,7 @@ function Contact() {
           mb: 4
         }}
       >
-        Contact Me
+        Contact me
       </Typography>
 
       <Box sx={{ 
