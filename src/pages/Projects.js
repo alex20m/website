@@ -143,8 +143,8 @@ function Projects() {
             >
               <Box
                 sx={{
-                  minWidth: 300,
-                  maxWidth: 300,
+                  minWidth: 275,
+                  maxWidth: 275,
                   p: 3,
                   height: '100%',
                   display: 'flex',

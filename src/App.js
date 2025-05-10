@@ -151,22 +151,22 @@ function App() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
               >
-                <section id="about" style={{ scrollMarginTop: '120px', paddingTop: '2rem' }}>
+                <section id="about" style={{ scrollMarginTop: '64px' }}>
                   <About />
                 </section>
-                <Divider sx={{ my: 6 }} />
+                <Divider sx={{ my: 4 }} />
                 <section id="experience" style={{ scrollMarginTop: '64px' }}>
                   <Experience />
                 </section>
-                <Divider sx={{ my: 6 }} />
+                <Divider sx={{ my: 4 }} />
                 <section id="cv" style={{ scrollMarginTop: '64px' }}>
                   <Resume />
                 </section>
-                <Divider sx={{ my: 6 }} />
+                <Divider sx={{ my: 4 }} />
                 <section id="projects" style={{ scrollMarginTop: '64px' }}>
                   <Projects />
                 </section>
-                <Divider sx={{ my: 6 }} />
+                <Divider sx={{ my: 4 }} />
                 <section id="contact" style={{ scrollMarginTop: '64px' }}>
                   <Contact />
                 </section>

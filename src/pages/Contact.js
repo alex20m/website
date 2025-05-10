@@ -16,7 +16,10 @@ function Contact() {
         variant="h2" 
         gutterBottom 
         color="primary"
-        sx={{ fontWeight: 'bold' }}
+        sx={{ 
+          fontWeight: 'bold',
+          mb: 4
+        }}
       >
         Contact Me
       </Typography>
@@ -28,7 +31,6 @@ function Contact() {
         gap: 3,
         maxWidth: '500px',
         width: '100%',
-        mt: 3,
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
           <EmailIcon color="primary" />

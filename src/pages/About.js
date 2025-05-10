@@ -37,8 +37,7 @@ function About() {
           variant="h2" 
           color="primary"
           sx={{ 
-            //mb: 2,
-            //mt: 6,
+            mb: 4,
             fontWeight: 'bold'
           }}
         >
@@ -54,8 +53,7 @@ function About() {
         <Typography 
           variant="body1" 
           color="text.secondary"
-          sx={{ 
-            mt: 2, 
+          sx={{  
             maxWidth: '800px', 
             textAlign: 'center', 
             lineHeight: 1.6,
