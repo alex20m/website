@@ -1,6 +1,6 @@
 # Personal Website
 
-A modern personal portfolio website built with React.js and Material-UI, showcasing my professional and projects experience.
+A modern personal portfolio website built with React.js and Material-UI, showcasing my professional and projects experience. Built using Cursor AI, trying out its AI capabilities.
 
 ## Features
 
