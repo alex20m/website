@@ -4,6 +4,7 @@ import About from './pages/About';
 import Projects from './pages/Projects';
 import Resume from './pages/Resume';
 import Contact from './pages/Contact';
+import Experience from './pages/Experience';
 import LandingPage from './pages/LandingPage';
 import { ThemeProvider, createTheme, CssBaseline, Box, Container, Paper, Divider } from '@mui/material';
 import { motion } from 'framer-motion';
@@ -152,6 +153,10 @@ function App() {
               >
                 <section id="about" style={{ scrollMarginTop: '120px', paddingTop: '2rem' }}>
                   <About />
+                </section>
+                <Divider sx={{ my: 6 }} />
+                <section id="experience" style={{ scrollMarginTop: '64px' }}>
+                  <Experience />
                 </section>
                 <Divider sx={{ my: 6 }} />
                 <section id="cv" style={{ scrollMarginTop: '64px' }}>

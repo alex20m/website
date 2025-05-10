@@ -42,7 +42,14 @@ function Navbar() {
             onClick={() => scrollToSection('about')}
             sx={{ color: 'white' }}
           >
-            About me
+            About
+          </Button>
+          <Button 
+            color="inherit"
+            onClick={() => scrollToSection('experience')}
+            sx={{ color: 'white' }}
+          >
+            Experience
           </Button>
           <Button 
             color="inherit"
