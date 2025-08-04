@@ -60,7 +60,7 @@ function About() {
           }}
         >
           I'm Alex Mecklin, a computer science master's student at Aalto University, specializing in big data and large scale computing.
-          I have a background in automation and robotics, and most of my work experience is in test automation, both for web applications and embedded systems.          
+          I have a background in automation and robotics, and most of my work experience is in test automation and software development, both for web applications and embedded systems.          
         </Typography>
       </motion.div>
     </Box>

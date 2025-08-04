@@ -7,10 +7,11 @@ const experiences = [
     title: "Test Automation Engineer, Trainee",
     company: "KONE",
     description: [
+      "Full-time summer internship",
       "Developed automated tests for web applications using Python, Robot Framework and Selenium",
       "Used AWS to interact with cloud-hosted systems and manage data storage",
+      "Implemented CI/CD pipelines in GitLab using Docker to automate development, testing and deployment processes",
       "Performed manual testing to identify complex bugs and edge cases",
-      "Collaborated closely with developers to understand new features and design effective test cases"
     ],
     period: "May 2025 - Present"
   },
@@ -18,6 +19,7 @@ const experiences = [
     title: "Software Engineer, Trainee",
     company: "Danfoss Drives",
     description: [
+      "Full-time summer internship",
       "Developed automated tests for embedded systems using Python and Robot Framework",
       "Software development for embedded systems using C",
       "Developed Python scripts to boost efficiency and automate repetitive tasks in the development process"
@@ -28,6 +30,7 @@ const experiences = [
     title: "Engine Automation Trainee ",
     company: "Wärtsilä",
     description: [
+      "Worked full-time during the summers and part-time during the spring 2023",
       "Conducted investigations on returned automation parts from field installations",
       "Performed maintenance on engine simulation rig",
       "Handled customer deliveries of engine automation software tools"
