@@ -4,11 +4,11 @@ import { motion } from 'framer-motion';
 // Add or edit experiences here
 const experiences = [
   {
-    title: "Test Automation Engineer, Trainee",
+    title: "Software Engineer, Trainee",
     company: "KONE",
     description: [
-      "Full-time summer internship",
-      "Developed automated tests for web applications using Python, Robot Framework and Selenium",
+      "Full-time during summer, part-time from autumn",
+      "Developed automated tests for web applications using Python, Robot Framework, Selenium and Playwright",
       "Used AWS to interact with cloud-hosted systems and manage data storage",
       "Implemented CI/CD pipelines in GitLab using Docker to automate development, testing and deployment processes",
       "Performed manual testing to identify complex bugs and edge cases",
