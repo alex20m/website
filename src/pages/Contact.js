@@ -35,8 +35,8 @@ function Contact() {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
           <EmailIcon color="primary" />
           <Typography variant="h6">
-            Email: <Link href="mailto:alex.mecklin@hotmail.com" underline="hover">
-              alex.mecklin@hotmail.com
+            Email: <Link href="mailto:alex.mecklin@outlook.com" underline="hover">
+              alex.mecklin@outlook.com
             </Link>
           </Typography>
         </Box>

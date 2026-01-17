@@ -59,8 +59,8 @@ function About() {
             lineHeight: 1.6,
           }}
         >
-          I'm Alex Mecklin, a computer science master's student at Aalto University, specializing in big data and large scale computing.
-          I have a background in automation and robotics, and most of my work experience is in test automation and software development, both for web applications and embedded systems.          
+          I'm a computer science master's student at Aalto University, specializing in big data and large scale computing.
+          Currently working on Generative AI software development, with prior experience in test automation, web development and embedded systems. Interested in cloud technologies and AI development.          
         </Typography>
       </motion.div>
     </Box>

@@ -4,16 +4,26 @@ import { motion } from 'framer-motion';
 // Add or edit experiences here
 const experiences = [
   {
+    title: "GenAI Software Developer (Master’s Thesis) ",
+    company: "KONE",
+    description: [
+      "Developing GenAI systems for agent–tool communication as part of my Master’s thesis",
+      "Implementing an MCP server to integrate an internal tool with AI agents",
+      "Building an AI agent to test and validate the MCP server",
+    ],
+    period: "January 2026 - Present"
+  },
+  {
     title: "Software Engineer, Trainee",
     company: "KONE",
     description: [
-      "Full-time during summer, part-time from autumn",
+      "Full-time during summer, part-time during autumn",
       "Developed automated tests for web applications using Python, Robot Framework, Selenium and Playwright",
       "Used AWS to interact with cloud-hosted systems and manage data storage",
       "Implemented CI/CD pipelines in GitLab using Docker to automate development, testing and deployment processes",
       "Performed manual testing to identify complex bugs and edge cases",
     ],
-    period: "May 2025 - Present"
+    period: "May - December 2025"
   },
   {
     title: "Software Engineer, Trainee",
