@@ -24,6 +24,11 @@ function About() {
             mb: 2,
             border: '4px solid white',
             boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+            '& img': {
+              objectFit: 'cover',
+              objectPosition: 'center 70%',
+              transform: 'scale(1.2)',
+            },
           }}
         />
       </motion.div>
