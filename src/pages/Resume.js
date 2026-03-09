@@ -1,6 +1,6 @@
 import { Container, Typography, Box, Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import ResumeFile from '../assets/resume.pdf';
+import ResumeFile from '../assets/Alex_Mecklin_CV.pdf';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 

@@ -1,53 +1,36 @@
 import { Typography, Box } from '@mui/material';
 import { motion } from 'framer-motion';
+import latexResume from '../data/latexResume';
 
-// Add or edit experiences here
-const experiences = [
-  {
-    title: "GenAI Software Developer (Master’s Thesis) ",
-    company: "KONE",
-    description: [
-      "Developing GenAI systems for agent–tool communication as part of my Master’s thesis",
-      "Implementing an MCP server to integrate an internal tool with AI agents",
-      "Building an AI agent to test and validate the MCP server",
-    ],
-    period: "January 2026 - Present"
-  },
-  {
-    title: "Software Engineer, Trainee",
-    company: "KONE",
-    description: [
-      "Full-time during summer, part-time during autumn",
-      "Developed automated tests for web applications using Python, Robot Framework, Selenium and Playwright",
-      "Used AWS to interact with cloud-hosted systems and manage data storage",
-      "Implemented CI/CD pipelines in GitLab using Docker to automate development, testing and deployment processes",
-      "Performed manual testing to identify complex bugs and edge cases",
-    ],
-    period: "May - December 2025"
-  },
-  {
-    title: "Software Engineer, Trainee",
-    company: "Danfoss Drives",
-    description: [
-      "Full-time summer internship",
-      "Developed automated tests for embedded systems using Python and Robot Framework",
-      "Software development for embedded systems using C",
-      "Developed Python scripts to boost efficiency and automate repetitive tasks in the development process"
-    ],
-    period: "May - August 2024"
-  },
-  {
-    title: "Engine Automation Trainee ",
-    company: "Wärtsilä",
-    description: [
-      "Worked full-time during the summers and part-time during the spring 2023",
-      "Conducted investigations on returned automation parts from field installations",
-      "Performed maintenance on engine simulation rig",
-      "Handled customer deliveries of engine automation software tools"
-    ],
-    period: "May 2022 - August 2023"
+// To update: open src/data/latexResume.js and paste your raw LaTeX directly.
+function parseLatexExperience(latexString) {
+  const experiences = [];
+  const lines = latexString.split('\n').filter(line => !line.trim().startsWith('%'));
+  const cleanedLatex = lines.join('\n');
+  const subheadingRegex = /\\resumeSubheading\s*\{([^}]*)\}\{([^}]*)\}\s*\{([^}]*)\}\{([^}]*)\}/g;
+  let match;
+  while ((match = subheadingRegex.exec(cleanedLatex)) !== null) {
+    const title = match[1].trim();
+    const period = match[2].trim().replace(/--/g, '-');
+    const company = match[3].trim();
+    const startPos = match.index + match[0].length;
+    const remainingText = cleanedLatex.substring(startPos);
+    const itemsMatch = remainingText.match(/\\resumeItemListStart([\s\S]*?)\\resumeItemListEnd/);
+    const description = [];
+    if (itemsMatch) {
+      const itemsText = itemsMatch[1];
+      const itemRegex = /\\resumeItem\{([^}]*)\}/g;
+      let itemMatch;
+      while ((itemMatch = itemRegex.exec(itemsText)) !== null) {
+        description.push(itemMatch[1].trim());
+      }
+    }
+    experiences.push({ title, company, description, period });
   }
-];
+  return experiences;
+}
+
+const experiences = parseLatexExperience(latexResume);
 
 function Experience() {
   return (
@@ -129,4 +112,4 @@ function Experience() {
   );
 }
 
-export default Experience; 
+export default Experience;

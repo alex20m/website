@@ -29,7 +29,7 @@ function Projects() {
   const projects = [
     {
       title: "Personal Website",
-      description: "Personal website built using Cursor AI, trying out its AI capabilities.",
+      description: "This website, built using Cursor AI, trying out its AI capabilities.",
       technologies: ["JavaScript", "React.js"],
       github: "https://github.com/alex20m/website",
     },
