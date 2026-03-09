@@ -1,6 +1,7 @@
 import { Typography, Box, Button, Chip } from '@mui/material';
 import { motion } from 'framer-motion';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useState, useRef, useEffect } from 'react';
 
@@ -34,22 +35,26 @@ function Projects() {
       github: "https://github.com/alex20m/website",
     },
     {
+      title: "OpenClaw Experiments",
+      description: "Experimenting with OpenClaw on an AWS EC2 instance, using OpenRouter to run LLMs.",
+      technologies: ["AWS", "Agentic AI", "LLMs"],
+      link: "https://openclaw.ai/",
+      linkLabel: "Learn More",
+      private: true,
+    },
+    {
+      title: "Home Assistant Automations",
+      description: "Personal home automation project using Home Assistant to integrate smart devices, sensors, and custom automations for a smarter home.",
+      technologies: ["YAML", "MQTT", "IoT"],
+      link: "https://www.home-assistant.io/",
+      linkLabel: "Learn More",
+      private: true,
+    },
+    {
       title: "Salary Predictor",
       description: "Machine learning model used to predict salaries for employees.",
       technologies: ["Python", "Machine Learning"],
       github: "https://github.com/alex20m/Salary_predictor",
-    },
-    {
-      title: "Test Project 1",
-      description: "Coming soon...",
-      technologies: ["Coming", "Soon"],
-      github: "https://github.com/alex20m/test1",
-    },
-    {
-      title: "Test Project 2",
-      description: "Coming soon...",
-      technologies: ["Coming", "Soon"],
-      github: "https://github.com/alex20m/test2",
     },
   ];
 
@@ -107,6 +112,7 @@ function Projects() {
           ref={scrollContainerRef}
           sx={{
             display: 'flex',
+            alignItems: 'stretch',
             gap: 3,
             overflowX: 'auto',
             px: 2,
@@ -139,12 +145,13 @@ function Projects() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.2 }}
+              style={{ display: 'flex', alignSelf: 'stretch' }}
             >
               <Box
                 sx={{
-                  minWidth: 275,
-                  maxWidth: 275,
-                  p: 3,
+                  minWidth: 340,
+                  maxWidth: 340,
+                  p: 4,
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -175,11 +182,6 @@ function Projects() {
                   sx={{ 
                     mb: 2,
                     flexGrow: 1,
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: 'vertical',
                   }}
                 >
                   {project.description}
@@ -204,7 +206,8 @@ function Projects() {
                 <Box sx={{ 
                   display: 'flex', 
                   gap: 2,
-                  mt: 'auto'
+                  mt: 'auto',
+                  flexWrap: 'wrap',
                 }}>
                   {project.github && (
                     <Button
@@ -217,6 +220,31 @@ function Projects() {
                     >
                       View on GitHub
                     </Button>
+                  )}
+                  {project.link && (
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      startIcon={<OpenInNewIcon />}
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {project.linkLabel || 'Learn More'}
+                    </Button>
+                  )}
+                  {project.private && (
+                    <Chip
+                      label="Private"
+                      size="small"
+                      icon={<GitHubIcon style={{ fontSize: 14 }} />}
+                      sx={{
+                        color: 'text.secondary',
+                        borderColor: 'text.secondary',
+                        border: '1px solid',
+                        background: 'transparent',
+                      }}
+                    />
                   )}
                 </Box>
               </Box>
