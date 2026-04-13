@@ -65,7 +65,7 @@ function About() {
           }}
         >
           I'm a computer science master's student at Aalto University, specializing in big data and large scale computing.
-          Currently working on Agentic AI software development, with prior experience in test automation, web development and embedded systems. Interested in cloud technologies and AI development.          
+          Currently working on agentic AI software development, with prior experience in web development, test automation  and embedded systems. Interested in agentic AI and cloud technologies.          
         </Typography>
       </motion.div>
     </Box>

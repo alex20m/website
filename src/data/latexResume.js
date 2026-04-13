@@ -8,7 +8,7 @@ const latexResume = String.raw`
 \resumeSubHeadingListStart
 
     \resumeSubheading
-    {Incoming AI Cloud Engineer, Trainee}{Jun -- Sep 2026}
+    {Incoming AI Cloud Engineer Intern}{Jun 2026 -- Sep 2026}
     {KONE}{Espoo, Finland}
     \resumeItemListStart
         \resumeItem{Continuing to work on similar agentic AI–focused tasks in the same team following my Master’s thesis}
@@ -24,7 +24,7 @@ const latexResume = String.raw`
     \resumeItemListEnd
 
     \resumeSubheading
-    {Software Engineer, Trainee}{May -- Dec 2025}
+    {Software Engineer Intern}{May 2025 -- Dec 2025}
     {KONE}{Espoo, Finland}
     \resumeItemListStart
         \resumeItem{Developed automated tests for web applications using Python, Robot Framework, Selenium and Playwright}
@@ -33,7 +33,7 @@ const latexResume = String.raw`
     \resumeItemListEnd
 
     \resumeSubheading
-    {Software Engineer, Trainee}{May -- Aug 2024}
+    {Software Engineer Intern}{May 2024 -- Aug 2024}
     {Danfoss Drives}{Vaasa, Finland}
     \resumeItemListStart
         \resumeItem{Developed automated tests for embedded systems using Python and Robot Framework}
@@ -42,7 +42,7 @@ const latexResume = String.raw`
     \resumeItemListEnd
 
     \resumeSubheading
-    {Engine Automation Trainee}{May -- Aug 2022, Jan -- Aug 2023}
+    {Automation Engineer Intern}{May 2022 -- Aug 2023}
     {Wärtsilä}{Vaasa, Finland}
     \resumeItemListStart
         \resumeItem{Conducted investigations on returned automation parts from field installations}
@@ -50,7 +50,7 @@ const latexResume = String.raw`
     \resumeItemListEnd
     
     \resumeSubheading
-    {Teaching Assistant}{Sep -- Dec 2022}
+    {Teaching Assistant}{Sep 2022 -- Dec 2022}
     {Aalto University}{Espoo, Finland}
     \resumeItemListStart
         \resumeItem{Worked part-time as a teaching assistant in a basics in Python programming course}
