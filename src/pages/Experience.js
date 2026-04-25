@@ -1,7 +1,9 @@
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Button } from '@mui/material';
 import { motion } from 'framer-motion';
 import latexResume from '../data/latexResume';
 import { useState, useEffect } from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 function parseLatexExperience(latexString) {
   const experiences = [];
@@ -85,9 +87,15 @@ function CompanyLogo({ company }) {
 }
 
 function Experience() {
+  const [expandedItems, setExpandedItems] = useState({});
+
+  const toggleExpand = (index) => {
+    setExpandedItems(prev => ({ ...prev, [index]: !prev[index] }));
+  };
+
   return (
     <Box>
-      <Typography variant="h2" sx={{ mb: 5, fontWeight: 'bold', color: '#0a1929' }}>Experience</Typography>
+      <Typography variant="h2" sx={{ mb: { xs: 3, md: 5 }, fontWeight: 'bold', color: '#0a1929' }}>Experience</Typography>
       <Box sx={{ position: 'relative', pl: { xs: 3, md: 5 } }}>
         {/* Timeline line */}
         <Box
@@ -122,29 +130,107 @@ function Experience() {
                 }}
               />
               <Typography
-                variant="body2"
-                sx={{ color: '#1565c0', fontWeight: 600, mb: 0.5, fontSize: '0.85rem' }}
+                variant="body1"
+                sx={{ color: '#1565c0', mb: 0.5 }}
               >
                 {exp.period}
               </Typography>
-              <Typography variant="h5" sx={{ color: '#0a1929', fontWeight: 700 }}>
+              <Typography variant="h5" sx={{ color: '#0a1929' }}>
                 {exp.title}
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
                 <CompanyLogo company={exp.company} />
-                <Typography variant="body1" sx={{ color: '#4a5568', fontWeight: 500 }}>
+                <Typography variant="body1" sx={{ color: '#4a5568' }}>
                   {exp.company} · {exp.location}
                 </Typography>
               </Box>
               {exp.description.length > 0 && (
-                <Box
-                  component="ul"
-                  sx={{ m: 0, pl: 2.5, color: '#4a5568', '& li': { mb: 0.5, fontSize: '0.95rem' } }}
-                >
-                  {exp.description.map((item, idx) => (
-                    <li key={idx}>{item}</li>
-                  ))}
-                </Box>
+                <>
+                  {/* Desktop: show full list */}
+                  <Box
+                    component="ul"
+                    sx={{
+                      m: 0,
+                      pl: 2.5,
+                      color: '#4a5568',
+                      display: { xs: 'none', md: 'block' },
+                      fontSize: '0.95rem',
+                      '& li': { mb: 0.5 },
+                    }}
+                  >
+                    {exp.description.map((item, idx) => (
+                      <li key={idx}>{item}</li>
+                    ))}
+                  </Box>
+                  
+                  {/* Mobile: show truncated or full */}
+                  <Box
+                    component="ul"
+                    sx={{
+                      m: 0,
+                      pl: 2.5,
+                      color: '#4a5568',
+                      display: { xs: 'block', md: 'none' },
+                      fontSize: '0.85rem',
+                      '& li': { mb: 0.5 },
+                    }}
+                  >
+                    {(() => {
+                      const fullText = exp.description.join(' ');
+                      const charLimit = 100;
+                      
+                      if (expandedItems[index] || fullText.length <= charLimit) {
+                        return exp.description.map((item, idx) => (
+                          <li key={idx}>{item}</li>
+                        ));
+                      }
+                      
+                      // Truncate text at character limit
+                      let charCount = 0;
+                      const truncatedItems = [];
+                      
+                      for (let item of exp.description) {
+                        if (charCount + item.length <= charLimit) {
+                          truncatedItems.push(<li key={truncatedItems.length}>{item}</li>);
+                          charCount += item.length;
+                        } else if (charCount < charLimit) {
+                          const remaining = charLimit - charCount;
+                          // Find last complete word before limit
+                          let truncatedText = item.substring(0, remaining);
+                          const lastSpaceIndex = truncatedText.lastIndexOf(' ');
+                          if (lastSpaceIndex > 0) {
+                            truncatedText = truncatedText.substring(0, lastSpaceIndex);
+                          }
+                          truncatedItems.push(
+                            <li key={truncatedItems.length}>{truncatedText}...</li>
+                          );
+                          break;
+                        } else {
+                          break;
+                        }
+                      }
+                      
+                      return truncatedItems;
+                    })()}
+                  </Box>
+                  
+                  {exp.description.join(' ').length > 100 && (
+                    <Button
+                      size="small"
+                      onClick={() => toggleExpand(index)}
+                      endIcon={expandedItems[index] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      sx={{
+                        display: { xs: 'inline-flex', md: 'none' },
+                        mt: 1,
+                        color: '#1565c0',
+                        textTransform: 'none',
+                        padding: '4px 8px',
+                      }}
+                    >
+                      {expandedItems[index] ? 'Show less' : 'Show more'}
+                    </Button>
+                  )}
+                </>
               )}
             </Box>
           </motion.div>

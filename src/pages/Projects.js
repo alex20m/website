@@ -35,8 +35,8 @@ const projects = [
 function Projects() {
   return (
     <Box>
-      <Typography variant="h2" sx={{ mb: 5, fontWeight: 'bold', color: '#0a1929' }}>Projects</Typography>
-      <Grid container spacing={3}>
+      <Typography variant="h2" sx={{ mb: { xs: 3, md: 5 }, fontWeight: 'bold', color: '#0a1929' }}>Projects</Typography>
+      <Grid container spacing={{ xs: 2, md: 3 }}>
         {projects.map((project, index) => (
           <Grid item xs={12} sm={6} key={index}>
             <motion.div
@@ -47,7 +47,7 @@ function Projects() {
             >
               <Box
                 sx={{
-                  p: 3,
+                  p: { xs: 2, md: 3 },
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -61,13 +61,13 @@ function Projects() {
                   },
                 }}
               >
-                <Typography variant="h5" sx={{ fontWeight: 700, color: '#0a1929', mb: 1 }}>
+                <Typography variant="h5" sx={{ color: '#0a1929', mb: { xs: 0.5, md: 1 } }}>
                   {project.title}
                 </Typography>
-                <Typography variant="body1" sx={{ mb: 2, flexGrow: 1, fontSize: '0.95rem' }}>
+                <Typography variant="body1" sx={{ mb: { xs: 1.5, md: 2 }, flexGrow: 1 }}>
                   {project.description}
                 </Typography>
-                <Box sx={{ mb: 2 }}>
+                <Box sx={{ mb: { xs: 1.5, md: 2 } }}>
                   {project.technologies.map((tech, i) => (
                     <Chip
                       key={i}
@@ -78,8 +78,6 @@ function Projects() {
                         mb: 0.5,
                         backgroundColor: '#e3eaf6',
                         color: '#0a1929',
-                        fontWeight: 600,
-                        fontSize: '0.75rem',
                       }}
                     />
                   ))}
@@ -93,7 +91,7 @@ function Projects() {
                       target="_blank"
                       rel="noopener noreferrer"
                       variant="outlined"
-                      sx={{ color: '#0a1929', borderColor: '#c8d6e5', fontWeight: 600, fontSize: '0.8rem', '&:hover': { borderColor: '#0a1929', backgroundColor: 'rgba(10,25,41,0.04)' } }}
+                      sx={{ color: '#0a1929', borderColor: '#c8d6e5', padding: '4px 12px', '&:hover': { borderColor: '#0a1929', backgroundColor: 'rgba(10,25,41,0.04)' } }}
                     >
                       View on GitHub
                     </Button>
@@ -106,7 +104,7 @@ function Projects() {
                       target="_blank"
                       rel="noopener noreferrer"
                       variant="outlined"
-                      sx={{ color: '#0a1929', borderColor: '#c8d6e5', fontWeight: 600, fontSize: '0.8rem', '&:hover': { borderColor: '#0a1929', backgroundColor: 'rgba(10,25,41,0.04)' } }}
+                      sx={{ color: '#0a1929', borderColor: '#c8d6e5', padding: '4px 12px', '&:hover': { borderColor: '#0a1929', backgroundColor: 'rgba(10,25,41,0.04)' } }}
                     >
                       {project.linkLabel || 'Learn More'}
                     </Button>
@@ -116,7 +114,7 @@ function Projects() {
                       label="Private"
                       size="small"
                       icon={<GitHubIcon style={{ fontSize: 14 }} />}
-                      sx={{ color: '#4a5568', borderColor: '#c8d6e5', border: '1px solid', background: 'transparent', fontSize: '0.75rem' }}
+                      sx={{ color: '#4a5568', borderColor: '#c8d6e5', border: '1px solid', background: 'transparent' }}
                     />
                   )}
                 </Box>

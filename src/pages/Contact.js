@@ -14,8 +14,8 @@ const contacts = [
 function Contact() {
   return (
     <Box sx={{ pb: 4 }}>
-      <Typography variant="h2" sx={{ mb: 5, fontWeight: 'bold', color: '#0a1929' }}>Contact</Typography>
-      <Grid container spacing={2}>
+      <Typography variant="h2" sx={{ mb: { xs: 3, md: 5 }, fontWeight: 'bold', color: '#0a1929' }}>Contact</Typography>
+      <Grid container spacing={{ xs: 1.5, md: 2 }}>
         {contacts.map((c, i) => (
           <Grid item xs={12} sm={6} key={i}>
             <Link
@@ -26,8 +26,8 @@ function Contact() {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 2,
-                p: 2.5,
+                gap: { xs: 1.5, md: 2 },
+                p: { xs: 2, md: 2.5 },
                 borderRadius: 3,
                 border: '1px solid #e3eaf6',
                 backgroundColor: '#fff',
@@ -40,8 +40,8 @@ function Contact() {
             >
               <Box
                 sx={{
-                  width: 44,
-                  height: 44,
+                  width: { xs: 36, md: 44 },
+                  height: { xs: 36, md: 44 },
                   borderRadius: 2,
                   display: 'flex',
                   alignItems: 'center',
@@ -54,10 +54,10 @@ function Contact() {
                 {c.icon}
               </Box>
               <Box>
-                <Typography variant="body2" sx={{ color: '#4a5568', fontSize: '0.8rem', fontWeight: 500 }}>
+                <Typography variant="body1" sx={{ color: '#4a5568' }}>
                   {c.label}
                 </Typography>
-                <Typography variant="body1" sx={{ color: '#0a1929', fontWeight: 600, fontSize: '0.95rem' }}>
+                <Typography variant="body1" sx={{ color: '#0a1929', fontWeight: 600, wordBreak: 'break-word' }}>
                   {c.value}
                 </Typography>
               </Box>

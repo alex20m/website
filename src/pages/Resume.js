@@ -8,16 +8,16 @@ function Resume() {
     <Box
       sx={{
         textAlign: 'center',
-        py: 4,
-        px: 3,
+        py: { xs: 2.5, md: 4 },
+        px: { xs: 2, md: 3 },
         borderRadius: 4,
         border: '2px dashed #c8d6e5',
         backgroundColor: '#f0f4fa',
       }}
     >
-      <DescriptionOutlinedIcon sx={{ fontSize: 48, color: '#1565c0', mb: 2 }} />
-      <Typography variant="h2" sx={{ mb: 1, fontWeight: 'bold', color: '#0a1929' }}>CV</Typography>
-      <Typography variant="body1" sx={{ mb: 3, color: '#4a5568' }}>
+      <DescriptionOutlinedIcon sx={{ fontSize: { xs: 32, md: 48 }, color: '#1565c0', mb: { xs: 1, md: 2 } }} />
+      <Typography variant="h2" sx={{ mb: { xs: 1, md: 1 }, fontWeight: 'bold', color: '#0a1929' }}>CV</Typography>
+      <Typography variant="body1" sx={{ mb: { xs: 2, md: 3 } }}>
         Download my full CV for a detailed overview of my education, skills, and experience.
       </Typography>
       <Button
@@ -27,11 +27,10 @@ function Resume() {
         size="large"
         startIcon={<DownloadIcon />}
         sx={{
-          py: 1.5,
-          px: 5,
+          py: { xs: 1, md: 1.5 },
+          px: { xs: 3, md: 5 },
           backgroundColor: '#0a1929',
           borderRadius: 2,
-          fontSize: '1rem',
           '&:hover': { backgroundColor: '#1565c0' },
         }}
       >

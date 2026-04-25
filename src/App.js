@@ -17,9 +17,9 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-    h2: { fontWeight: 700, letterSpacing: '-0.5px', fontSize: '2.2rem' },
-    h5: { fontWeight: 600, letterSpacing: '0.2px' },
-    body1: { fontSize: '1.05rem', lineHeight: 1.75, color: '#4a5568' },
+    h2: { fontWeight: 700, letterSpacing: '-0.5px', fontSize: '2.2rem', '@media (max-width:600px)': { fontSize: '1.6rem' } },
+    h5: { fontWeight: 600, letterSpacing: '0.2px', fontSize: '1.4rem', '@media (max-width:600px)': { fontSize: '1.1rem' } },
+    body1: { fontSize: '0.95rem', lineHeight: 1.7, color: '#4a5568', '@media (max-width:600px)': { fontSize: '0.85rem' } },
   },
   components: {
     MuiButton: {

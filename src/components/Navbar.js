@@ -80,7 +80,7 @@ function Navbar() {
         <List sx={{ pt: 4 }}>
           {navItems.map((item) => (
             <ListItemButton key={item.id} onClick={() => scrollToSection(item.id)}>
-              <ListItemText primary={item.label} primaryTypographyProps={{ fontWeight: 500 }} />
+              <ListItemText primary={item.label} primaryTypographyProps={{ fontWeight: 500, color: '#fff' }} />
             </ListItemButton>
           ))}
         </List>
