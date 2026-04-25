@@ -1,8 +1,8 @@
 import { Typography, Box } from '@mui/material';
 import { motion } from 'framer-motion';
 import latexResume from '../data/latexResume';
+import { useState, useEffect } from 'react';
 
-// To update: open src/data/latexResume.js and paste your raw LaTeX directly.
 function parseLatexExperience(latexString) {
   const experiences = [];
   const lines = latexString.split('\n').filter(line => !line.trim().startsWith('%'));
@@ -13,6 +13,7 @@ function parseLatexExperience(latexString) {
     const title = match[1].trim();
     const period = match[2].trim().replace(/--/g, '-');
     const company = match[3].trim();
+    const location = match[4].trim();
     const startPos = match.index + match[0].length;
     const remainingText = cleanedLatex.substring(startPos);
     const itemsMatch = remainingText.match(/\\resumeItemListStart([\s\S]*?)\\resumeItemListEnd/);
@@ -25,88 +26,129 @@ function parseLatexExperience(latexString) {
         description.push(itemMatch[1].trim());
       }
     }
-    experiences.push({ title, company, description, period });
+    experiences.push({ title, company, location, description, period });
   }
   return experiences;
 }
 
 const experiences = parseLatexExperience(latexResume);
 
+function CompanyLogo({ company }) {
+  const [logo, setLogo] = useState(null);
+
+  useEffect(() => {
+    // Convert company name to lowercase with underscores
+    const logoName = company.toLowerCase().replace(/\s+/g, '_');
+    
+    // Try to load logo based on company name
+    import(`../assets/logos/${logoName}.png`)
+      .then(module => setLogo(module.default))
+      .catch(() => {
+        // Try jpg if png fails
+        import(`../assets/logos/${logoName}.jpg`)
+          .then(module => setLogo(module.default))
+          .catch(() => setLogo(null));
+      });
+  }, [company]);
+
+  if (!logo) return null;
+
+  return (
+    <Box
+      sx={{
+        width: 40,
+        height: 40,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+        borderRadius: 1,
+        border: '1px solid #e3eaf6',
+        backgroundColor: '#fff',
+        padding: '4px',
+      }}
+    >
+      <Box
+        component="img"
+        src={logo}
+        alt={company}
+        sx={{
+          maxHeight: '100%',
+          maxWidth: '100%',
+          width: 'auto',
+          height: 'auto',
+          objectFit: 'contain',
+        }}
+      />
+    </Box>
+  );
+}
+
 function Experience() {
   return (
-    <Box sx={{ 
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      width: '100%',
-    }}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        <Typography 
-          variant="h2" 
-          color="primary"
-          sx={{ 
-            mb: 4,
-            fontWeight: 'bold'
+    <Box>
+      <Typography variant="h2" sx={{ mb: 5, fontWeight: 'bold', color: '#0a1929' }}>Experience</Typography>
+      <Box sx={{ position: 'relative', pl: { xs: 3, md: 5 } }}>
+        {/* Timeline line */}
+        <Box
+          sx={{
+            position: 'absolute',
+            left: { xs: 6, md: 14 },
+            top: 8,
+            bottom: 8,
+            width: 2,
+            backgroundColor: '#c8d6e5',
           }}
-        >
-          Experience
-        </Typography>
-      </motion.div>
-
-      <Box sx={{ 
-        width: '100%', 
-        maxWidth: '800px',
-      }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-        >
-          {experiences.map((exp, index) => (
-            <Box key={index} sx={{ mb: index === experiences.length - 1 ? 0 : 4 }}>
-              <Typography 
-                variant="h5" 
-                color="primary"
-                sx={{ fontWeight: 600 }}
-              >
-                {exp.title}
-              </Typography>
-              <Typography 
-                variant="h6" 
-                color="text.secondary"
-                sx={{ mt: 1, fontWeight: 500 }}
-              >
-                {exp.company}
-              </Typography>
-              <Typography 
-                variant="body1" 
-                color="text.secondary"
-                sx={{ mt: 1, lineHeight: 1.6 }}
-              >
-                {Array.isArray(exp.description) ? (
-                  <ul style={{ margin: 0, paddingLeft: '1.2em' }}>
-                    {exp.description.map((item, idx) => (
-                      <li key={idx}>{item}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  exp.description
-                )}
-              </Typography>
-              <Typography 
-                variant="body2" 
-                color="text.secondary"
-                sx={{ mt: 1, fontStyle: 'italic' }}
+        />
+        {experiences.map((exp, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.4 }}
+          >
+            <Box sx={{ position: 'relative', mb: index === experiences.length - 1 ? 0 : 4 }}>
+              {/* Timeline dot */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  left: { xs: -21, md: -29 },
+                  top: 6,
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  backgroundColor: '#1565c0',
+                  border: '3px solid #e3eaf6',
+                }}
+              />
+              <Typography
+                variant="body2"
+                sx={{ color: '#1565c0', fontWeight: 600, mb: 0.5, fontSize: '0.85rem' }}
               >
                 {exp.period}
               </Typography>
+              <Typography variant="h5" sx={{ color: '#0a1929', fontWeight: 700 }}>
+                {exp.title}
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
+                <CompanyLogo company={exp.company} />
+                <Typography variant="body1" sx={{ color: '#4a5568', fontWeight: 500 }}>
+                  {exp.company} · {exp.location}
+                </Typography>
+              </Box>
+              {exp.description.length > 0 && (
+                <Box
+                  component="ul"
+                  sx={{ m: 0, pl: 2.5, color: '#4a5568', '& li': { mb: 0.5, fontSize: '0.95rem' } }}
+                >
+                  {exp.description.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </Box>
+              )}
             </Box>
-          ))}
-        </motion.div>
+          </motion.div>
+        ))}
       </Box>
     </Box>
   );

@@ -1,182 +1,70 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Navbar from './components/Navbar';
 import About from './pages/About';
 import Projects from './pages/Projects';
 import Resume from './pages/Resume';
 import Contact from './pages/Contact';
 import Experience from './pages/Experience';
-import LandingPage from './pages/LandingPage';
-import { ThemeProvider, createTheme, CssBaseline, Box, Container, Paper, Divider } from '@mui/material';
-import { motion } from 'framer-motion';
+import { ThemeProvider, createTheme, CssBaseline, Box, Container } from '@mui/material';
 
 const theme = createTheme({
   palette: {
     mode: 'light',
-    primary: {
-      main: '#1a237e',
-      light: '#534bae',
-      dark: '#000051',
-    },
-    secondary: {
-      main: '#263238',
-      light: '#4f5b62',
-      dark: '#000a12',
-    },
-    background: {
-      default: '#f5f5f6',
-      paper: '#ffffff',
-    },
-    text: {
-      primary: '#1a237e',
-      secondary: '#37474f',
-    }
+    primary: { main: '#0a1929', light: '#1565c0', dark: '#050e18' },
+    secondary: { main: '#1565c0' },
+    background: { default: '#f8f9fb', paper: '#ffffff' },
+    text: { primary: '#0a1929', secondary: '#4a5568' },
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-    h2: {
-      fontWeight: 700,
-      letterSpacing: '-0.5px',
-      fontSize: '2.5rem',
-    },
-    h5: {
-      fontWeight: 500,
-      letterSpacing: '0.5px',
-    },
-    body1: {
-      fontSize: '1.1rem',
-      letterSpacing: '0.15px',
-      lineHeight: 1.8,
-    },
+    h2: { fontWeight: 700, letterSpacing: '-0.5px', fontSize: '2.2rem' },
+    h5: { fontWeight: 600, letterSpacing: '0.2px' },
+    body1: { fontSize: '1.05rem', lineHeight: 1.75, color: '#4a5568' },
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 4,
-          textTransform: 'none',
-          fontSize: '1rem',
-          fontWeight: 500,
-          padding: '8px 16px',
-          transition: 'all 0.2s ease-in-out',
-          '&:hover': {
-            transform: 'translateY(-1px)',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-          },
-        },
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
           borderRadius: 8,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          textTransform: 'none',
+          fontSize: '0.95rem',
+          fontWeight: 600,
+          padding: '10px 24px',
+          transition: 'all 0.2s ease',
         },
       },
     },
   },
 });
 
+const Section = ({ id, children, bg }) => (
+  <Box
+    component="section"
+    id={id}
+    sx={{
+      scrollMarginTop: '80px',
+      py: { xs: 6, md: 8 },
+      backgroundColor: bg || 'transparent',
+    }}
+  >
+    <Container maxWidth="md">{children}</Container>
+  </Box>
+);
+
 function App() {
-  const [navbarStyle, setNavbarStyle] = useState({
-    position: 'fixed',
-    width: '100%',
-    top: 0,
-    left: 0,
-    opacity: 0,
-    transform: 'translateY(-100%) rotateX(20deg)',
-    transition: 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
-    transformOrigin: 'top',
-    zIndex: 1100,
-  });
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      if (scrollPosition > window.innerHeight / 2) {
-        setNavbarStyle((prevStyle) => ({
-          ...prevStyle,
-          opacity: 1,
-          transform: 'translateY(0) rotateX(0deg)',
-        }));
-      } else {
-        setNavbarStyle((prevStyle) => ({
-          ...prevStyle,
-          opacity: 0,
-          transform: 'translateY(-100%) rotateX(20deg)',
-        }));
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box 
-        sx={{ 
-          minHeight: '100vh', 
-          display: 'flex', 
-          flexDirection: 'column',
-          background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-          backgroundAttachment: 'fixed',
-        }}
-      >
-        <div style={navbarStyle}>
-          <Navbar />
-        </div>
-        <LandingPage />
-        <Container id="main-content" maxWidth="lg" sx={{ flexGrow: 1, py: 3 }}>
-          <Paper
-            elevation={3}
-            sx={{
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: 4,
-              overflow: 'hidden',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-            }}
-          >
-            <Box 
-              sx={{ 
-                display: 'flex', 
-                flexDirection: 'column',
-                gap: 6,
-                p: 6,
-              }}
-            >
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1 }}
-              >
-                <section id="about" style={{ scrollMarginTop: '64px' }}>
-                  <About />
-                </section>
-                <Divider sx={{ my: 4 }} />
-                <section id="experience" style={{ scrollMarginTop: '64px' }}>
-                  <Experience />
-                </section>
-                <Divider sx={{ my: 4 }} />
-                <section id="cv" style={{ scrollMarginTop: '64px' }}>
-                  <Resume />
-                </section>
-                <Divider sx={{ my: 4 }} />
-                <section id="projects" style={{ scrollMarginTop: '64px' }}>
-                  <Projects />
-                </section>
-                <Divider sx={{ my: 4 }} />
-                <section id="contact" style={{ scrollMarginTop: '64px' }}>
-                  <Contact />
-                </section>
-              </motion.div>
-            </Box>
-          </Paper>
-        </Container>
+      <Navbar />
+      <Box component="main">
+        <Section id="about"><About /></Section>
+        <Section id="experience" bg="#ffffff"><Experience /></Section>
+        <Section id="cv"><Resume /></Section>
+        <Section id="projects" bg="#ffffff"><Projects /></Section>
+        <Section id="contact"><Contact /></Section>
       </Box>
     </ThemeProvider>
   );
 }
 
-export default App; 
+export default App;

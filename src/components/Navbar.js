@@ -1,161 +1,92 @@
-import { AppBar, Toolbar, Button, Box, Typography } from '@mui/material';
-import { useState, useRef, useEffect } from 'react';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { AppBar, Toolbar, Button, Box, Typography, IconButton, Drawer, List, ListItemButton, ListItemText } from '@mui/material';
+import { useState } from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
+
+const navItems = [
+  { label: 'About', id: 'about' },
+  { label: 'Experience', id: 'experience' },
+  { label: 'CV', id: 'cv' },
+  { label: 'Projects', id: 'projects' },
+  { label: 'Contact', id: 'contact' },
+];
 
 function Navbar() {
-  const [showArrow, setShowArrow] = useState(false);
-  const scrollContainerRef = useRef(null);
-
-  const handleScroll = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-      const isAtEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < 1;
-      const hasOverflow = scrollWidth > clientWidth;
-      setShowArrow(hasOverflow && !isAtEnd);
-    }
-  };
-
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (scrollContainer) {
-      scrollContainer.addEventListener('scroll', handleScroll);
-      // Initial check
-      handleScroll();
-      // Add resize listener to recheck on window resize
-      window.addEventListener('resize', handleScroll);
-      return () => {
-        scrollContainer.removeEventListener('scroll', handleScroll);
-        window.removeEventListener('resize', handleScroll);
-      };
-    }
-  }, []);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const scrollToSection = (id) => {
+    setDrawerOpen(false);
     const element = document.getElementById(id);
     if (element) {
-      const offset = 120;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-      
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+      const offset = 80;
+      const top = element.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
     }
   };
 
   return (
-    <AppBar 
-      sx={{ 
-        mb: 2,
-        backgroundColor: '#1976d2',
-        boxShadow: 3,
-      }}
-    >
-      <Toolbar sx={{ position: 'relative' }}>
-        <Typography 
-          variant="h6" 
-          sx={{ 
-            mr: 4,
-            fontWeight: 'bold',
-            color: 'white',
-            flexShrink: 0
-          }}
-        >
-          Alex Mecklin
-        </Typography>
-        <Box 
-          ref={scrollContainerRef}
-          sx={{ 
-            flexGrow: 1, 
-            display: 'flex', 
-            gap: 2,
-            overflowX: 'auto',
-            scrollbarWidth: 'none',
-            '::-webkit-scrollbar': {
-              display: 'none'
-            },
-            msOverflowStyle: 'none',
-            position: 'relative',
-            '&::after': {
-              content: '""',
-              minWidth: '40px',
-              height: '100%',
-            }
-          }}
-        >
-          <Button 
-            color="inherit"
-            onClick={() => scrollToSection('about')}
-            sx={{ color: 'white', flexShrink: 0 }}
+    <>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+          backgroundColor: '#0a1929',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+        }}
+      >
+        <Toolbar sx={{ justifyContent: 'space-between', maxWidth: 'md', width: '100%', mx: 'auto' }}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 700, color: '#fff', cursor: 'pointer', letterSpacing: '-0.3px' }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            About
-          </Button>
-          <Button 
-            color="inherit"
-            onClick={() => scrollToSection('experience')}
-            sx={{ color: 'white', flexShrink: 0 }}
-          >
-            Experience
-          </Button>
-          <Button 
-            color="inherit"
-            onClick={() => scrollToSection('cv')}
-            sx={{ color: 'white', flexShrink: 0 }}
-          >
-            CV
-          </Button>
-          <Button 
-            color="inherit"
-            onClick={() => scrollToSection('projects')}
-            sx={{ color: 'white', flexShrink: 0 }}
-          >
-            Projects
-          </Button>
-          <Button 
-            color="inherit"
-            onClick={() => scrollToSection('contact')}
-            sx={{ color: 'white', flexShrink: 0 }}
-          >
-            Contact
-          </Button>
-        </Box>
-        {showArrow && (
-          <Box
-            sx={{
-              position: 'absolute',
-              right: 0,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              zIndex: 1,
-              animation: 'pulse 2s infinite',
-              '@keyframes pulse': {
-                '0%': {
-                  opacity: 0.5,
-                  transform: 'translateY(-50%) translateX(0)',
-                },
-                '50%': {
-                  opacity: 1,
-                  transform: 'translateY(-50%) translateX(-10px)',
-                },
-                '100%': {
-                  opacity: 0.5,
-                  transform: 'translateY(-50%) translateX(0)',
-                },
-              },
-            }}
-          >
-            <ArrowForwardIosIcon 
-              sx={{ 
-                color: 'white',
-                fontSize: '1.5rem',
-              }} 
-            />
+            Alex Mecklin
+          </Typography>
+
+          {/* Desktop nav */}
+          <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 1 }}>
+            {navItems.map((item) => (
+              <Button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                sx={{
+                  color: 'rgba(255,255,255,0.8)',
+                  fontWeight: 500,
+                  fontSize: '0.9rem',
+                  '&:hover': { color: '#fff', backgroundColor: 'rgba(255,255,255,0.08)' },
+                }}
+              >
+                {item.label}
+              </Button>
+            ))}
           </Box>
-        )}
-      </Toolbar>
-    </AppBar>
+
+          {/* Mobile hamburger */}
+          <IconButton
+            sx={{ display: { sm: 'none' }, color: '#fff' }}
+            onClick={() => setDrawerOpen(true)}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      {/* Mobile drawer */}
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        PaperProps={{ sx: { width: 220, backgroundColor: '#0a1929', color: '#fff' } }}
+      >
+        <List sx={{ pt: 4 }}>
+          {navItems.map((item) => (
+            <ListItemButton key={item.id} onClick={() => scrollToSection(item.id)}>
+              <ListItemText primary={item.label} primaryTypographyProps={{ fontWeight: 500 }} />
+            </ListItemButton>
+          ))}
+        </List>
+      </Drawer>
+    </>
   );
 }
 
-export default Navbar; 
+export default Navbar;
