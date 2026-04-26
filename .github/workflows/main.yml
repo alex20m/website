@@ -1,0 +1,16 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    uses: ./.github/workflows/jobs/build-job.yml
+
+  deploy:
+    needs: build
+    uses: ./.github/workflows/jobs/deploy-job.yml
+    secrets: inherit
+    with:
+      artifact-name: ${{ needs.build.outputs.artifact-name }}

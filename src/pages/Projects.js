@@ -6,7 +6,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 const projects = [
   {
     title: 'Personal Website',
-    description: 'This website, built using Cursor AI and GitHub Copilot to explore their AI capabilities.',
+    description: 'This website, built using Cursor AI and GitHub Copilot to explore their AI capabilities. Deployed automatically to GitHub Pages via a CI/CD pipeline using GitHub Actions.',
     technologies: ['JavaScript', 'React.js'],
     github: 'https://github.com/alex20m/website',
   },

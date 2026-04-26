@@ -79,10 +79,24 @@ npm run deploy
 
 ## Deployment
 
-Deploys to GitHub Pages via `gh-pages` package:
-- Build artifacts go to `gh-pages` branch
-- Main branch contains only source code
-- Custom domain configured via `CNAME` file
+Automatic CI/CD pipeline via GitHub Actions — triggers on every push or merge to `main`.
+
+**Workflow structure:**
+```
+.github/workflows/
+├── main.yml           # Orchestrates the pipeline
+└── jobs/
+    ├── build-job.yml  # Installs deps, builds app, uploads artifact
+    └── deploy-job.yml # Downloads artifact, deploys to gh-pages branch
+```
+
+**Pipeline steps:**
+1. `build` — runs `npm ci` + `npm run build`, uploads `build/` as a workflow artifact
+2. `deploy` — downloads the artifact and pushes it to the `gh-pages` branch via [`peaceiris/actions-gh-pages`](https://github.com/peaceiris/actions-gh-pages)
+
+The artifact name is defined once in `build-job.yml` and threaded through to `deploy-job.yml` via workflow outputs. Custom domain is preserved via `public/CNAME` which React copies into `build/` automatically.
+
+> To deploy manually: `npm run build && npm run deploy`
 
 ## Design Principles
 
