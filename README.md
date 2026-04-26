@@ -1,6 +1,6 @@
 # Alex Mecklin - Portfolio Website
 
-Professional portfolio website showcasing my experience, projects, and CV. Built with a focus on recruiter accessibility - clean design, intuitive navigation, and mobile-optimized layout.
+Professional portfolio website showcasing my experience, projects, and CV. Built with a focus on recruiter accessibility - clean design, intuitive navigation, mobile-optimized layout, and AI-powered chat assistant.
 
 🔗 **Live Site:** [alexmecklin.com](https://alexmecklin.com)
 
@@ -12,14 +12,21 @@ Single-page React application with smooth scrolling navigation between sections:
 - **CV** - Downloadable resume with LaTeX parsing
 - **Projects** - Grid showcase of personal projects
 - **Contact** - Quick access to email, phone, LinkedIn, and GitHub
+- **Chat** - AI assistant to answer questions about me (powered by Cloudflare Workers + OpenRouter)
 
 ## Tech Stack
 
+### Frontend
 - **React 18.2.0** - UI framework
 - **Vite** - Build tool and dev server
 - **Material-UI v5** - Component library (Typography, Box, Button, Grid, AppBar, etc.)
 - **Framer Motion** - Smooth entrance animations
 - **Emotion** - CSS-in-JS styling
+
+### Backend (AI Chat)
+- **Cloudflare Workers** - Serverless edge compute for API proxy
+- **OpenRouter API** - Free LLM inference (model: `openrouter/free`)
+- **Server-Sent Events (SSE)** - Real-time streaming responses
 
 ## Key Features
 
@@ -41,6 +48,14 @@ Single-page React application with smooth scrolling navigation between sections:
 - Automatic LaTeX CV parsing from `data/latexResume.js`
 - Show more/less functionality on mobile
 
+### AI Chat Assistant
+- Conversational interface to answer questions about my background
+- Powered by Cloudflare Workers edge compute
+- Real-time streaming responses via SSE
+- Context-aware system prompt with factual information
+- Mobile-optimized chat UI with message history
+- CORS-enabled API for secure cross-origin requests
+
 ## Project Structure
 
 ```
@@ -54,7 +69,8 @@ src/
 │   ├── Experience.jsx         # Timeline with logo components
 │   ├── Resume.jsx             # CV download button
 │   ├── Projects.jsx           # Project cards with tech tags
-│   └── Contact.jsx            # Clickable contact cards
+│   ├── Contact.jsx            # Clickable contact cards
+│   └── Chat.jsx               # AI chat interface with SSE streaming
 ├── hooks/
 │   └── useIsMobile.js         # Responsive breakpoint hook
 ├── data/
@@ -64,10 +80,17 @@ src/
 └── assets/
     ├── profile.png            # Profile photo
     └── logos/                 # Company logo images
+
+worker/                        # Cloudflare Worker (backend)
+├── src/
+│   ├── index.js               # API handler for chat requests
+│   └── systemPrompt.js        # AI assistant instructions & context
+└── wrangler.toml              # Cloudflare deployment config
 ```
 
 ## Local Development
 
+### Frontend
 ```bash
 # Install dependencies
 npm install
@@ -80,10 +103,25 @@ npm run build
 
 # Preview production build locally
 npm run preview
-
-# Deploy to GitHub Pages
-npm run deploy
 ```
+
+### Cloudflare Worker (Chat Backend)
+```bash
+# Navigate to worker directory
+cd worker
+
+# Install dependencies
+npm install
+
+# Start local dev server
+npx wrangler dev
+
+# Deploy to Cloudflare
+npx wrangler deploy
+```
+
+**Required environment variable:**
+- `OPENROUTER_API_KEY` - Set in Cloudflare dashboard under Worker settings → Variables
 
 ## Deployment
 
@@ -96,12 +134,17 @@ Automatic CI/CD pipeline via GitHub Actions — triggers on every push or merge 
 ```
 
 **Pipeline steps:**
-1. `build` — runs `npm ci` + `npm run build`, uploads `build/` as a workflow artifact
-2. `deploy` — deploys the artifact to GitHub Pages via [`actions/deploy-pages`](https://github.com/actions/deploy-pages)
+1. `deploy-worker` — deploys Cloudflare Worker with `wrangler deploy` (requires `CLOUDFLARE_API_TOKEN` secret)
+2. `build` — runs `npm ci` + `npm run build`, uploads `build/` as a workflow artifact
+3. `deploy` — deploys the artifact to GitHub Pages via [`actions/deploy-pages`](https://github.com/actions/deploy-pages)
 
 Custom domain is preserved via `public/CNAME`, which Vite copies into `build/` automatically.
 
-> To deploy manually: `npm run deploy`
+**Required GitHub Secrets:**
+- `CLOUDFLARE_API_TOKEN` - API token with Workers edit permissions
+
+**Cloudflare Worker Environment:**
+- `OPENROUTER_API_KEY` - Set in Cloudflare dashboard (not in GitHub)
 
 ## Design Principles
 

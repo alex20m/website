@@ -8,6 +8,7 @@ const navItems = [
   { label: 'Ask AI', id: 'chat' },
   { label: 'Experience', id: 'experience' },
   { label: 'Projects', id: 'projects' },
+  { label: 'CV', id: 'cv' },
   { label: 'Contact', id: 'contact' },
 ];
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Typography, Box, TextField, IconButton, Stack, Paper } from '@mui/material';
+import { Typography, Box, TextField, IconButton, Stack, Paper, Link } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
@@ -13,6 +13,61 @@ const SUGGESTIONS = [
   'What are his skills?',
   'Tell me about his experience',
 ];
+
+// Helper function to convert URLs in text to clickable links
+const linkifyText = (text) => {
+  const urlRegex = /(https?:\/\/[^\s]+|#[a-z]+)/g;
+  const parts = text.split(urlRegex);
+  
+  return parts.map((part, i) => {
+    if (part.match(urlRegex)) {
+      // Handle hash links (internal navigation)
+      if (part.startsWith('#')) {
+        const sectionId = part.slice(1);
+        return (
+          <Link
+            key={i}
+            href={part}
+            onClick={(e) => {
+              e.preventDefault();
+              const element = document.getElementById(sectionId);
+              if (element) {
+                const offset = 80;
+                const top = element.getBoundingClientRect().top + window.pageYOffset - offset;
+                window.scrollTo({ top, behavior: 'smooth' });
+              }
+            }}
+            sx={{
+              color: 'inherit',
+              textDecoration: 'underline',
+              cursor: 'pointer',
+              '&:hover': { color: '#1565c0' },
+            }}
+          >
+            {part}
+          </Link>
+        );
+      }
+      // Handle external links
+      return (
+        <Link
+          key={i}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{
+            color: 'inherit',
+            textDecoration: 'underline',
+            '&:hover': { color: '#1565c0' },
+          }}
+        >
+          {part}
+        </Link>
+      );
+    }
+    return part;
+  });
+};
 
 function Chat() {
   const isMobile = useIsMobile();
@@ -212,7 +267,7 @@ function Chat() {
                     wordBreak: 'break-word',
                   }}
                 >
-                  {msg.content}
+                  {msg.role === 'assistant' ? linkifyText(msg.content) : msg.content}
                 </Box>
               </Box>
             </motion.div>

@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import About from './pages/About';
 import Projects from './pages/Projects';
 import Chat from './pages/Chat';
+import CV from './pages/CV';
 import Contact from './pages/Contact';
 import Experience from './pages/Experience';
 import { ThemeProvider, createTheme, CssBaseline, Box, Container } from '@mui/material';
@@ -67,7 +68,8 @@ function App() {
         <Section id="chat" bg="#ffffff"><Chat /></Section>
         <Section id="experience"><Experience /></Section>
         <Section id="projects" bg="#ffffff"><Projects /></Section>
-        <Section id="contact"><Contact /></Section>
+        <Section id="cv"><CV /></Section>
+        <Section id="contact" bg="#ffffff"><Contact /></Section>
       </Box>
     </ThemeProvider>
   );

@@ -4,7 +4,7 @@ import useIsMobile from '../hooks/useIsMobile';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { cv } from '../data/personal.jsx';
 
-function Resume() {
+function CV() {
   const isMobile = useIsMobile();
   return (
     <Box
@@ -42,4 +42,4 @@ function Resume() {
   );
 }
 
-export default Resume;
+export default CV;
