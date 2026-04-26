@@ -1,12 +1,22 @@
 import { SYSTEM_PROMPT } from './systemPrompt.js';
 
+const ALLOWED_ORIGINS = ['https://alexmecklin.com', 'http://localhost:5173'];
+
+function getCorsOrigin(request) {
+  const origin = request.headers.get('Origin');
+  return ALLOWED_ORIGINS.includes(origin) ? origin : null;
+}
+
 export default {
   async fetch(request, env) {
+    const corsOrigin = getCorsOrigin(request);
+
     // Handle CORS preflight
     if (request.method === 'OPTIONS') {
+      if (!corsOrigin) return new Response('Forbidden', { status: 403 });
       return new Response(null, {
         headers: {
-          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Origin': corsOrigin,
           'Access-Control-Allow-Methods': 'POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type',
         },
@@ -17,6 +27,10 @@ export default {
       return new Response('Method not allowed', { status: 405 });
     }
 
+    if (!corsOrigin) {
+      return new Response('Forbidden', { status: 403 });
+    }
+
     try {
       const { messages } = await request.json();
 
@@ -25,7 +39,7 @@ export default {
           status: 400,
           headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': corsOrigin,
           },
         });
       }
@@ -56,7 +70,7 @@ export default {
           status: 502,
           headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': corsOrigin,
           },
         });
       }
@@ -66,7 +80,7 @@ export default {
         headers: {
           'Content-Type': 'text/event-stream',
           'Cache-Control': 'no-cache',
-          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Origin': corsOrigin,
         },
       });
     } catch (err) {
@@ -74,7 +88,7 @@ export default {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Origin': corsOrigin,
         },
       });
     }
