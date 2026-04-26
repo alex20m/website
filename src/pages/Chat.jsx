@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Typography, Box, TextField, IconButton, Stack, Paper, Link, Chip } from '@mui/material';
+import { useState, useEffect, useRef } from 'react';
+import { Typography, Box, TextField, IconButton, Stack, Paper, Chip } from '@mui/material';
+import Linkify from 'linkify-react';
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
@@ -14,58 +15,49 @@ const SUGGESTIONS = [
   'Tell me about his experience',
 ];
 
-// Helper function to convert URLs in text to clickable links
-const linkifyText = (text) => {
-  const urlRegex = /(https?:\/\/[^\s]+|#[a-z]+)/g;
-  const parts = text.split(urlRegex);
-  
+const linkifyOptions = {
+  render: ({ attributes, content }) => {
+    const { href, ...props } = attributes;
+    return (
+      <a
+        href={href}
+        {...props}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: 'inherit', textDecoration: 'underline' }}
+      >
+        {content}
+      </a>
+    );
+  },
+};
+
+const hashLinkRegex = /(#[a-z]+)/g;
+
+const renderWithHashLinks = (text) => {
+  const parts = text.split(hashLinkRegex);
   return parts.map((part, i) => {
-    if (part.match(urlRegex)) {
-      // Handle hash links (internal navigation)
-      if (part.startsWith('#')) {
-        const sectionId = part.slice(1);
-        return (
-          <Link
-            key={i}
-            href={part}
-            onClick={(e) => {
-              e.preventDefault();
-              const element = document.getElementById(sectionId);
-              if (element) {
-                const offset = 80;
-                const top = element.getBoundingClientRect().top + window.pageYOffset - offset;
-                window.scrollTo({ top, behavior: 'smooth' });
-              }
-            }}
-            sx={{
-              color: 'inherit',
-              textDecoration: 'underline',
-              cursor: 'pointer',
-              '&:hover': { color: '#1565c0' },
-            }}
-          >
-            {part}
-          </Link>
-        );
-      }
-      // Handle external links
+    if (part.match(hashLinkRegex)) {
+      const sectionId = part.slice(1);
       return (
-        <Link
+        <a
           key={i}
           href={part}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{
-            color: 'inherit',
-            textDecoration: 'underline',
-            '&:hover': { color: '#1565c0' },
+          onClick={(e) => {
+            e.preventDefault();
+            const element = document.getElementById(sectionId);
+            if (element) {
+              const top = element.getBoundingClientRect().top + window.pageYOffset - 80;
+              window.scrollTo({ top, behavior: 'smooth' });
+            }
           }}
+          style={{ color: 'inherit', textDecoration: 'underline', cursor: 'pointer' }}
         >
           {part}
-        </Link>
+        </a>
       );
     }
-    return part;
+    return <Linkify key={i} options={linkifyOptions}>{part}</Linkify>;
   });
 };
 
@@ -74,6 +66,12 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [messages, loading]);
 
   const sendMessage = async (text) => {
     const userMessage = text || input.trim();
@@ -168,8 +166,11 @@ function Chat() {
   return (
     <Box>
       <Typography variant="h2" sx={{ mb: 1, fontWeight: 'bold', color: '#0a1929' }}>Ask AI</Typography>
-      <Typography variant="body1" sx={{ mb: isMobile ? 2 : 3 }}>
+      <Typography variant="body1" sx={{ mb: 0.5 }}>
         Have a question about me? Ask the AI assistant — it knows about my experience, skills, and projects.
+      </Typography>
+      <Typography variant="body2" sx={{ mb: isMobile ? 2 : 3 }}>
+        ⚠️ AI responses may not always be accurate. Verify important information through my CV or contact details.
       </Typography>
 
       <Paper
@@ -185,6 +186,7 @@ function Chat() {
       >
         {/* Messages area */}
         <Box
+          ref={scrollRef}
           sx={{
             flex: 1,
             overflowY: 'auto',
@@ -267,7 +269,7 @@ function Chat() {
                     wordBreak: 'break-word',
                   }}
                 >
-                  {msg.role === 'assistant' ? linkifyText(msg.content) : msg.content}
+                  {msg.role === 'assistant' ? renderWithHashLinks(msg.content) : msg.content}
                 </Box>
               </Box>
             </motion.div>
