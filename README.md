@@ -110,9 +110,6 @@ npm run preview
 # Navigate to worker directory
 cd worker
 
-# Install dependencies
-npm install
-
 # Start local dev server
 npx wrangler dev
 
