@@ -2,7 +2,8 @@ import React from 'react';
 import Navbar from './components/Navbar';
 import About from './pages/About';
 import Projects from './pages/Projects';
-import Resume from './pages/Resume';
+import Chat from './pages/Chat';
+import CV from './pages/CV';
 import Contact from './pages/Contact';
 import Experience from './pages/Experience';
 import { ThemeProvider, createTheme, CssBaseline, Box, Container } from '@mui/material';
@@ -64,10 +65,11 @@ function App() {
       <Navbar />
       <Box component="main">
         <Section id="about"><About /></Section>
-        <Section id="experience" bg="#ffffff"><Experience /></Section>
-        <Section id="projects"><Projects /></Section>
-        <Section id="cv" bg="#ffffff"><Resume /></Section>
-        <Section id="contact"><Contact /></Section>
+        <Section id="chat" bg="#ffffff"><Chat /></Section>
+        <Section id="experience"><Experience /></Section>
+        <Section id="projects" bg="#ffffff"><Projects /></Section>
+        <Section id="cv"><CV /></Section>
+        <Section id="contact" bg="#ffffff"><Contact /></Section>
       </Box>
     </ThemeProvider>
   );

@@ -5,6 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 const navItems = [
   { label: 'About', id: 'about' },
+  { label: 'Ask AI', id: 'chat' },
   { label: 'Experience', id: 'experience' },
   { label: 'Projects', id: 'projects' },
   { label: 'CV', id: 'cv' },

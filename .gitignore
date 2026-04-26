@@ -1,5 +1,6 @@
 # Dependencies
 /node_modules
+/worker/node_modules
 
 # Production build output
 /build
@@ -14,6 +15,10 @@
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Wrangler
+/worker/.wrangler
+/worker/.dev.vars
 
 # Logs
 npm-debug.log*
