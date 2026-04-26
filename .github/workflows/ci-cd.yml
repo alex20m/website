@@ -5,30 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  deploy-worker:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4.4.0
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install worker dependencies
-        working-directory: worker
-        run: npm ci
-
-      - name: Deploy Cloudflare Worker
-        working-directory: worker
-        run: npx wrangler deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-
   build:
-    needs: deploy-worker
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
