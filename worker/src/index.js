@@ -52,6 +52,16 @@ export default {
         });
       }
 
+      if (!env.OPENROUTER_API_KEY) {
+        return new Response(JSON.stringify({ error: 'Server misconfiguration: API key not set' }), {
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': corsOrigin,
+          },
+        });
+      }
+
       // Limit conversation history to last 20 messages to control token usage
       const trimmedMessages = messages.slice(-20);
 
