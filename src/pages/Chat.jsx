@@ -112,6 +112,7 @@ function Chat() {
         const lines = buffer.split('\n');
         buffer = lines.pop();
 
+        let chunkContent = '';
         for (const line of lines) {
           if (!line.startsWith('data: ')) continue;
           const data = line.slice(6).trim();
@@ -120,24 +121,28 @@ function Chat() {
             const json = JSON.parse(data);
             const token = json.choices?.[0]?.delta?.content;
             if (token) {
-              if (firstToken) {
-                // First token: hide "Thinking..." and add assistant message
-                setLoading(false);
-                setMessages([...newMessages, { role: 'assistant', content: token }]);
-                firstToken = false;
-              } else {
-                setMessages((prev) => {
-                  const updated = [...prev];
-                  updated[updated.length - 1] = {
-                    ...updated[updated.length - 1],
-                    content: updated[updated.length - 1].content + token,
-                  };
-                  return updated;
-                });
-              }
+              chunkContent += token;
             }
           } catch {
             // ignore malformed SSE lines
+          }
+        }
+
+        if (chunkContent) {
+          if (firstToken) {
+            // First chunk: hide "Thinking..." and add assistant message
+            setLoading(false);
+            setMessages([...newMessages, { role: 'assistant', content: chunkContent }]);
+            firstToken = false;
+          } else {
+            setMessages((prev) => {
+              const updated = [...prev];
+              updated[updated.length - 1] = {
+                ...updated[updated.length - 1],
+                content: updated[updated.length - 1].content + chunkContent,
+              };
+              return updated;
+            });
           }
         }
       }
