@@ -65,8 +65,8 @@ function App() {
       <Box component="main">
         <Section id="about"><About /></Section>
         <Section id="experience" bg="#ffffff"><Experience /></Section>
-        <Section id="cv"><Resume /></Section>
-        <Section id="projects" bg="#ffffff"><Projects /></Section>
+        <Section id="projects"><Projects /></Section>
+        <Section id="cv" bg="#ffffff"><Resume /></Section>
         <Section id="contact"><Contact /></Section>
       </Box>
     </ThemeProvider>

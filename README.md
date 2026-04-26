@@ -58,6 +58,8 @@ src/
 ├── hooks/
 │   └── useIsMobile.js         # Responsive breakpoint hook
 ├── data/
+│   ├── projects.js            # Project cards data
+│   ├── personal.jsx           # Contact info & CV file reference
 │   └── latexResume.js         # Raw LaTeX CV content
 └── assets/
     ├── profile.png            # Profile photo

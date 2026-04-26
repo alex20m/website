@@ -1,7 +1,9 @@
-import { Typography, Box, Avatar, Chip, Stack } from '@mui/material';
+import { Typography, Box, Avatar, Chip, Stack, Button, IconButton, Tooltip } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
 import { motion } from 'framer-motion';
 import ProfilePhoto from '../assets/profile.png';
 import useIsMobile from '../hooks/useIsMobile';
+import { contacts, cv } from '../data/personal.jsx';
 
 const skills = [
   'Agentic AI',
@@ -41,14 +43,16 @@ function About() {
       </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}>
-        <Box sx={{ textAlign: isMobile ? 'center' : 'left' }}>
-          <Typography variant="h2" sx={{ color: '#0a1929', mb: 1 }}>
-            Alex Mecklin
-          </Typography>
-          <Typography variant="h5" sx={{ color: '#1565c0', mb: 2 }}>
-            M.Sc. Student · Aalto University
-          </Typography>
-          <Typography variant="body1" sx={{ mb: isMobile ? 2 : 3, maxWidth: isMobile ? 'none' : 540 }}>
+        <Stack sx={{ textAlign: isMobile ? 'center' : 'left' }} gap={2}>
+          <Box>
+            <Typography variant="h2" sx={{ color: '#0a1929', mb: 0.5 }}>
+              Alex Mecklin
+            </Typography>
+            <Typography variant="h5" sx={{ color: '#1565c0' }}>
+              M.Sc. Student · Aalto University
+            </Typography>
+          </Box>
+          <Typography variant="body1" sx={{ maxWidth: isMobile ? 'none' : 540 }}>
             Computer science student specializing in big data and large scale computing.
             Currently working on agentic AI software development, with prior experience in web development, 
             test automation and embedded systems. Interested in agentic AI and cloud technologies.
@@ -66,7 +70,37 @@ function About() {
               />
             ))}
           </Stack>
-        </Box>
+          <Stack direction="row" alignItems="center" gap={1} justifyContent={isMobile ? 'center' : 'flex-start'}>
+            <Button
+              variant="outlined"
+              href={cv.file}
+              download={cv.filename}
+              startIcon={<DownloadIcon />}
+              sx={{
+                borderColor: '#0a1929',
+                color: '#0a1929',
+                borderRadius: 2,
+                fontWeight: 600,
+                '&:hover': { backgroundColor: '#0a1929', color: '#fff' },
+              }}
+            >
+              Download CV
+            </Button>
+            {contacts.map((c) => (
+              <Tooltip key={c.label} title={c.value}>
+                <IconButton
+                  component="a"
+                  href={c.href}
+                  target={c.external ? '_blank' : undefined}
+                  rel={c.external ? 'noopener noreferrer' : undefined}
+                  sx={{ color: '#0a1929', '&:hover': { color: '#1565c0' } }}
+                >
+                  {c.icon}
+                </IconButton>
+              </Tooltip>
+            ))}
+          </Stack>
+        </Stack>
       </motion.div>
     </Box>
   );
