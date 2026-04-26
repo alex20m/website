@@ -16,6 +16,7 @@ Single-page React application with smooth scrolling navigation between sections:
 ## Tech Stack
 
 - **React 18.2.0** - UI framework
+- **Vite** - Build tool and dev server
 - **Material-UI v5** - Component library (Typography, Box, Button, Grid, AppBar, etc.)
 - **Framer Motion** - Smooth entrance animations
 - **Emotion** - CSS-in-JS styling
@@ -44,19 +45,21 @@ Single-page React application with smooth scrolling navigation between sections:
 
 ```
 src/
-├── App.js                     # Theme provider & routing
+├── App.jsx                    # Theme provider & routing
+├── index.jsx                  # Entry point
 ├── components/
-│   └── Navbar.js              # Fixed navigation with mobile drawer
+│   └── Navbar.jsx             # Fixed navigation with mobile drawer
 ├── pages/
-│   ├── About.js               # Hero with profile photo & skills
-│   ├── Experience.js          # Timeline with logo components
-│   ├── Resume.js              # CV download button
-│   ├── Projects.js            # Project cards with tech tags
-│   └── Contact.js             # Clickable contact cards
+│   ├── About.jsx              # Hero with profile photo & skills
+│   ├── Experience.jsx         # Timeline with logo components
+│   ├── Resume.jsx             # CV download button
+│   ├── Projects.jsx           # Project cards with tech tags
+│   └── Contact.jsx            # Clickable contact cards
+├── hooks/
+│   └── useIsMobile.js         # Responsive breakpoint hook
 ├── data/
 │   └── latexResume.js         # Raw LaTeX CV content
 └── assets/
-    ├── Alex_Mecklin_CV.pdf    # Downloadable resume
     ├── profile.png            # Profile photo
     └── logos/                 # Company logo images
 ```
@@ -67,11 +70,14 @@ src/
 # Install dependencies
 npm install
 
-# Start dev server (opens localhost:3000)
-npm start
+# Start dev server (opens localhost:5173)
+npm run dev
 
 # Build for production
 npm run build
+
+# Preview production build locally
+npm run preview
 
 # Deploy to GitHub Pages
 npm run deploy
@@ -84,19 +90,16 @@ Automatic CI/CD pipeline via GitHub Actions — triggers on every push or merge 
 **Workflow structure:**
 ```
 .github/workflows/
-├── main.yml           # Orchestrates the pipeline
-└── jobs/
-    ├── build-job.yml  # Installs deps, builds app, uploads artifact
-    └── deploy-job.yml # Downloads artifact, deploys to gh-pages branch
+└── ci-cd.yml          # Build and deploy pipeline
 ```
 
 **Pipeline steps:**
 1. `build` — runs `npm ci` + `npm run build`, uploads `build/` as a workflow artifact
-2. `deploy` — downloads the artifact and pushes it to the `gh-pages` branch via [`peaceiris/actions-gh-pages`](https://github.com/peaceiris/actions-gh-pages)
+2. `deploy` — deploys the artifact to GitHub Pages via [`actions/deploy-pages`](https://github.com/actions/deploy-pages)
 
-The artifact name is defined once in `build-job.yml` and threaded through to `deploy-job.yml` via workflow outputs. Custom domain is preserved via `public/CNAME` which React copies into `build/` automatically.
+Custom domain is preserved via `public/CNAME`, which Vite copies into `build/` automatically.
 
-> To deploy manually: `npm run build && npm run deploy`
+> To deploy manually: `npm run deploy`
 
 ## Design Principles
 
