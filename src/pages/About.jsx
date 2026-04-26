@@ -70,12 +70,13 @@ function About() {
               />
             ))}
           </Stack>
-          <Stack direction="row" alignItems="center" gap={1} justifyContent={isMobile ? 'center' : 'flex-start'}>
+          <Stack direction="row" alignItems="center" gap={isMobile ? 0.5 : 1} justifyContent={isMobile ? 'center' : 'flex-start'}>
             <Button
               variant="outlined"
               href={cv.file}
               download={cv.filename}
               startIcon={<DownloadIcon />}
+              size={isMobile ? 'small' : 'medium'}
               sx={{
                 borderColor: '#0a1929',
                 color: '#0a1929',
@@ -93,6 +94,7 @@ function About() {
                   href={c.href}
                   target={c.external ? '_blank' : undefined}
                   rel={c.external ? 'noopener noreferrer' : undefined}
+                  size={isMobile ? 'small' : 'medium'}
                   sx={{ color: '#0a1929', '&:hover': { color: '#1565c0' } }}
                 >
                   {c.icon}
