@@ -123,6 +123,30 @@ May 2022 - Aug 2023, Vaasa, Finland
 
 ---
 
+Projects
+
+Personal Website
+- Built using Cursor AI and GitHub Copilot to explore their AI capabilities.
+- Deployed automatically to GitHub Pages via a CI/CD pipeline using GitHub Actions.
+- Technologies: JavaScript, React.js
+- GitHub: https://github.com/alex20m/website
+
+OpenClaw Experiments
+- Experimenting with OpenClaw on an AWS EC2 instance, using OpenRouter to run LLMs.
+- Technologies: AWS, Agentic AI, LLMs
+- Link: https://openclaw.ai/
+
+Home Assistant Automations
+- Personal home automation project using Home Assistant to integrate smart devices, sensors, and custom automations for a smarter home.
+- Technologies: YAML, MQTT, IoT
+
+Salary Predictor
+- Machine learning model used to predict salaries for employees.
+- Technologies: Python, Machine Learning
+- GitHub: https://github.com/alex20m/Salary_predictor
+
+---
+
 Technical Skills
 
 Programming Languages
