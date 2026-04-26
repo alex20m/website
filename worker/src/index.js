@@ -19,20 +19,13 @@ export default {
           'Access-Control-Allow-Origin': corsOrigin,
           'Access-Control-Allow-Methods': 'POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type',
+          'Vary': 'Origin',
         },
       });
     }
 
     if (request.method !== 'POST') {
-      return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-        status: 405,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
-        },
-      });
+      return new Response('Method not allowed', { status: 405 });
     }
 
     if (!corsOrigin) {
@@ -48,6 +41,7 @@ export default {
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': corsOrigin,
+            'Vary': 'Origin',
           },
         });
       }
@@ -58,6 +52,7 @@ export default {
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': corsOrigin,
+            'Vary': 'Origin',
           },
         });
       }
@@ -89,6 +84,7 @@ export default {
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': corsOrigin,
+            'Vary': 'Origin',
           },
         });
       }
@@ -99,6 +95,7 @@ export default {
           'Content-Type': 'text/event-stream',
           'Cache-Control': 'no-cache',
           'Access-Control-Allow-Origin': corsOrigin,
+          'Vary': 'Origin',
         },
       });
     } catch (err) {
@@ -107,6 +104,7 @@ export default {
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': corsOrigin,
+          'Vary': 'Origin',
         },
       });
     }
