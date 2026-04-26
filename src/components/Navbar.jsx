@@ -6,8 +6,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 const navItems = [
   { label: 'About', id: 'about' },
   { label: 'Experience', id: 'experience' },
-  { label: 'CV', id: 'cv' },
   { label: 'Projects', id: 'projects' },
+  { label: 'CV', id: 'cv' },
   { label: 'Contact', id: 'contact' },
 ];
 

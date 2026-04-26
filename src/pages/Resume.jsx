@@ -2,7 +2,7 @@ import { Typography, Box, Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import useIsMobile from '../hooks/useIsMobile';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import ResumeFile from '../assets/Alex_Mecklin_CV.pdf';
+import { cv } from '../data/personal.jsx';
 
 function Resume() {
   const isMobile = useIsMobile();
@@ -24,8 +24,8 @@ function Resume() {
       </Typography>
       <Button
         variant="contained"
-        href={ResumeFile}
-        download="Alex_Mecklin_CV.pdf"
+        href={cv.file}
+        download={cv.filename}
         size="large"
         startIcon={<DownloadIcon />}
         sx={{
