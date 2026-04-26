@@ -1,4 +1,5 @@
 import { Typography, Box, Link, Grid } from '@mui/material';
+import useIsMobile from '../hooks/useIsMobile';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -12,10 +13,11 @@ const contacts = [
 ];
 
 function Contact() {
+  const isMobile = useIsMobile();
   return (
     <Box sx={{ pb: 4 }}>
-      <Typography variant="h2" sx={{ mb: { xs: 3, md: 5 }, fontWeight: 'bold', color: '#0a1929' }}>Contact</Typography>
-      <Grid container spacing={{ xs: 1.5, md: 2 }}>
+      <Typography variant="h2" sx={{ mb: isMobile ? 3 : 5, fontWeight: 'bold', color: '#0a1929' }}>Contact</Typography>
+      <Grid container spacing={isMobile ? 1.5 : 2}>
         {contacts.map((c, i) => (
           <Grid item xs={12} sm={6} key={i}>
             <Link
@@ -26,8 +28,8 @@ function Contact() {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: { xs: 1.5, md: 2 },
-                p: { xs: 2, md: 2.5 },
+                gap: isMobile ? 1.5 : 2,
+                p: isMobile ? 2 : 2.5,
                 borderRadius: 3,
                 border: '1px solid #e3eaf6',
                 backgroundColor: '#fff',
@@ -40,8 +42,8 @@ function Contact() {
             >
               <Box
                 sx={{
-                  width: { xs: 36, md: 44 },
-                  height: { xs: 36, md: 44 },
+                  width: isMobile ? 36 : 44,
+                  height: isMobile ? 36 : 44,
                   borderRadius: 2,
                   display: 'flex',
                   alignItems: 'center',

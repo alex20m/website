@@ -2,6 +2,7 @@ import { Typography, Box, Button } from '@mui/material';
 import { motion } from 'framer-motion';
 import latexResume from '../data/latexResume';
 import { useState, useEffect } from 'react';
+import useIsMobile from '../hooks/useIsMobile';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
@@ -88,6 +89,7 @@ function CompanyLogo({ company }) {
 
 function Experience() {
   const [expandedItems, setExpandedItems] = useState({});
+  const isMobile = useIsMobile();
 
   const toggleExpand = (index) => {
     setExpandedItems(prev => ({ ...prev, [index]: !prev[index] }));
@@ -95,13 +97,13 @@ function Experience() {
 
   return (
     <Box>
-      <Typography variant="h2" sx={{ mb: { xs: 3, md: 5 }, fontWeight: 'bold', color: '#0a1929' }}>Experience</Typography>
-      <Box sx={{ position: 'relative', pl: { xs: 3, md: 5 } }}>
+      <Typography variant="h2" sx={{ mb: isMobile ? 3 : 5, fontWeight: 'bold', color: '#0a1929' }}>Experience</Typography>
+      <Box sx={{ position: 'relative', pl: isMobile ? 3 : 5 }}>
         {/* Timeline line */}
         <Box
           sx={{
             position: 'absolute',
-            left: { xs: 6, md: 14 },
+            left: isMobile ? 6 : 14,
             top: 8,
             bottom: 8,
             width: 2,
@@ -120,7 +122,7 @@ function Experience() {
               <Box
                 sx={{
                   position: 'absolute',
-                  left: { xs: -21, md: -29 },
+                  left: isMobile ? -21 : -29,
                   top: 6,
                   width: 12,
                   height: 12,
@@ -153,7 +155,7 @@ function Experience() {
                       m: 0,
                       pl: 2.5,
                       color: '#4a5568',
-                      display: { xs: 'none', md: 'block' },
+                      display: isMobile ? 'none' : 'block',
                       fontSize: '0.95rem',
                       '& li': { mb: 0.5 },
                     }}
@@ -170,7 +172,7 @@ function Experience() {
                       m: 0,
                       pl: 2.5,
                       color: '#4a5568',
-                      display: { xs: 'block', md: 'none' },
+                      display: isMobile ? 'block' : 'none',
                       fontSize: '0.85rem',
                       '& li': { mb: 0.5 },
                     }}
@@ -220,7 +222,7 @@ function Experience() {
                       onClick={() => toggleExpand(index)}
                       endIcon={expandedItems[index] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                       sx={{
-                        display: { xs: 'inline-flex', md: 'none' },
+                        display: isMobile ? 'inline-flex' : 'none',
                         mt: 1,
                         color: '#1565c0',
                         textTransform: 'none',

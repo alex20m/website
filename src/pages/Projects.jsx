@@ -1,5 +1,6 @@
 import { Typography, Box, Button, Chip, Grid } from '@mui/material';
 import { motion } from 'framer-motion';
+import useIsMobile from '../hooks/useIsMobile';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
@@ -33,10 +34,11 @@ const projects = [
 ];
 
 function Projects() {
+  const isMobile = useIsMobile();
   return (
     <Box>
-      <Typography variant="h2" sx={{ mb: { xs: 3, md: 5 }, fontWeight: 'bold', color: '#0a1929' }}>Projects</Typography>
-      <Grid container spacing={{ xs: 2, md: 3 }}>
+      <Typography variant="h2" sx={{ mb: isMobile ? 3 : 5, fontWeight: 'bold', color: '#0a1929' }}>Projects</Typography>
+      <Grid container spacing={isMobile ? 2 : 3}>
         {projects.map((project, index) => (
           <Grid item xs={12} sm={6} key={index}>
             <motion.div
@@ -47,7 +49,7 @@ function Projects() {
             >
               <Box
                 sx={{
-                  p: { xs: 2, md: 3 },
+                  p: isMobile ? 2 : 3,
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -61,13 +63,13 @@ function Projects() {
                   },
                 }}
               >
-                <Typography variant="h5" sx={{ color: '#0a1929', mb: { xs: 0.5, md: 1 } }}>
+                <Typography variant="h5" sx={{ color: '#0a1929', mb: isMobile ? 0.5 : 1 }}>
                   {project.title}
                 </Typography>
-                <Typography variant="body1" sx={{ mb: { xs: 1.5, md: 2 }, flexGrow: 1 }}>
+                <Typography variant="body1" sx={{ mb: isMobile ? 1.5 : 2, flexGrow: 1 }}>
                   {project.description}
                 </Typography>
-                <Box sx={{ mb: { xs: 1.5, md: 2 } }}>
+                <Box sx={{ mb: isMobile ? 1.5 : 2 }}>
                   {project.technologies.map((tech, i) => (
                     <Chip
                       key={i}

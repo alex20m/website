@@ -1,5 +1,6 @@
 import { AppBar, Toolbar, Button, Box, Typography, IconButton, Drawer, List, ListItemButton, ListItemText } from '@mui/material';
 import { useState } from 'react';
+import useIsMobile from '../hooks/useIsMobile';
 import MenuIcon from '@mui/icons-material/Menu';
 
 const navItems = [
@@ -12,6 +13,7 @@ const navItems = [
 
 function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   const scrollToSection = (id) => {
     setDrawerOpen(false);
@@ -43,7 +45,7 @@ function Navbar() {
           </Typography>
 
           {/* Desktop nav */}
-          <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 1 }}>
+          <Box sx={{ display: isMobile ? 'none' : 'flex', gap: 1 }}>
             {navItems.map((item) => (
               <Button
                 key={item.id}
@@ -62,7 +64,7 @@ function Navbar() {
 
           {/* Mobile hamburger */}
           <IconButton
-            sx={{ display: { sm: 'none' }, color: '#fff' }}
+            sx={{ display: isMobile ? 'flex' : 'none', color: '#fff' }}
             onClick={() => setDrawerOpen(true)}
           >
             <MenuIcon />
