@@ -9,6 +9,16 @@ import Experience from './pages/Experience';
 import { ThemeProvider, createTheme, CssBaseline, Box, Container } from '@mui/material';
 import useIsMobile from './hooks/useIsMobile';
 
+const SectionDivider = () => (
+  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, py: 0 }}>
+    <Box sx={{ flex: 1, height: '2px', background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.3))' }} />
+    <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: 'rgba(0,0,0,0.35)' }} />
+    <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: 'rgba(0,0,0,0.35)' }} />
+    <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: 'rgba(0,0,0,0.35)' }} />
+    <Box sx={{ flex: 1, height: '2px', background: 'linear-gradient(to left, transparent, rgba(0,0,0,0.3))' }} />
+  </Box>
+);
+
 const Section = ({ id, children, bg }) => {
   const isMobile = useIsMobile();
   return (
@@ -65,10 +75,15 @@ function App() {
       <Navbar />
       <Box component="main">
         <Section id="about"><About /></Section>
+        <SectionDivider />
         <Section id="chat" bg="#ffffff"><Chat /></Section>
+        <SectionDivider />
         <Section id="experience"><Experience /></Section>
+        <SectionDivider />
         <Section id="projects" bg="#ffffff"><Projects /></Section>
+        <SectionDivider />
         <Section id="cv"><CV /></Section>
+        <SectionDivider />
         <Section id="contact" bg="#ffffff"><Contact /></Section>
       </Box>
     </ThemeProvider>
