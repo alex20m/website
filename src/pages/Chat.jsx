@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Typography, Box, TextField, IconButton, Stack, Paper, Link } from '@mui/material';
+import { Typography, Box, TextField, IconButton, Stack, Paper, Link, Chip } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
@@ -203,24 +203,19 @@ function Chat() {
               </Typography>
               <Stack direction="row" flexWrap="wrap" gap={1} justifyContent="center">
                 {SUGGESTIONS.map((s) => (
-                  <Box
+                  <Chip
                     key={s}
+                    label={s}
                     onClick={() => sendMessage(s)}
+                    variant="outlined"
                     sx={{
-                      px: 1.5,
-                      py: 0.75,
-                      borderRadius: 2,
-                      border: '1px solid #e3eaf6',
+                      borderColor: '#e3eaf6',
                       backgroundColor: '#fff',
                       color: '#4a5568',
                       fontSize: '0.8rem',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s ease',
                       '&:hover': { borderColor: '#1565c0', color: '#1565c0' },
                     }}
-                  >
-                    {s}
-                  </Box>
+                  />
                 ))}
               </Stack>
             </Box>
@@ -345,6 +340,7 @@ function Chat() {
             }}
           />
           <IconButton
+            aria-label="Send message"
             onClick={() => sendMessage()}
             disabled={!input.trim() || loading}
             sx={{
