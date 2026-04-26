@@ -38,9 +38,22 @@ export default {
       return new Response('Forbidden', { status: 403 });
     }
 
-    try {
-      const { messages } = await request.json();
+    let messages;
 
+    try {
+      ({ messages } = await request.json());
+    } catch (err) {
+      return new Response(JSON.stringify({ error: 'Invalid JSON body' }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': corsOrigin,
+          'Vary': 'Origin',
+        },
+      });
+    }
+
+    try {
       if (!messages || !Array.isArray(messages) || messages.length === 0) {
         return new Response(JSON.stringify({ error: 'No messages provided' }), {
           status: 400,
