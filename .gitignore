@@ -1,19 +1,12 @@
 # Dependencies
 /node_modules
-/.pnp
-.pnp.js
 
-# Testing
-/coverage
-
-# Production
+# Production build output
 /build
 /dist
 
-# Build artifacts in root
-/asset-manifest.json
-/index.html
-/static
+# Vite cache
+/.vite
 
 # Environment files
 .env
