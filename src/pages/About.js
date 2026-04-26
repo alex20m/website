@@ -1,75 +1,73 @@
-import { Container, Typography, Box, Avatar } from '@mui/material';
+import { Typography, Box, Avatar, Chip, Stack } from '@mui/material';
 import { motion } from 'framer-motion';
-import ProfilePhoto from '../assets/profile.png'; // Changed from .jpg to .png
+import ProfilePhoto from '../assets/profile.png';
+
+const skills = [
+  'Agentic AI',
+  'Cloud Technologies',
+  'Software Development',
+  'CI/CD',
+  'Data Science',
+  'Machine Learning',
+  'Test Automation'
+];
 
 function About() {
   return (
-    <Box sx={{ 
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}>
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
+    <Box
+      sx={{
+        pt: { xs: 8, md: 14 },
+        pb: 2,
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
+        alignItems: { xs: 'center', md: 'flex-start' },
+        gap: { xs: 3, md: 6 },
+      }}
+    >
+      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
         <Avatar
           src={ProfilePhoto}
           alt="Alex Mecklin"
           sx={{
-            width: 200,
-            height: 200,
-            mb: 2,
-            border: '4px solid white',
-            boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
-            '& img': {
-              objectFit: 'cover',
-              objectPosition: 'center 70%',
-              transform: 'scale(1.2)',
-            },
+            width: { xs: 120, md: 180 },
+            height: { xs: 120, md: 180 },
+            border: '4px solid #e3eaf6',
+            boxShadow: '0 8px 24px rgba(10,25,41,0.12)',
+            '& img': { objectFit: 'cover', objectPosition: 'center 70%', transform: 'scale(1.2)' },
           }}
         />
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
-      >
-        <Typography 
-          variant="h2" 
-          color="primary"
-          sx={{ 
-            mb: 4,
-            fontWeight: 'bold'
-          }}
-        >
-          About me
-        </Typography>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.7, duration: 0.8 }}
-      >
-        <Typography 
-          variant="body1" 
-          color="text.secondary"
-          sx={{  
-            maxWidth: '800px', 
-            textAlign: 'center', 
-            lineHeight: 1.6,
-          }}
-        >
-          I'm a computer science master's student at Aalto University, specializing in big data and large scale computing.
-          Currently working on agentic AI software development, with prior experience in web development, test automation  and embedded systems. Interested in agentic AI and cloud technologies.          
-        </Typography>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}>
+        <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+          <Typography variant="h2" sx={{ color: '#0a1929', mb: 1 }}>
+            Alex Mecklin
+          </Typography>
+          <Typography variant="h5" sx={{ color: '#1565c0', mb: 2 }}>
+            M.Sc. Student · Aalto University
+          </Typography>
+          <Typography variant="body1" sx={{ mb: { xs: 2, md: 3 }, maxWidth: 540 }}>
+            Computer science student specializing in big data and large scale computing.
+            Currently working on agentic AI software development, with prior experience in web development, 
+            test automation and embedded systems. Interested in agentic AI and cloud technologies.
+          </Typography>
+          <Stack direction="row" flexWrap="wrap" gap={0.5} justifyContent={{ xs: 'center', md: 'flex-start' }}>
+            {skills.map((skill) => (
+              <Chip
+                key={skill}
+                label={skill}
+                size="small"
+                sx={{
+                  backgroundColor: '#e3eaf6',
+                  color: '#0a1929',
+                }}
+              />
+            ))}
+          </Stack>
+        </Box>
       </motion.div>
     </Box>
   );
 }
 
-export default About; 
+export default About;

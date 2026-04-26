@@ -3,15 +3,17 @@
 /.pnp
 .pnp.js
 
-# Assets
-/src/assets
-
 # Testing
 /coverage
 
 # Production
 /build
 /dist
+
+# Build artifacts in root
+/asset-manifest.json
+/index.html
+/static
 
 # Environment files
 .env
