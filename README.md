@@ -67,7 +67,7 @@ src/
 ├── pages/
 │   ├── About.jsx              # Hero with profile photo & skills
 │   ├── Experience.jsx         # Timeline with logo components
-│   ├── Resume.jsx             # CV download button
+│   ├── CV.jsx                 # CV download button
 │   ├── Projects.jsx           # Project cards with tech tags
 │   ├── Contact.jsx            # Clickable contact cards
 │   └── Chat.jsx               # AI chat interface with SSE streaming
