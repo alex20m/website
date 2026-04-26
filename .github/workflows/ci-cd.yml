@@ -15,11 +15,6 @@ jobs:
         uses: actions/setup-node@v4.4.0
         with:
           node-version: '22'
-          cache: 'npm'
-
-      - name: Install worker dependencies
-        working-directory: worker
-        run: npm ci
 
       - name: Deploy Cloudflare Worker
         working-directory: worker
