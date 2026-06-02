@@ -8,27 +8,28 @@ const latexResume = String.raw`
 \resumeSubHeadingListStart
 
     \resumeSubheading
-    {Incoming AI Cloud Engineer Intern}{Jun 2026 -- Sep 2026}
+    {Full Stack Developer Intern}{Jun 2026 -- Present}
     {KONE}{Espoo, Finland}
     \resumeItemListStart
-        \resumeItem{Continuing to work on similar agentic AI–focused tasks in the same team following my Master’s thesis}
+        \resumeItem{Full stack development using TypeScript and React for an internal agentic AI platform}
     \resumeItemListEnd
 
     \resumeSubheading
-    {Master’s Thesis Worker}{Jan 2026 -- Present}
+    {Master’s Thesis Worker}{Jan 2026 -- May 2026}
     {KONE}{Espoo, Finland}
     \resumeItemListStart
-        \resumeItem{Developing agentic AI systems as part of my Master’s thesis}
-        \resumeItem{Designing and building AI agents and supporting infrastructure on AWS}
-        \resumeItem{Implementing MCP servers to enable tool integration and communication between AI agents and internal systems}
+        \resumeItem{Developed agentic AI systems as part of my Master’s thesis}
+        \resumeItem{Designed and built AI agents and supporting infrastructure on AWS}
+        \resumeItem{Integrated MCP servers to enable communication between AI agents and internal systems}
     \resumeItemListEnd
 
     \resumeSubheading
     {Software Engineer Intern}{May 2025 -- Dec 2025}
     {KONE}{Espoo, Finland}
     \resumeItemListStart
-        \resumeItem{Developed automated tests for web applications using Python, Robot Framework, Selenium and Playwright}
-        \resumeItem{Built CI/CD pipelines and supporting infrastructure using Docker and YAML to automate development, testing, and deployment processes}
+        \resumeItem{Created automated tests for web applications using Python, Robot Framework, Selenium and Playwright}
+        \resumeItem{Designed and implemented CI/CD pipelines and supporting infrastructure using Docker and YAML to automate development, testing, and deployment processes}
+        \resumeItem{Developed backend services using Python for an internal platform, leveraging AWS Lambda and DynamoDB}
         \resumeItem{Used AWS to interact with cloud-hosted systems and manage data storage}
     \resumeItemListEnd
 
