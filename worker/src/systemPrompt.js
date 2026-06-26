@@ -134,6 +134,12 @@ Sep 2022 - Dec 2022, Espoo, Finland
 
 Projects
 
+Application Tracker
+- Cross-device job application tracker built with Next.js and Supabase.
+- Supports authentication, persistent storage with Postgres, and is installable as a PWA on iPhone and desktop.
+- Technologies: Next.js, TypeScript, React, Supabase (Auth + Postgres), Tailwind CSS, Vercel
+- GitHub: https://github.com/alex20m/application_tracker
+
 Personal Website
 - Built using Cursor AI and GitHub Copilot to explore their AI capabilities.
 - Deployed automatically to GitHub Pages via a CI/CD pipeline using GitHub Actions.

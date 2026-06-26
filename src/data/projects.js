@@ -1,5 +1,11 @@
 const projects = [
   {
+    title: 'Application Tracker',
+    description: 'Cross-device job application tracker with authentication, persistent storage, and PWA support. Installable on mobile and desktop.',
+    technologies: ['Next.js', 'TypeScript', 'React', 'Supabase', 'Vercel', 'Tailwind CSS'],
+    github: 'https://github.com/alex20m/application_tracker',
+  },
+  {
     title: 'Personal Website',
     description: 'This website, built using Cursor AI and GitHub Copilot to explore their AI capabilities. Deployed automatically to GitHub Pages via a CI/CD pipeline using GitHub Actions.',
     technologies: ['JavaScript', 'React.js'],
