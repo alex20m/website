@@ -70,7 +70,7 @@ Education
 Master of Science - Computer Science (Aalto University)
 Sep 2024 - Present, Espoo, Finland
 Study Track: Big Data and Large Scale Computing
-Master's Thesis (ongoing): Design and Evaluation of the Model Context Protocol for AI Agent Tool Integration
+Master's Thesis (completed): Design and Evaluation of the Model Context Protocol for AI Agent Tool Integration
 
 Thesis Focus
 - Agent-to-tool communication  
