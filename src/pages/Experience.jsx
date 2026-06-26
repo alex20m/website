@@ -6,6 +6,17 @@ import useIsMobile from '../hooks/useIsMobile';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
+function decodeLatex(str) {
+  return str
+    .replace(/\\&/g, '&')
+    .replace(/\\%/g, '%')
+    .replace(/\\_/g, '_')
+    .replace(/\\#/g, '#')
+    .replace(/\\\$/g, '$')
+    .replace(/\\~/g, '~')
+    .replace(/\\\^/g, '^');
+}
+
 function parseLatexExperience(latexString) {
   const experiences = [];
   const lines = latexString.split('\n').filter(line => !line.trim().startsWith('%'));
@@ -13,10 +24,10 @@ function parseLatexExperience(latexString) {
   const subheadingRegex = /\\resumeSubheading\s*\{([^}]*)\}\{([^}]*)\}\s*\{([^}]*)\}\{([^}]*)\}/g;
   let match;
   while ((match = subheadingRegex.exec(cleanedLatex)) !== null) {
-    const title = match[1].trim();
+    const title = decodeLatex(match[1].trim());
     const period = match[2].trim().replace(/--/g, '-');
-    const company = match[3].trim();
-    const location = match[4].trim();
+    const company = decodeLatex(match[3].trim());
+    const location = decodeLatex(match[4].trim());
     const startPos = match.index + match[0].length;
     const remainingText = cleanedLatex.substring(startPos);
     const itemsMatch = remainingText.match(/\\resumeItemListStart([\s\S]*?)\\resumeItemListEnd/);
@@ -26,7 +37,7 @@ function parseLatexExperience(latexString) {
       const itemRegex = /\\resumeItem\{([^}]*)\}/g;
       let itemMatch;
       while ((itemMatch = itemRegex.exec(itemsText)) !== null) {
-        description.push(itemMatch[1].trim());
+        description.push(decodeLatex(itemMatch[1].trim()));
       }
     }
     experiences.push({ title, company, location, description, period });
