@@ -11,8 +11,8 @@ const latexResume = String.raw`
     {AI \& Cloud Developer Intern}{Jun 2026 -- Present}
     {KONE}{Espoo, Finland}
     \resumeItemListStart
-        \resumeItem{Built and deployed AI agents on AWS AgentCore as part of an internal agentic AI platform}
-        \resumeItem{Developed full stack features across the platform using TypeScript and React}
+        \resumeItem{Building and deploying AI agents on AWS AgentCore as part of an internal agentic AI platform}
+        \resumeItem{Developing full stack features across the platform using TypeScript and React}
     \resumeItemListEnd
 
     \resumeSubheading

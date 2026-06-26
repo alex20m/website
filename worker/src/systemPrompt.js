@@ -98,8 +98,8 @@ Work Experience
 
 AI & Cloud Developer Intern - KONE
 Jun 2026 - Present, Espoo, Finland
-- Built and deployed AI agents on AWS AgentCore as part of an internal agentic AI platform.
-- Developed full stack features across the platform using TypeScript and React.
+- Building and deploying AI agents on AWS AgentCore as part of an internal agentic AI platform.
+- Developing full stack features across the platform using TypeScript and React.
 
 Master's Thesis Worker - KONE
 Jan 2026 - May 2026, Espoo, Finland
