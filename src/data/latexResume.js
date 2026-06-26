@@ -8,10 +8,11 @@ const latexResume = String.raw`
 \resumeSubHeadingListStart
 
     \resumeSubheading
-    {Full Stack Developer Intern}{Jun 2026 -- Present}
+    {AI \& Cloud Developer Intern}{Jun 2026 -- Present}
     {KONE}{Espoo, Finland}
     \resumeItemListStart
-        \resumeItem{Full stack development using TypeScript and React for an internal agentic AI platform}
+        \resumeItem{Built and deployed AI agents on AWS AgentCore as part of an internal agentic AI platform}
+        \resumeItem{Developed full stack features across the platform using TypeScript and React}
     \resumeItemListEnd
 
     \resumeSubheading

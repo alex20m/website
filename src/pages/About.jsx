@@ -53,9 +53,8 @@ function About() {
             </Typography>
           </Box>
           <Typography variant="body1" sx={{ maxWidth: isMobile ? 'none' : 540 }}>
-            Computer science student specializing in big data and large scale computing.
-            Currently working on agentic AI software development, with prior experience in web development, 
-            test automation and embedded systems. Interested in agentic AI and cloud technologies.
+            AI-focused developer with hands-on experience building agentic AI systems and full stack applications. 
+            Background spanning web development, data science, test automation, and embedded systems.
           </Typography>
           <Stack direction="row" flexWrap="wrap" gap={0.5} justifyContent={isMobile ? 'center' : 'flex-start'}>
             {skills.map((skill) => (

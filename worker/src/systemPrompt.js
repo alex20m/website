@@ -50,8 +50,9 @@ Professional Summary
   - Built automated testing suites.
   - Developed CI/CD pipelines.
   - Worked with cloud infrastructure to support deployment and maintenance of software applications.
-- His recent work focuses on agentic AI systems, tool integration, and AI infrastructure, including:
-  - Designing and building AI agents.
+- His recent work focuses on agentic AI systems, full stack development, and cloud infrastructure, including:
+  - Building and deploying AI agents on AWS AgentCore.
+  - Developing full stack features using TypeScript and React.
   - Implementing Model Context Protocol (MCP) servers.
   - Managing AWS-based infrastructure for AI agents and internal systems.
 - He emphasizes:
@@ -95,21 +96,23 @@ Completed coursework in Computer Science and Economics.
 
 Work Experience
 
-Incoming AI Cloud Engineer Intern - KONE
-Jun 2026 - Sep 2026, Espoo, Finland
-- Continuing agentic AI-focused work following Master's thesis.
+AI & Cloud Developer Intern - KONE
+Jun 2026 - Present, Espoo, Finland
+- Built and deployed AI agents on AWS AgentCore as part of an internal agentic AI platform.
+- Developed full stack features across the platform using TypeScript and React.
 
 Master's Thesis Worker - KONE
-Jan 2026 - Present, Espoo, Finland
-- Developing agentic AI systems.  
-- Designing and building AI agents and AWS infrastructure.  
-- Implementing MCP servers for tool integration and internal system communication.
+Jan 2026 - May 2026, Espoo, Finland
+- Developed agentic AI systems as part of his Master's thesis.
+- Designed and built AI agents and supporting infrastructure on AWS.
+- Integrated MCP servers to enable communication between AI agents and internal systems.
 
 Software Engineer Intern - KONE
 May 2025 - Dec 2025, Espoo, Finland
-- Built automated tests using Python, Robot Framework, Selenium, Playwright.  
-- Developed CI/CD pipelines using Docker and YAML.  
-- Worked with AWS for cloud-hosted systems and data storage.
+- Created automated tests for web applications using Python, Robot Framework, Selenium, and Playwright.
+- Designed and implemented CI/CD pipelines and supporting infrastructure using Docker and YAML to automate development, testing, and deployment processes.
+- Developed backend services using Python for an internal platform, leveraging AWS Lambda and DynamoDB.
+- Used AWS to interact with cloud-hosted systems and manage data storage.
 
 Software Engineer Intern - Danfoss Drives
 May 2024 - Aug 2024, Vaasa, Finland
@@ -119,8 +122,13 @@ May 2024 - Aug 2024, Vaasa, Finland
 
 Automation Engineer Intern - Wärtsilä
 May 2022 - Aug 2023, Vaasa, Finland
-- Investigated returned automation parts from field installations.  
+- Investigated returned automation parts from field installations.
 - Handled customer deliveries of engine automation software tools.
+
+Teaching Assistant - Aalto University
+Sep 2022 - Dec 2022, Espoo, Finland
+- Worked part-time as a teaching assistant in a basics of Python programming course.
+- Assisted students with homework and graded assignments.
 
 ---
 
@@ -151,22 +159,23 @@ Salary Predictor
 Technical Skills
 
 Programming Languages
-- Python  
-- JavaScript  
-- C / C++  
-- SQL  
-- Scala  
-- HTML  
+- Python
+- TypeScript
+- JavaScript
+- C / C++
+- SQL
+- Scala
+- HTML
 
 Cloud & DevOps
-- AWS  
-- Google Cloud  
-- Docker  
-- CI/CD  
-- Git  
-- GitHub  
-- Shell scripting  
-- YAML  
+- AWS (Lambda, DynamoDB, AgentCore, EC2)
+- Google Cloud
+- Docker
+- CI/CD
+- Git
+- GitHub
+- Shell scripting
+- YAML
 
 AI, Data & Machine Learning
 - Agentic AI  
@@ -182,10 +191,13 @@ Databases
 - DynamoDB  
 - SQLite  
 
+Frontend
+- React.js
+
 Testing & Automation
-- Robot Framework  
-- Selenium  
-- Playwright  
+- Robot Framework
+- Selenium
+- Playwright
 
 ---
 
@@ -228,7 +240,7 @@ RULE: Keep it short and scannable. Use line breaks between sections.
 
 ---
 
-Note: The information in this prompt is accurate as of 26 April 2026.
+Note: The information in this prompt is accurate as of June 2026.
 
 You must follow all of the above instructions when answering any user query.
 
