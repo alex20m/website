@@ -1,22 +1,25 @@
 const projects = [
   {
-    title: 'Application Tracker',
+    title: 'Job Application Tracker',
     description: 'Cross-device job application tracker with authentication, persistent storage, and PWA support. Installable on mobile and desktop.',
     technologies: ['Next.js', 'TypeScript', 'React', 'Supabase', 'Vercel', 'Tailwind CSS'],
     github: 'https://github.com/alex20m/application_tracker',
+    link: 'https://job.alexmecklin.com',
+    linkLabel: 'Visit Website',
+  },
+  {
+    title: 'Trip Planner',
+    description: 'A PWA for planning trips together, with a shared weekly calendar, email invitations, offline mode, and calendar sync via .ics feeds.',
+    technologies: ['Next.js', 'TypeScript', 'React', 'Supabase', 'Vercel', 'Tailwind CSS'],
+    github: 'https://github.com/alex20m/trip_planner',
+    link: 'https://trips.alexmecklin.com',
+    linkLabel: 'Visit Website',
   },
   {
     title: 'Personal Website',
     description: 'This website, built using Cursor AI and GitHub Copilot to explore their AI capabilities. Deployed automatically to GitHub Pages via a CI/CD pipeline using GitHub Actions.',
     technologies: ['JavaScript', 'React.js'],
     github: 'https://github.com/alex20m/website',
-  },
-  {
-    title: 'OpenClaw Experiments',
-    description: 'Experimenting with OpenClaw on an AWS EC2 instance, using OpenRouter to run LLMs.',
-    technologies: ['AWS', 'Agentic AI', 'LLMs'],
-    link: 'https://openclaw.ai/',
-    private: true,
   },
   {
     title: 'Home Assistant Automations',

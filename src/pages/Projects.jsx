@@ -57,19 +57,6 @@ function Projects() {
                   ))}
                 </Box>
                 <Box sx={{ display: 'flex', gap: 1, mt: 'auto', flexWrap: 'wrap', alignItems: 'center' }}>
-                  {project.github && (
-                    <Button
-                      size="small"
-                      startIcon={<GitHubIcon />}
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      variant="outlined"
-                      sx={{ color: '#0a1929', borderColor: '#c8d6e5', padding: '4px 12px', '&:hover': { borderColor: '#0a1929', backgroundColor: 'rgba(10,25,41,0.04)' } }}
-                    >
-                      View on GitHub
-                    </Button>
-                  )}
                   {project.link && (
                     <Button
                       size="small"
@@ -81,6 +68,19 @@ function Projects() {
                       sx={{ color: '#0a1929', borderColor: '#c8d6e5', padding: '4px 12px', '&:hover': { borderColor: '#0a1929', backgroundColor: 'rgba(10,25,41,0.04)' } }}
                     >
                       {project.linkLabel || 'Learn More'}
+                    </Button>
+                  )}
+                  {project.github && (
+                    <Button
+                      size="small"
+                      startIcon={<GitHubIcon />}
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      variant="outlined"
+                      sx={{ color: '#0a1929', borderColor: '#c8d6e5', padding: '4px 12px', '&:hover': { borderColor: '#0a1929', backgroundColor: 'rgba(10,25,41,0.04)' } }}
+                    >
+                      View on GitHub
                     </Button>
                   )}
                   {project.private && (
