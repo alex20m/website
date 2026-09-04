@@ -126,6 +126,82 @@ describe('the checks', () => {
   });
 });
 
+describe('the e2e suites', () => {
+  // Two separate jobs — not one job running two Playwright projects — so a
+  // regression that only shows up at one viewport (the mobile-nav
+  // hydration-timing bug this suite exists to catch, for one) surfaces as
+  // its own red check rather than being folded into a single "e2e" result.
+  const E2E_JOBS: Record<'e2e-desktop' | 'e2e-mobile', string> = {
+    'e2e-desktop': 'test:e2e:desktop',
+    'e2e-mobile': 'test:e2e:mobile',
+  };
+
+  it('runs both a desktop and a mobile e2e job in both workflows', () => {
+    for (const [file, workflow] of Object.entries(workflows)) {
+      for (const jobId of Object.keys(E2E_JOBS)) {
+        expect(Object.keys(workflow.jobs), `${file} must define a "${jobId}" job`).toContain(jobId);
+      }
+    }
+  });
+
+  it('installs from the lockfile and installs Chromium before running each suite', () => {
+    for (const [file, workflow] of Object.entries(workflows)) {
+      for (const jobId of Object.keys(E2E_JOBS)) {
+        const commands = commandsOf(workflow, jobId);
+        expect(commands, `${file}:${jobId} must install from the lockfile`).toContain('npm ci');
+        expect(commands, `${file}:${jobId} must not resolve fresh versions`).not.toMatch(/npm install\b/);
+        expect(commands, `${file}:${jobId} must install a matching Chromium build`).toMatch(
+          /playwright install .*chromium/,
+        );
+      }
+    }
+  });
+
+  it('runs the desktop job against the desktop project and the mobile job against the mobile project', () => {
+    // The one bug this test exists to catch: the two job bodies swapped, so
+    // "e2e-desktop" silently runs the mobile suite (or both run the same
+    // one) and a viewport-specific regression stops being caught by the job
+    // named after it.
+    for (const [file, workflow] of Object.entries(workflows)) {
+      for (const [jobId, script] of Object.entries(E2E_JOBS)) {
+        const commands = commandsOf(workflow, jobId);
+        expect(commands, `${file}:${jobId} must run "npm run ${script}"`).toContain(`npm run ${script}`);
+        for (const otherScript of Object.values(E2E_JOBS)) {
+          if (otherScript === script) continue;
+          expect(commands, `${file}:${jobId} must not also run "npm run ${otherScript}"`).not.toContain(
+            `npm run ${otherScript}`,
+          );
+        }
+      }
+    }
+  });
+
+  it('uploads the Playwright report for a failed run so a red check is debuggable', () => {
+    for (const [file, workflow] of Object.entries(workflows)) {
+      for (const jobId of Object.keys(E2E_JOBS)) {
+        const uploadStep = (jobOf(workflow, jobId).steps ?? []).find((step) =>
+          /upload-artifact/.test((step as { uses?: string }).uses ?? ''),
+        );
+        expect(uploadStep, `${file}:${jobId} must upload a report on failure`).toBeDefined();
+        expect(uploadStep?.if, `${file}:${jobId}'s report upload must be gated on failure`).toBe(
+          '${{ failure() }}',
+        );
+      }
+    }
+  });
+
+  it('keeps the e2e jobs independent of `verify` so all checks report in one run', () => {
+    // Gating e2e behind `verify` would mean a lint failure hides whatever the
+    // e2e suites would have found, defeating the "report every failing check
+    // in one run" goal the `verify` job itself is held to above.
+    for (const [file, workflow] of Object.entries(workflows)) {
+      for (const jobId of Object.keys(E2E_JOBS)) {
+        expect(jobOf(workflow, jobId).needs, `${file}:${jobId} must not depend on verify`).toBeUndefined();
+      }
+    }
+  });
+});
+
 describe('deploying', () => {
   it('recognises a job that would deploy the Next.js app to Vercel', () => {
     // Matches nothing by design, so it would pass vacuously if the detector
