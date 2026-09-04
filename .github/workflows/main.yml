@@ -61,6 +61,69 @@ jobs:
         if: ${{ !cancelled() }}
         run: npm run build
 
+  # Mirrors pull-request.yml's e2e-desktop/e2e-mobile: same two independent
+  # jobs, same reasoning (a viewport-specific regression gets its own check;
+  # the two run in parallel with `verify`), kept identical so a red check
+  # here means something genuinely slipped past the pull request gate rather
+  # than the two workflows having quietly drifted apart.
+  e2e-desktop:
+    name: E2E (desktop)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run desktop e2e suite
+        run: npm run test:e2e:desktop
+
+      - name: Upload Playwright report (desktop)
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-desktop
+          path: playwright-report/
+          retention-days: 14
+
+  e2e-mobile:
+    name: E2E (mobile)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run mobile e2e suite
+        run: npm run test:e2e:mobile
+
+      - name: Upload Playwright report (mobile)
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-mobile
+          path: playwright-report/
+          retention-days: 14
+
   deploy-worker:
     name: Deploy chat worker
     needs: verify
