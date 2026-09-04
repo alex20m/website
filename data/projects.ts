@@ -14,6 +14,8 @@ const projects: Project[] = [
     description: 'Books group fitness classes at Elixia (SATS Group) the moment booking opens, using QStash to wake up and book at the exact release millisecond.',
     technologies: ['Next.js', 'TypeScript', 'React', 'Neon', 'Vercel', 'QStash'],
     github: 'https://github.com/alex20m/elixia_booker',
+    link: 'https://elixia.alexmecklin.com',
+    linkLabel: 'Visit Website',
   },
   {
     title: 'Job Application Tracker',
