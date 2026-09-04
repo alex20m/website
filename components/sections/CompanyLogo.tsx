@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { companyLogoName } from '@/lib/companyLogo';
 
@@ -11,6 +11,21 @@ import { companyLogoName } from '@/lib/companyLogo';
  */
 export default function CompanyLogo({ company }: { company: string }) {
   const [failed, setFailed] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    // The <img> already exists in the server-rendered HTML, so the browser
+    // can start — and finish — loading it before this component hydrates
+    // and `onError` below is wired up. Resource `error` events don't bubble
+    // and never replay, so a fast 404 that beats hydration is otherwise lost
+    // entirely, leaving a permanently broken image. This catches that case
+    // by checking the already-settled state once mounted.
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth === 0) {
+      setFailed(true);
+    }
+  }, []);
+
   if (failed) return null;
 
   return (
@@ -30,6 +45,7 @@ export default function CompanyLogo({ company }: { company: string }) {
     >
       <Box
         component="img"
+        ref={imgRef}
         src={`/logos/${companyLogoName(company)}.png`}
         alt={company}
         onError={() => setFailed(true)}
