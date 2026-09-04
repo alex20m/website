@@ -83,7 +83,7 @@ export default {
           'X-Title': 'Alex Mecklin Portfolio Chat',
         },
         body: JSON.stringify({
-          model: 'openrouter/free',
+          model: 'thinkingmachines/inkling-small:free',
           stream: true,
           messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...trimmedMessages],
         }),
