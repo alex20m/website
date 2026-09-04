@@ -65,11 +65,13 @@ export default async function OpengraphImage() {
             justifyContent: 'center',
           }}
         >
-          <div style={{ display: 'flex', fontSize: 60, fontWeight: 700, color: '#0a1929' }}>{profile.name}</div>
-          <div style={{ display: 'flex', fontSize: 30, color: '#1565c0', marginTop: 14 }}>{profile.title}</div>
-          <div style={{ display: 'flex', fontSize: 24, color: '#4a5568', marginTop: 26, lineHeight: 1.5 }}>
-            {profile.bio}
-          </div>
+          {/* No bio here: at the sizes platforms actually render this image
+              (a phone message bubble can be under 300px wide), a full
+              sentence shrinks past legible while name/title still hold up.
+              The bio is still in og:description for platforms that render
+              that as text. */}
+          <div style={{ display: 'flex', fontSize: 68, fontWeight: 700, color: '#0a1929' }}>{profile.name}</div>
+          <div style={{ display: 'flex', fontSize: 36, color: '#1565c0', marginTop: 18 }}>{profile.title}</div>
         </div>
       </div>
     ),
