@@ -9,7 +9,7 @@ interface ChatMessage {
   content: string;
 }
 
-const ALLOWED_ORIGINS = ['https://alexmecklin.com', 'http://localhost:3000'];
+const ALLOWED_ORIGINS = ['https://alexmecklin.com', 'https://www.alexmecklin.com', 'http://localhost:3000'];
 
 function getCorsOrigin(request: Request): string | null {
   const origin = request.headers.get('Origin');

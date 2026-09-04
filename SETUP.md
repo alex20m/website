@@ -132,7 +132,10 @@ That token needs **Workers Scripts: Edit** on the account the worker lives in
 — narrower than a full account token. If the secret is not set, the job
 notices and skips the deploy with a notice instead of failing.
 
-Verify the worker is live and enforcing its CORS allowlist:
+Verify the worker is live and enforcing its CORS allowlist. The site is
+reachable at both the apex domain and `www.`, and both are real browser
+origins visitors land on, so both need to be checked (and both are in
+`ALLOWED_ORIGINS` in `worker/src/index.ts`):
 
 ```bash
 curl -i -X OPTIONS https://portfolio-chat-worker.alex-mecklin.workers.dev \
@@ -140,14 +143,18 @@ curl -i -X OPTIONS https://portfolio-chat-worker.alex-mecklin.workers.dev \
 # expect: 200, with Access-Control-Allow-Origin echoing that origin
 
 curl -i -X OPTIONS https://portfolio-chat-worker.alex-mecklin.workers.dev \
+  -H "Origin: https://www.alexmecklin.com"
+# expect: 200, with Access-Control-Allow-Origin echoing that origin
+
+curl -i -X OPTIONS https://portfolio-chat-worker.alex-mecklin.workers.dev \
   -H "Origin: https://evil.example"
 # expect: 403 — origins outside ALLOWED_ORIGINS in worker/src/index.ts are refused
 ```
 
-If the website's own domain ever changes, `ALLOWED_ORIGINS` in
-`worker/src/index.ts` has to change with it — the worker will otherwise
-refuse the site's own chat requests with a CORS 403 that has nothing to do
-with Cloudflare being down.
+If the website's own domain ever changes — including adding or dropping a
+`www` alias — `ALLOWED_ORIGINS` in `worker/src/index.ts` has to change with
+it — the worker will otherwise refuse the site's own chat requests with a
+CORS 403 that has nothing to do with Cloudflare being down.
 
 ## 6. Web analytics
 
