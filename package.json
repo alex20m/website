@@ -1,40 +1,53 @@
 {
-  "dependencies": {
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.3",
-    "@mui/icons-material": "^5.15.11",
-    "@mui/material": "^5.15.11",
-    "@mui/styled-engine": "^5.15.11",
-    "framer-motion": "^12.4.7",
-    "linkify-react": "^4.3.2",
-    "linkifyjs": "^4.3.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
   "name": "website",
   "version": "1.0.0",
+  "private": true,
+  "description": "Alex Mecklin's personal portfolio website.",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p worker/tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.4.0",
+    "@mui/material": "^9.4.0",
+    "@mui/material-nextjs": "^9.4.0",
+    "framer-motion": "^13.2.0",
+    "linkify-react": "^4.3.3",
+    "linkifyjs": "^4.3.3",
+    "next": "^16.3.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260904.1",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.1",
+    "jsdom": "^30.0.1",
+    "typescript": "^5.7.2",
+    "vitest": "^5.0.0",
+    "wrangler": "^4.129.0",
+    "yaml": "^2.9.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alex20m/website.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "homepage": "https://alexmecklin.com",
   "bugs": {
     "url": "https://github.com/alex20m/website/issues"
   },
-  "description": "",
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.7.0",
-    "gh-pages": "^6.3.0",
-    "vite": "^6.4.2"
-  },
-  "homepage": "https://alexmecklin.com"
+  "license": "ISC"
 }

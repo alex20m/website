@@ -1,164 +1,157 @@
-# Alex Mecklin - Portfolio Website
+# Alex Mecklin — Portfolio Website
 
-Professional portfolio website showcasing my experience, projects, and CV. Built with a focus on recruiter accessibility - clean design, intuitive navigation, mobile-optimized layout, and AI-powered chat assistant.
+Personal portfolio site: experience, projects, CV, and an AI chat assistant
+that answers questions about me. Built with a focus on recruiter
+accessibility — clean design, intuitive navigation, mobile-optimized layout.
 
-🔗 **Live Site:** [alexmecklin.com](https://alexmecklin.com)
+🔗 **Live site:** [alexmecklin.com](https://alexmecklin.com)
+
+**New here or setting this up from scratch?** Read [`AGENTS.md`](AGENTS.md)
+first — it is the standing contract this repo's agents (human-directed or
+not) work under: branch and PR policy, the test bar, and where CI stops and
+Vercel's own deploy takes over. [`SETUP.md`](SETUP.md) has the actual
+provisioning steps.
 
 ## Overview
 
-Single-page React application with smooth scrolling navigation between sections:
-- **About** - Introduction with skills overview
-- **Experience** - Timeline view of work history with company logos
-- **CV** - Downloadable resume with LaTeX parsing
-- **Projects** - Grid showcase of personal projects
-- **Contact** - Quick access to email, phone, LinkedIn, and GitHub
-- **Chat** - AI assistant to answer questions about me (powered by Cloudflare Workers + OpenRouter)
+A single-page Next.js app with smooth-scrolling navigation between sections:
+
+- **About** — introduction with a skills overview
+- **Ask AI** — a chat assistant that answers questions about my background,
+  backed by a separate Cloudflare Worker
+- **Experience** — timeline view of work history with company logos, parsed
+  straight out of my LaTeX CV so the two never drift apart
+- **Projects** — grid of personal projects
+- **CV** — downloadable resume
+- **Contact** — email, phone, LinkedIn, GitHub
 
 ## Tech Stack
 
 ### Frontend
-- **React 18.2.0** - UI framework
-- **Vite** - Build tool and dev server
-- **Material-UI v5** - Component library (Typography, Box, Button, Grid, AppBar, etc.)
-- **Framer Motion** - Smooth entrance animations
-- **Emotion** - CSS-in-JS styling
 
-### Backend (AI Chat)
-- **Cloudflare Workers** - Serverless edge compute for API proxy
-- **OpenRouter API** - Free LLM inference (model: `openrouter/free`)
-- **Server-Sent Events (SSE)** - Real-time streaming responses
+- **Next.js (App Router) + TypeScript** — framework and language
+- **React 19**
+- **MUI (Material UI) v9** — components and theming, with
+  `@mui/material-nextjs` for App Router SSR
+- **Framer Motion** — entrance animations
+- **Vercel** — hosting, with automatic deploys from this repo's Git
+  integration: every push gets a preview, every merge to `main` goes to
+  production
 
-## Key Features
+### Backend (AI chat)
 
-### Design
-- Navy blue professional theme (`#0a1929`)
-- Consistent 3-level typography system (h2/h5/body1) with responsive scaling
-- Always-visible navigation bar
-- Smooth scroll behavior with proper offsets
-
-### Mobile Optimization
-- Responsive breakpoints (xs: <600px, md: ≥900px)
-- Collapsible experience descriptions on mobile (100 char limit)
-- Compact spacing and font sizes for small screens
-- Hamburger menu navigation
-
-### Experience Section
-- Vertical timeline layout with visual dots
-- Dynamic company logo loading from `/assets/logos/`
-- Automatic LaTeX CV parsing from `data/latexResume.js`
-- Show more/less functionality on mobile
-
-### AI Chat Assistant
-- Conversational interface to answer questions about my background
-- Powered by Cloudflare Workers edge compute
-- Real-time streaming responses via SSE
-- Context-aware system prompt with factual information
-- Mobile-optimized chat UI with message history
-- CORS-enabled API for secure cross-origin requests
+- **Cloudflare Workers** (`worker/`, TypeScript) — a small edge API that
+  proxies chat requests. Deployed separately from the website itself, since
+  it's Cloudflare infrastructure rather than a Vercel one — see
+  [Deployment](#deployment).
+- **OpenRouter API** — LLM inference
+- **Server-Sent Events (SSE)** — streamed responses
 
 ## Project Structure
 
 ```
-src/
-├── App.jsx                    # Theme provider & routing
-├── index.jsx                  # Entry point
-├── components/
-│   └── Navbar.jsx             # Fixed navigation with mobile drawer
-├── pages/
-│   ├── About.jsx              # Hero with profile photo & skills
-│   ├── Experience.jsx         # Timeline with logo components
-│   ├── CV.jsx                 # CV download button
-│   ├── Projects.jsx           # Project cards with tech tags
-│   ├── Contact.jsx            # Clickable contact cards
-│   └── Chat.jsx               # AI chat interface with SSE streaming
-├── hooks/
-│   └── useIsMobile.js         # Responsive breakpoint hook
-├── data/
-│   ├── projects.js            # Project cards data
-│   ├── personal.jsx           # Contact info & CV file reference
-│   └── latexResume.js         # Raw LaTeX CV content
-└── assets/
-    ├── profile.png            # Profile photo
-    └── logos/                 # Company logo images
+app/                          # Next.js App Router
+├── layout.tsx                 # Root layout, metadata, MUI SSR cache provider
+└── page.tsx                   # Entry point; renders PortfolioApp
+components/
+├── Navbar.tsx                  # Fixed navigation with mobile drawer
+├── Section.tsx                 # Section wrapper + divider used between them
+├── PortfolioApp.tsx             # Theme setup and page layout
+└── sections/
+    ├── About.tsx, Experience.tsx, Projects.tsx, CV.tsx, Contact.tsx, Chat.tsx
+    └── CompanyLogo.tsx          # Renders a logo from public/logos/, or nothing
+hooks/
+└── useIsMobile.ts               # Responsive breakpoint hook
+data/
+├── projects.ts, personal.tsx    # Project cards, contact info, CV reference
+└── latexResume.ts               # Raw LaTeX CV content
+lib/                            # Pure logic, unit-tested independently of the UI
+├── parseLatexExperience.ts      # Extracts Experience entries out of the LaTeX CV
+├── truncateDescription.ts       # Word-boundary truncation for the mobile view
+├── companyLogo.ts               # Company name -> logo filename
+└── chatStream.ts                # SSE chunk parsing for the chat stream
+tests/                          # Vitest — the pure `lib/` functions, the page
+                                 # render, and the CI pipeline's own shape
+public/                         # Static assets: favicons, profile photo, CV,
+                                 # company logos
 
-worker/                        # Cloudflare Worker (backend)
-├── src/
-│   ├── index.js               # API handler for chat requests
-│   └── systemPrompt.js        # AI assistant instructions & context
-└── wrangler.toml              # Cloudflare deployment config
+worker/                         # Cloudflare Worker (chat backend), deployed
+├── src/index.ts                 # separately — see Deployment below
+├── src/systemPrompt.ts
+└── wrangler.toml
 ```
 
 ## Local Development
 
-### Frontend
+### Website
+
 ```bash
-# Install dependencies
 npm install
-
-# Start dev server (opens localhost:5173)
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build locally
-npm run preview
+npm run dev          # http://localhost:3000
 ```
 
-### Cloudflare Worker (Chat Backend)
 ```bash
-# Navigate to worker directory
-cd worker
-
-# Start local dev server
-npx wrangler dev
-
-# Deploy to Cloudflare
-npx wrangler deploy
+npm run lint && npm run typecheck && npm test && npm run build
 ```
 
-**Required environment variable:**
-- `OPENROUTER_API_KEY` - Set in Cloudflare dashboard under Worker settings → Variables
+This is exactly what CI runs on every pull request and every push to `main`.
+
+### Chat backend (Cloudflare Worker)
+
+```bash
+cd worker
+npx wrangler dev
+```
+
+**Required environment variable:** `OPENROUTER_API_KEY`, set in the Cloudflare
+dashboard under the worker's Settings → Variables (not in this repo, and not
+in GitHub — see [`SETUP.md`](SETUP.md)).
 
 ## Deployment
 
-Automatic CI/CD pipeline via GitHub Actions — triggers on every push or merge to `main`.
+Two independent, non-competing deploy paths:
 
-**Workflow structure:**
+- **The website** deploys via **Vercel's Git integration** — connect the repo
+  once (see [`SETUP.md`](SETUP.md)) and every push gets a preview, every merge
+  to `main` goes to production automatically. Nothing in
+  `.github/workflows/` deploys it; a workflow that also ran `vercel deploy`
+  would just race the platform's own deploy and ship everything twice.
+- **The chat worker** (`worker/`) is Cloudflare infrastructure that Vercel
+  doesn't touch, so it has its own deploy job: `main.yml`'s `deploy-worker`
+  job, which runs only after the `verify` job (lint, typecheck, test, build)
+  passes, and only if the `CLOUDFLARE_API_TOKEN` repository secret is set —
+  otherwise it skips with a notice rather than failing.
+
+### CI
+
 ```
 .github/workflows/
-└── ci-cd.yml          # Build and deploy pipeline
+├── pull-request.yml   # lint, typecheck, test, build — every pull request
+└── main.yml           # the same checks on push to main, plus the worker deploy
 ```
 
-**Pipeline steps:**
-1. `deploy-worker` — deploys Cloudflare Worker with `wrangler deploy` (requires `CLOUDFLARE_API_TOKEN` secret)
-2. `build` — runs `npm ci` + `npm run build`, uploads `build/` as a workflow artifact
-3. `deploy` — deploys the artifact to GitHub Pages via [`actions/deploy-pages`](https://github.com/actions/deploy-pages)
+`tests/pipeline.test.ts` asserts on the shape of both workflows (installs from
+the lockfile, runs all four checks, never deploys the Next.js app itself) so
+that shape can't quietly regress.
 
-Custom domain is preserved via `public/CNAME`, which Vite copies into `build/` automatically.
-
-**Required GitHub Secrets:**
-- `CLOUDFLARE_API_TOKEN` - API token with Workers edit permissions
-
-**Cloudflare Worker Environment:**
-- `OPENROUTER_API_KEY` - Set in Cloudflare dashboard (not in GitHub)
+Custom domain DNS lives in Cloudflare, pointed at Vercel with the proxy
+(orange cloud) off — see [`SETUP.md`](SETUP.md) for the exact records.
 
 ## Design Principles
 
-**Typography System:**
-- Section headers: `h2` (2.2rem desktop / 1.6rem mobile)
-- Subsection headers: `h5` (1.4rem desktop / 1.1rem mobile)  
-- Body text: `body1` (0.95rem desktop / 0.85rem mobile)
-- No font size overrides - all sizing controlled via theme
+**Typography:**
 
-**Color Palette:**
+- Section headers: `h2` (2.2rem desktop / 1.6rem mobile)
+- Subsection headers: `h5` (1.4rem desktop / 1.1rem mobile)
+- Body text: `body1` (0.95rem desktop / 0.85rem mobile)
+- All sizing controlled via the MUI theme — no ad hoc font-size overrides
+
+**Color palette:**
+
 - Primary: `#0a1929` (navy)
 - Accent: `#1565c0` (blue)
 - Text: `#4a5568` (gray)
 - Backgrounds: `#f8f9fb` / `#ffffff`
 
-**Responsive Strategy:**
-- Mobile-first collapsible content
-- Grid layouts adapt to single column
-- Icons and spacing scale down proportionally
-- Desktop maintains comfortable reading sizes
+**Responsive strategy:** mobile-first collapsible content, single-column grid
+layouts on small screens, icons and spacing scaling down proportionally.
