@@ -22,6 +22,7 @@ export default function Projects() {
               style={{ height: '100%' }}
             >
               <Box
+                data-testid={`project-card-${project.title}`}
                 sx={{
                   p: isMobile ? 2 : 3,
                   height: '100%',

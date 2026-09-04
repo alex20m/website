@@ -10,7 +10,11 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit && tsc --noEmit -p worker/tsconfig.json",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:desktop": "playwright test --project=desktop",
+    "test:e2e:mobile": "playwright test --project=mobile",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -27,6 +31,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260904.1",
+    "@playwright/test": "^1.62.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@types/node": "^22.10.2",

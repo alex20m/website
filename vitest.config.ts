@@ -18,6 +18,10 @@ export default defineConfig({
     // environment broke a test that never touches the DOM.
     environment: 'node',
     setupFiles: ['./vitest.setup.ts'],
-    exclude: ['worker/**', 'node_modules/**'],
+    // e2e/** holds Playwright specs (run via `npm run test:e2e`, not vitest)
+    // — Playwright's own test files also match vitest's default `*.spec.ts`
+    // glob, so without this exclude `npm test` tries to execute them here
+    // and fails immediately on `test.describe()` outside a Playwright runner.
+    exclude: ['worker/**', 'node_modules/**', 'e2e/**'],
   },
 });
