@@ -33,7 +33,7 @@ const projects: Project[] = [
   },
   {
     title: 'Personal Website',
-    description: 'This website, built using Cursor AI and GitHub Copilot to explore their AI capabilities. Deployed automatically via Vercel from every push to main.',
+    description: 'This personal portfolio website showcasing my projects and experience.',
     technologies: ['TypeScript', 'Next.js', 'React'],
     github: 'https://github.com/alex20m/website',
   },
