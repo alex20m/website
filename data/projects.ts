@@ -1,4 +1,14 @@
-const projects = [
+export interface Project {
+  title: string;
+  description: string;
+  technologies: string[];
+  github?: string;
+  link?: string;
+  linkLabel?: string;
+  private?: boolean;
+}
+
+const projects: Project[] = [
   {
     title: 'Job Application Tracker',
     description: 'Cross-device job application tracker with authentication, persistent storage, and PWA support. Installable on mobile and desktop.',
@@ -17,8 +27,8 @@ const projects = [
   },
   {
     title: 'Personal Website',
-    description: 'This website, built using Cursor AI and GitHub Copilot to explore their AI capabilities. Deployed automatically to GitHub Pages via a CI/CD pipeline using GitHub Actions.',
-    technologies: ['JavaScript', 'React.js'],
+    description: 'This website, built using Cursor AI and GitHub Copilot to explore their AI capabilities. Deployed automatically via Vercel from every push to main.',
+    technologies: ['TypeScript', 'Next.js', 'React'],
     github: 'https://github.com/alex20m/website',
   },
   {

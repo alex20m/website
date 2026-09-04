@@ -1,15 +1,17 @@
-import { Typography, Box, Link, Grid } from '@mui/material';
-import useIsMobile from '../hooks/useIsMobile';
-import { contacts } from '../data/personal.jsx';
+'use client';
 
-function Contact() {
+import { Typography, Box, Link, Grid } from '@mui/material';
+import useIsMobile from '@/hooks/useIsMobile';
+import { contacts } from '@/data/personal';
+
+export default function Contact() {
   const isMobile = useIsMobile();
   return (
     <Box sx={{ pb: 4 }}>
       <Typography variant="h2" sx={{ mb: isMobile ? 3 : 5, fontWeight: 'bold', color: '#0a1929' }}>Contact</Typography>
       <Grid container spacing={isMobile ? 1.5 : 2}>
-        {contacts.map((c, i) => (
-          <Grid item xs={12} sm={6} key={i}>
+        {contacts.map((c) => (
+          <Grid key={c.label} size={{ xs: 12, sm: 6 }}>
             <Link
               href={c.href}
               target={c.external ? '_blank' : undefined}
@@ -60,5 +62,3 @@ function Contact() {
     </Box>
   );
 }
-
-export default Contact;

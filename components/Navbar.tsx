@@ -1,6 +1,8 @@
+'use client';
+
 import { AppBar, Toolbar, Button, Box, Typography, IconButton, Drawer, List, ListItemButton, ListItemText } from '@mui/material';
 import { useState } from 'react';
-import useIsMobile from '../hooks/useIsMobile';
+import useIsMobile from '@/hooks/useIsMobile';
 import MenuIcon from '@mui/icons-material/Menu';
 
 const navItems = [
@@ -12,11 +14,11 @@ const navItems = [
   { label: 'Contact', id: 'contact' },
 ];
 
-function Navbar() {
+export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const isMobile = useIsMobile();
 
-  const scrollToSection = (id) => {
+  const scrollToSection = (id: string) => {
     setDrawerOpen(false);
     const element = document.getElementById(id);
     if (element) {
@@ -67,6 +69,7 @@ function Navbar() {
           <IconButton
             sx={{ display: isMobile ? 'flex' : 'none', color: '#fff' }}
             onClick={() => setDrawerOpen(true)}
+            aria-label="Open navigation menu"
           >
             <MenuIcon />
           </IconButton>
@@ -78,12 +81,12 @@ function Navbar() {
         anchor="right"
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        PaperProps={{ sx: { width: 220, backgroundColor: '#0a1929', color: '#fff' } }}
+        slotProps={{ paper: { sx: { width: 220, backgroundColor: '#0a1929', color: '#fff' } } }}
       >
         <List sx={{ pt: 4 }}>
           {navItems.map((item) => (
             <ListItemButton key={item.id} onClick={() => scrollToSection(item.id)}>
-              <ListItemText primary={item.label} primaryTypographyProps={{ fontWeight: 500, color: '#fff' }} />
+              <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontWeight: 500, color: '#fff' } } }} />
             </ListItemButton>
           ))}
         </List>
@@ -91,5 +94,3 @@ function Navbar() {
     </>
   );
 }
-
-export default Navbar;

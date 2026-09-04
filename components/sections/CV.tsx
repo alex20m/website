@@ -1,10 +1,12 @@
+'use client';
+
 import { Typography, Box, Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import useIsMobile from '../hooks/useIsMobile';
+import useIsMobile from '@/hooks/useIsMobile';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import { cv } from '../data/personal.jsx';
+import { cv } from '@/data/personal';
 
-function CV() {
+export default function CV() {
   const isMobile = useIsMobile();
   return (
     <Box
@@ -41,5 +43,3 @@ function CV() {
     </Box>
   );
 }
-
-export default CV;

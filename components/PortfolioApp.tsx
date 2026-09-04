@@ -1,42 +1,17 @@
-import React from 'react';
-import Navbar from './components/Navbar';
-import About from './pages/About';
-import Projects from './pages/Projects';
-import Chat from './pages/Chat';
-import CV from './pages/CV';
-import Contact from './pages/Contact';
-import Experience from './pages/Experience';
-import { ThemeProvider, createTheme, CssBaseline, Box, Container } from '@mui/material';
-import useIsMobile from './hooks/useIsMobile';
+'use client';
 
-const SectionDivider = () => (
-  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, py: 0 }}>
-    <Box sx={{ flex: 1, height: '2px', background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.3))' }} />
-    <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: 'rgba(0,0,0,0.35)' }} />
-    <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: 'rgba(0,0,0,0.35)' }} />
-    <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: 'rgba(0,0,0,0.35)' }} />
-    <Box sx={{ flex: 1, height: '2px', background: 'linear-gradient(to left, transparent, rgba(0,0,0,0.3))' }} />
-  </Box>
-);
+import Navbar from '@/components/Navbar';
+import { Section, SectionDivider } from '@/components/Section';
+import About from '@/components/sections/About';
+import Projects from '@/components/sections/Projects';
+import Chat from '@/components/sections/Chat';
+import CV from '@/components/sections/CV';
+import Contact from '@/components/sections/Contact';
+import Experience from '@/components/sections/Experience';
+import { ThemeProvider, createTheme, CssBaseline, Box } from '@mui/material';
+import useIsMobile from '@/hooks/useIsMobile';
 
-const Section = ({ id, children, bg }) => {
-  const isMobile = useIsMobile();
-  return (
-    <Box
-      component="section"
-      id={id}
-      sx={{
-        scrollMarginTop: '80px',
-        py: isMobile ? 6 : 8,
-        backgroundColor: bg || 'transparent',
-      }}
-    >
-      <Container maxWidth="md">{children}</Container>
-    </Box>
-  );
-};
-
-function App() {
+export default function PortfolioApp() {
   const isMobile = useIsMobile();
 
   const theme = createTheme({
@@ -89,5 +64,3 @@ function App() {
     </ThemeProvider>
   );
 }
-
-export default App;

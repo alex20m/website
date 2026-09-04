@@ -2,19 +2,22 @@
 /node_modules
 /worker/node_modules
 
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
 # Production build output
 /build
 /dist
 
-# Vite cache
-/.vite
-
 # Environment files
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env*.local
+
+# Vercel
+.vercel
 
 # Wrangler
 /worker/.wrangler
@@ -38,4 +41,4 @@ yarn-error.log*
 .Spotlight-V100
 .Trashes
 ehthumbs.db
-Thumbs.db 
+Thumbs.db

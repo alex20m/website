@@ -1,9 +1,10 @@
+'use client';
+
 import { Typography, Box, Avatar, Chip, Stack, Button, IconButton, Tooltip } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { motion } from 'framer-motion';
-import ProfilePhoto from '../assets/profile.png';
-import useIsMobile from '../hooks/useIsMobile';
-import { contacts, cv } from '../data/personal.jsx';
+import useIsMobile from '@/hooks/useIsMobile';
+import { contacts, cv } from '@/data/personal';
 
 const skills = [
   'Agentic AI',
@@ -12,10 +13,10 @@ const skills = [
   'CI/CD',
   'Data Science',
   'Machine Learning',
-  'Test Automation'
+  'Test Automation',
 ];
 
-function About() {
+export default function About() {
   const isMobile = useIsMobile();
   return (
     <Box
@@ -30,7 +31,7 @@ function About() {
     >
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
         <Avatar
-          src={ProfilePhoto}
+          src="/profile.png"
           alt="Alex Mecklin"
           sx={{
             width: isMobile ? 120 : 180,
@@ -43,7 +44,7 @@ function About() {
       </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}>
-        <Stack sx={{ textAlign: isMobile ? 'center' : 'left' }} gap={2}>
+        <Stack sx={{ textAlign: isMobile ? 'center' : 'left', gap: 2 }}>
           <Box>
             <Typography variant="h2" sx={{ color: '#0a1929', mb: 0.5 }}>
               Alex Mecklin
@@ -53,10 +54,13 @@ function About() {
             </Typography>
           </Box>
           <Typography variant="body1" sx={{ maxWidth: isMobile ? 'none' : 540 }}>
-            AI-focused developer with hands-on experience building agentic AI systems and full stack applications. 
+            AI-focused developer with hands-on experience building agentic AI systems and full stack applications.
             Background spanning web development, data science, test automation, and embedded systems.
           </Typography>
-          <Stack direction="row" flexWrap="wrap" gap={0.5} justifyContent={isMobile ? 'center' : 'flex-start'}>
+          <Stack
+            direction="row"
+            sx={{ flexWrap: 'wrap', gap: 0.5, justifyContent: isMobile ? 'center' : 'flex-start' }}
+          >
             {skills.map((skill) => (
               <Chip
                 key={skill}
@@ -69,7 +73,10 @@ function About() {
               />
             ))}
           </Stack>
-          <Stack direction="row" alignItems="center" gap={isMobile ? 0.5 : 1} justifyContent={isMobile ? 'center' : 'flex-start'}>
+          <Stack
+            direction="row"
+            sx={{ alignItems: 'center', gap: isMobile ? 0.5 : 1, justifyContent: isMobile ? 'center' : 'flex-start' }}
+          >
             <Button
               variant="outlined"
               href={cv.file}
@@ -106,5 +113,3 @@ function About() {
     </Box>
   );
 }
-
-export default About;

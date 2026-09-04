@@ -1,11 +1,14 @@
-import { useState, useEffect, useRef } from 'react';
+'use client';
+
+import { useState, useEffect, useRef, type ReactNode, type KeyboardEvent } from 'react';
 import { Typography, Box, TextField, IconButton, Stack, Paper, Chip } from '@mui/material';
 import Linkify from 'linkify-react';
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutlined';
 import { motion } from 'framer-motion';
-import useIsMobile from '../hooks/useIsMobile';
+import useIsMobile from '@/hooks/useIsMobile';
+import { parseSseChunk } from '@/lib/chatStream';
 
 const WORKER_URL = 'https://portfolio-chat-worker.alex-mecklin.workers.dev';
 
@@ -15,8 +18,13 @@ const SUGGESTIONS = [
   'Tell me about his experience',
 ];
 
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 const linkifyOptions = {
-  render: ({ attributes, content }) => {
+  render: ({ attributes, content }: { attributes: Record<string, string>; content: string }) => {
     const { href, ...props } = attributes;
     return (
       <a
@@ -34,7 +42,7 @@ const linkifyOptions = {
 
 const hashLinkRegex = /(#[a-z]+)/g;
 
-const renderWithHashLinks = (text) => {
+function renderWithHashLinks(text: string): ReactNode[] {
   const parts = text.split(hashLinkRegex);
   return parts.map((part, i) => {
     if (part.match(hashLinkRegex)) {
@@ -57,27 +65,31 @@ const renderWithHashLinks = (text) => {
         </a>
       );
     }
-    return <Linkify key={i} options={linkifyOptions}>{part}</Linkify>;
+    return (
+      <Linkify key={i} options={linkifyOptions}>
+        {part}
+      </Linkify>
+    );
   });
-};
+}
 
-function Chat() {
+export default function Chat() {
   const isMobile = useIsMobile();
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages, loading]);
 
-  const sendMessage = async (text) => {
+  const sendMessage = async (text?: string) => {
     const userMessage = text || input.trim();
     if (!userMessage || loading) return;
 
-    const newMessages = [...messages, { role: 'user', content: userMessage }];
+    const newMessages: ChatMessage[] = [...messages, { role: 'user', content: userMessage }];
     setMessages(newMessages);
     setInput('');
     setLoading(true);
@@ -101,30 +113,16 @@ function Chat() {
       const decoder = new TextDecoder();
       let buffer = '';
       let firstToken = true;
+      let streamDone = false;
 
-      while (true) {
+      while (!streamDone) {
         const { done, value } = await reader.read();
         if (done) break;
 
         buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop();
-
-        let chunkContent = '';
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const data = line.slice(6).trim();
-          if (data === '[DONE]') break;
-          try {
-            const json = JSON.parse(data);
-            const token = json.choices?.[0]?.delta?.content;
-            if (token) {
-              chunkContent += token;
-            }
-          } catch {
-            // ignore malformed SSE lines
-          }
-        }
+        const { text: chunkContent, remainder, done: sseDone } = parseSseChunk(buffer);
+        buffer = remainder;
+        streamDone = sseDone;
 
         if (chunkContent) {
           if (firstToken) {
@@ -135,10 +133,8 @@ function Chat() {
           } else {
             setMessages((prev) => {
               const updated = [...prev];
-              updated[updated.length - 1] = {
-                ...updated[updated.length - 1],
-                content: updated[updated.length - 1].content + chunkContent,
-              };
+              const last = updated[updated.length - 1];
+              if (last) updated[updated.length - 1] = { ...last, content: last.content + chunkContent };
               return updated;
             });
           }
@@ -156,7 +152,7 @@ function Chat() {
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
@@ -203,7 +199,7 @@ function Chat() {
               <Typography variant="body1" sx={{ color: '#8a9bb5', textAlign: 'center' }}>
                 Ask me anything about Alex
               </Typography>
-              <Stack direction="row" flexWrap="wrap" gap={1} justifyContent="center">
+              <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1, justifyContent: 'center' }}>
                 {SUGGESTIONS.map((s) => (
                   <Chip
                     key={s}
@@ -362,5 +358,3 @@ function Chat() {
     </Box>
   );
 }
-
-export default Chat;

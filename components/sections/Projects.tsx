@@ -1,18 +1,20 @@
+'use client';
+
 import { Typography, Box, Button, Chip, Grid } from '@mui/material';
 import { motion } from 'framer-motion';
-import useIsMobile from '../hooks/useIsMobile';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import projects from '../data/projects.js';
+import useIsMobile from '@/hooks/useIsMobile';
+import projects from '@/data/projects';
 
-function Projects() {
+export default function Projects() {
   const isMobile = useIsMobile();
   return (
     <Box>
       <Typography variant="h2" sx={{ mb: isMobile ? 3 : 5, fontWeight: 'bold', color: '#0a1929' }}>Projects</Typography>
       <Grid container spacing={isMobile ? 2 : 3}>
         {projects.map((project, index) => (
-          <Grid item xs={12} sm={6} key={index}>
+          <Grid key={project.title} size={{ xs: 12, sm: 6 }}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -42,9 +44,9 @@ function Projects() {
                   {project.description}
                 </Typography>
                 <Box sx={{ mb: isMobile ? 1.5 : 2 }}>
-                  {project.technologies.map((tech, i) => (
+                  {project.technologies.map((tech) => (
                     <Chip
-                      key={i}
+                      key={tech}
                       label={tech}
                       size="small"
                       sx={{
@@ -100,5 +102,3 @@ function Projects() {
     </Box>
   );
 }
-
-export default Projects;
