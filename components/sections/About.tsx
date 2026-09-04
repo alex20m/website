@@ -4,7 +4,7 @@ import { Typography, Box, Avatar, Chip, Stack, Button, IconButton, Tooltip } fro
 import DownloadIcon from '@mui/icons-material/Download';
 import { motion } from 'framer-motion';
 import useIsMobile from '@/hooks/useIsMobile';
-import { contacts, cv } from '@/data/personal';
+import { contacts, cv, profile } from '@/data/personal';
 
 const skills = [
   'Agentic AI',
@@ -31,8 +31,8 @@ export default function About() {
     >
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
         <Avatar
-          src="/profile.png"
-          alt="Alex Mecklin"
+          src={profile.photo.src}
+          alt={profile.name}
           sx={{
             width: isMobile ? 120 : 180,
             height: isMobile ? 120 : 180,
@@ -47,15 +47,14 @@ export default function About() {
         <Stack sx={{ textAlign: isMobile ? 'center' : 'left', gap: 2 }}>
           <Box>
             <Typography variant="h2" sx={{ color: '#0a1929', mb: 0.5 }}>
-              Alex Mecklin
+              {profile.name}
             </Typography>
             <Typography variant="h5" sx={{ color: '#1565c0' }}>
-              M.Sc. Student · Aalto University
+              {profile.title}
             </Typography>
           </Box>
           <Typography variant="body1" sx={{ maxWidth: isMobile ? 'none' : 540 }}>
-            AI-focused developer with hands-on experience building agentic AI systems and full stack applications.
-            Background spanning web development, data science, test automation, and embedded systems.
+            {profile.bio}
           </Typography>
           <Stack
             direction="row"

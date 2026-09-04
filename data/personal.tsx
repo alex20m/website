@@ -4,6 +4,13 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
+export const profile = {
+  name: 'Alex Mecklin',
+  title: 'M.Sc. Student · Aalto University',
+  bio: 'AI-focused developer with hands-on experience building agentic AI systems and full stack applications. Background spanning web development, data science, test automation, and embedded systems.',
+  photo: { src: '/profile.png', width: 703, height: 940 },
+};
+
 export interface Contact {
   icon: ReactNode;
   label: string;
