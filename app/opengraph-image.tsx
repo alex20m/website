@@ -70,8 +70,8 @@ export default async function OpengraphImage() {
               sentence shrinks past legible while name/title still hold up.
               The bio is still in og:description for platforms that render
               that as text. */}
-          <div style={{ display: 'flex', fontSize: 68, fontWeight: 700, color: '#0a1929' }}>{profile.name}</div>
-          <div style={{ display: 'flex', fontSize: 36, color: '#1565c0', marginTop: 18 }}>{profile.title}</div>
+          <div style={{ display: 'flex', fontSize: 84, fontWeight: 700, color: '#0a1929' }}>{profile.name}</div>
+          <div style={{ display: 'flex', fontSize: 42, color: '#1565c0', marginTop: 20 }}>{profile.title}</div>
         </div>
       </div>
     ),
