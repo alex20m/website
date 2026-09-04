@@ -149,6 +149,17 @@ If the website's own domain ever changes, `ALLOWED_ORIGINS` in
 refuse the site's own chat requests with a CORS 403 that has nothing to do
 with Cloudflare being down.
 
+## 6. Web analytics
+
+The `<Analytics />` component from `@vercel/analytics` is already in
+`app/layout.tsx` and ships with every deploy — no environment variable, no
+per-environment config. It only sends events once Web Analytics is turned on
+for the project, which is a one-time toggle in the Vercel dashboard (Project
+→ Analytics → Enable), not something the CLI or API exposes. After enabling
+it and deploying, visit the production URL and navigate between a couple of
+pages; data shows up in the Analytics tab within about 30 seconds if nothing
+is blocking the collection request.
+
 ## Has to be done by hand
 
 - **Minting the first token** — `VERCEL_TOKEN`, `CLOUDFLARE_API_TOKEN`, the
@@ -156,6 +167,8 @@ with Cloudflare being down.
   by one.
 - **Billing and accepting terms** on Vercel, Cloudflare and OpenRouter, where
   those providers gate it on a human deliberately.
+- **Enabling Web Analytics** on the Vercel project (Project → Analytics →
+  Enable) — there is no CLI or API for this toggle.
 
 ## Environment variables
 
@@ -175,6 +188,7 @@ auth provider, and the worker's public URL is not a secret.
 - [ ] Chat worker deployed once by hand; `OPENROUTER_API_KEY` set on it in the Cloudflare dashboard
 - [ ] `CLOUDFLARE_API_TOKEN` set as a GitHub Actions repository secret
 - [ ] The two `curl -X OPTIONS` checks above both return the expected status
+- [ ] Web Analytics enabled on the Vercel project
 
 ## Troubleshooting
 

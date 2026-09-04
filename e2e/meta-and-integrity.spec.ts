@@ -23,6 +23,11 @@ test.describe('Page metadata', () => {
     await page.goto('/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   });
+
+  test('loads the Vercel Web Analytics script', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('script[src*="_vercel/insights/script.js"]')).toHaveCount(1);
+  });
 });
 
 test.describe('Accessibility basics', () => {
@@ -109,6 +114,10 @@ test.describe('External links point out, internal assets resolve', () => {
     page.on('response', (response) => {
       const url = new URL(response.url());
       const isSameOrigin = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
+      // Vercel's edge network rewrites this path to the Web Analytics script
+      // only for a real deployment with Web Analytics enabled; `next start`
+      // has nothing to serve it, so it 404s in every local/CI run by design.
+      if (isSameOrigin && url.pathname === '/_vercel/insights/script.js') return;
       if (isSameOrigin && !response.ok()) failures.push(`${response.status()} ${response.url()}`);
     });
 
@@ -133,7 +142,11 @@ test.describe('No console or page errors during a full user journey', () => {
   }, testInfo) => {
     const errors: string[] = [];
     page.on('console', (msg) => {
-      if (msg.type() === 'error') errors.push(msg.text());
+      if (msg.type() !== 'error') return;
+      // Same 404 as above: the Web Analytics script only resolves on a real
+      // Vercel deployment, not under `next start`.
+      if (msg.location().url.includes('_vercel/insights/script.js')) return;
+      errors.push(msg.text());
     });
     page.on('pageerror', (err) => errors.push(err.message));
 

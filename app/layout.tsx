@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
+import { Analytics } from '@vercel/analytics/next';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+        <Analytics />
       </body>
     </html>
   );
