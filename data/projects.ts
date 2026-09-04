@@ -10,6 +10,12 @@ export interface Project {
 
 const projects: Project[] = [
   {
+    title: 'Elixia Booker',
+    description: 'Books group fitness classes at Elixia (SATS Group) the moment booking opens, using QStash to wake up and book at the exact release millisecond.',
+    technologies: ['Next.js', 'TypeScript', 'React', 'Neon', 'Vercel', 'QStash'],
+    github: 'https://github.com/alex20m/elixia_booker',
+  },
+  {
     title: 'Job Application Tracker',
     description: 'Cross-device job application tracker with authentication, persistent storage, and PWA support. Installable on mobile and desktop.',
     technologies: ['Next.js', 'TypeScript', 'React', 'Supabase', 'Vercel', 'Tailwind CSS'],
