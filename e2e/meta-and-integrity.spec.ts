@@ -48,7 +48,7 @@ test.describe('Open Graph / link preview metadata', () => {
     await expect(page.locator('meta[name="twitter:description"]')).toHaveAttribute('content', aboutBio);
   });
 
-  test('declares an og:image that resolves to the same photo shown in About', async ({ page, request }) => {
+  test('declares a 1200x630 og:image that resolves to a real PNG', async ({ page, request }) => {
     await page.goto('/');
     const ogImage = page.locator('meta[property="og:image"]');
     await expect(ogImage).toHaveCount(1);
@@ -62,14 +62,15 @@ test.describe('Open Graph / link preview metadata', () => {
     const resolved = new URL(content!);
     expect(resolved.protocol).toBe('https:');
 
-    const aboutPhotoSrc = await page.locator('#about').getByRole('img').getAttribute('src');
-    expect(resolved.pathname).toBe(aboutPhotoSrc);
+    await expect(page.locator('meta[property="og:image:width"]')).toHaveAttribute('content', '1200');
+    await expect(page.locator('meta[property="og:image:height"]')).toHaveAttribute('content', '630');
 
     // Fetch the same path from this test's own server (not the resolved
-    // production host) to confirm the asset actually exists, without making
-    // the test depend on the live site being reachable.
-    const response = await request.get(resolved.pathname);
+    // production host) to confirm the generated image actually renders,
+    // without making the test depend on the live site being reachable.
+    const response = await request.get(resolved.pathname + resolved.search);
     expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toBe('image/png');
   });
 
   test('declares twitter:card as summary_large_image', async ({ page }) => {

@@ -24,20 +24,13 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: profile.name,
     type: 'website',
-    images: [
-      {
-        url: profile.photo.src,
-        width: profile.photo.width,
-        height: profile.photo.height,
-        alt: profile.name,
-      },
-    ],
+    // No `images` here: app/opengraph-image.tsx generates the card and
+    // Next.js wires up the og:image/twitter:image tags for it automatically.
   },
   twitter: {
     card: 'summary_large_image',
     title: profile.name,
     description: profile.bio,
-    images: [profile.photo.src],
   },
 };
 
