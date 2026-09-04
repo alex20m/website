@@ -38,7 +38,11 @@ export default function About() {
             height: isMobile ? 120 : 180,
             border: '4px solid #e3eaf6',
             boxShadow: '0 8px 24px rgba(10,25,41,0.12)',
-            '& img': { objectFit: 'cover', objectPosition: 'center 70%', transform: 'scale(1.2)' },
+            '& img': {
+              objectFit: 'cover',
+              objectPosition: `${profile.photo.focalX}% ${profile.photo.focalY}%`,
+              transform: `scale(${profile.photo.zoom})`,
+            },
           }}
         />
       </motion.div>

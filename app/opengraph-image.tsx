@@ -2,27 +2,24 @@ import { ImageResponse } from 'next/og';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { profile } from '@/data/personal';
+import { computeAvatarCrop } from '@/lib/avatarCrop';
 
 export const alt = profile.name;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-const PHOTO_PANEL_WIDTH = size.width * 0.38;
-const PHOTO_INSET = 0.82; // fraction of the panel the photo may occupy
+const AVATAR_SIZE = 320;
+const AVATAR_LEFT = 70;
+const TEXT_LEFT = AVATAR_LEFT + AVATAR_SIZE + 50;
 
-// Satori's `object-fit` support on raster <img> is unreliable, so the
-// contained size is computed here instead and applied as an explicit
-// width/height — that's what actually keeps the whole photo visible,
-// centered, and at its native proportions (no cropping, no stretching).
-const photoAspect = profile.photo.width / profile.photo.height;
-const maxPhotoWidth = PHOTO_PANEL_WIDTH * PHOTO_INSET;
-const maxPhotoHeight = size.height * PHOTO_INSET;
-let photoWidth = maxPhotoWidth;
-let photoHeight = photoWidth / photoAspect;
-if (photoHeight > maxPhotoHeight) {
-  photoHeight = maxPhotoHeight;
-  photoWidth = photoHeight * photoAspect;
-}
+const crop = computeAvatarCrop(
+  AVATAR_SIZE,
+  profile.photo.width,
+  profile.photo.height,
+  profile.photo.focalX,
+  profile.photo.focalY,
+  profile.photo.zoom,
+);
 
 export default async function OpengraphImage() {
   const photoBuffer = await readFile(join(process.cwd(), 'public', profile.photo.src));
@@ -30,27 +27,42 @@ export default async function OpengraphImage() {
 
   return new ImageResponse(
     (
-      <div style={{ width: '100%', height: '100%', display: 'flex', backgroundColor: '#f8f9fb' }}>
+      <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', backgroundColor: '#f8f9fb' }}>
         <div
           style={{
-            width: PHOTO_PANEL_WIDTH,
-            height: '100%',
+            position: 'absolute',
+            left: AVATAR_LEFT,
+            top: (size.height - AVATAR_SIZE) / 2,
+            width: AVATAR_SIZE,
+            height: AVATAR_SIZE,
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#0a1929',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            border: '6px solid #e3eaf6',
+            boxShadow: '0 8px 24px rgba(10,25,41,0.12)',
           }}
         >
-          <img src={photoSrc} alt={profile.name} width={photoWidth} height={photoHeight} />
+          {/* Same crop the live Avatar renders — computeAvatarCrop derives
+              the equivalent numeric rect from profile.photo's focalX/focalY/
+              zoom, since Satori can't apply object-fit/transform directly. */}
+          <img
+            src={photoSrc}
+            alt={profile.name}
+            width={crop.width}
+            height={crop.height}
+            style={{ position: 'absolute', left: crop.left, top: crop.top }}
+          />
         </div>
         <div
           style={{
-            width: size.width - PHOTO_PANEL_WIDTH,
+            position: 'absolute',
+            left: TEXT_LEFT,
+            top: 0,
+            width: size.width - TEXT_LEFT - 60,
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            padding: '0 60px',
           }}
         >
           <div style={{ display: 'flex', fontSize: 60, fontWeight: 700, color: '#0a1929' }}>{profile.name}</div>
