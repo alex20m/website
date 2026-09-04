@@ -4,6 +4,16 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
+export const profile = {
+  name: 'Alex Mecklin',
+  title: 'M.Sc. Student · Aalto University',
+  bio: 'AI-focused developer with hands-on experience building agentic AI systems and full stack applications. Background spanning web development, data science, test automation, and embedded systems.',
+  // focalX/focalY/zoom mirror CSS's object-position + transform: scale() —
+  // the single crop definition both the live Avatar and the generated OG
+  // image (which can't use those CSS properties directly) render from.
+  photo: { src: '/profile.png', width: 703, height: 940, focalX: 50, focalY: 70, zoom: 1.2 },
+};
+
 export interface Contact {
   icon: ReactNode;
   label: string;

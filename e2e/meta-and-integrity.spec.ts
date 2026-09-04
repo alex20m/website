@@ -30,6 +30,55 @@ test.describe('Page metadata', () => {
   });
 });
 
+test.describe('Open Graph / link preview metadata', () => {
+  // The og:*/twitter:* tags are sourced from the same `profile` data as the
+  // About section, so the two can never drift apart — this compares the live
+  // head tags against what About actually renders, rather than against a
+  // second hardcoded copy of the same strings.
+  test('the title and description match what About actually renders', async ({ page }) => {
+    await page.goto('/');
+    const about = page.locator('#about');
+    const aboutName = await about.getByRole('heading', { level: 2 }).innerText();
+    const aboutBio = await about.getByText(/AI-focused developer/).innerText();
+
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', aboutName);
+    await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', aboutBio);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', aboutBio);
+    await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute('content', aboutName);
+    await expect(page.locator('meta[name="twitter:description"]')).toHaveAttribute('content', aboutBio);
+  });
+
+  test('declares a 1200x630 og:image that resolves to a real PNG', async ({ page, request }) => {
+    await page.goto('/');
+    const ogImage = page.locator('meta[property="og:image"]');
+    await expect(ogImage).toHaveCount(1);
+    const content = await ogImage.getAttribute('content');
+    expect(content, 'og:image has no content').toBeTruthy();
+
+    // og:image must be an absolute URL (per the Open Graph spec, crawlers
+    // won't resolve a relative one) — `metadataBase` in layout.tsx is what
+    // makes that so; without it Next.js silently falls back to
+    // http://localhost:3000, which is wrong in every real deployment.
+    const resolved = new URL(content!);
+    expect(resolved.protocol).toBe('https:');
+
+    await expect(page.locator('meta[property="og:image:width"]')).toHaveAttribute('content', '1200');
+    await expect(page.locator('meta[property="og:image:height"]')).toHaveAttribute('content', '630');
+
+    // Fetch the same path from this test's own server (not the resolved
+    // production host) to confirm the generated image actually renders,
+    // without making the test depend on the live site being reachable.
+    const response = await request.get(resolved.pathname + resolved.search);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toBe('image/png');
+  });
+
+  test('declares twitter:card as summary_large_image', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
+  });
+});
+
 test.describe('Accessibility basics', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
