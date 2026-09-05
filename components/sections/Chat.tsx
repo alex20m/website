@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef, type ReactNode, type KeyboardEvent } from 'react';
+import { useState, useEffect, useRef, type ReactNode, type KeyboardEvent, type MouseEvent } from 'react';
 import { Typography, Box, TextField, IconButton, Stack, Paper, Chip } from '@mui/material';
-import Linkify from 'linkify-react';
+import ReactMarkdown, { type Components } from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutlined';
@@ -23,54 +25,59 @@ interface ChatMessage {
   content: string;
 }
 
-const linkifyOptions = {
-  render: ({ attributes, content }: { attributes: Record<string, string>; content: string }) => {
-    const { href, ...props } = attributes;
+// The assistant may still write a bare "#section" instead of proper markdown
+// link syntax — wrapping it as `[#section](#section)` first lets a single
+// ReactMarkdown pass render it as a real (smooth-scrolling) link too.
+const bareHashTokenRegex = /(?<!\]\()#[a-z]+/g;
+
+function linkifyBareHashTokens(text: string): string {
+  return text.replace(bareHashTokenRegex, (token) => `[${token}](${token})`);
+}
+
+function scrollToSection(sectionId: string) {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    const top = element.getBoundingClientRect().top + window.pageYOffset - 80;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+}
+
+const markdownComponents: Components = {
+  a: ({ href, children }) => {
+    const isSectionLink = href?.startsWith('#');
     return (
       <a
         href={href}
-        {...props}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ color: 'inherit', textDecoration: 'underline' }}
+        onClick={
+          isSectionLink
+            ? (e: MouseEvent<HTMLAnchorElement>) => {
+                e.preventDefault();
+                scrollToSection(href!.slice(1));
+              }
+            : undefined
+        }
+        target={isSectionLink ? undefined : '_blank'}
+        rel={isSectionLink ? undefined : 'noopener noreferrer'}
+        style={{ color: 'inherit', textDecoration: 'underline', cursor: 'pointer' }}
       >
-        {content}
+        {children}
       </a>
     );
   },
+  // Markdown wraps every paragraph in <p>, which carries browser default
+  // margins that fight the chat bubble's own spacing — a block-level span
+  // gets paragraph-style line breaks (via remark-breaks) without them.
+  p: ({ children }) => <span style={{ display: 'block' }}>{children}</span>,
+  ul: ({ children }) => <ul style={{ margin: '4px 0', paddingLeft: '1.2em' }}>{children}</ul>,
+  ol: ({ children }) => <ol style={{ margin: '4px 0', paddingLeft: '1.2em' }}>{children}</ol>,
 };
 
-const hashLinkRegex = /(#[a-z]+)/g;
-
-function renderWithHashLinks(text: string): ReactNode[] {
-  const parts = text.split(hashLinkRegex);
-  return parts.map((part, i) => {
-    if (part.match(hashLinkRegex)) {
-      const sectionId = part.slice(1);
-      return (
-        <a
-          key={i}
-          href={part}
-          onClick={(e) => {
-            e.preventDefault();
-            const element = document.getElementById(sectionId);
-            if (element) {
-              const top = element.getBoundingClientRect().top + window.pageYOffset - 80;
-              window.scrollTo({ top, behavior: 'smooth' });
-            }
-          }}
-          style={{ color: 'inherit', textDecoration: 'underline', cursor: 'pointer' }}
-        >
-          {part}
-        </a>
-      );
-    }
-    return (
-      <Linkify key={i} options={linkifyOptions}>
-        {part}
-      </Linkify>
-    );
-  });
+function renderMarkdown(text: string): ReactNode {
+  return (
+    <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]} components={markdownComponents}>
+      {linkifyBareHashTokens(text)}
+    </ReactMarkdown>
+  );
 }
 
 export default function Chat() {
@@ -261,11 +268,14 @@ export default function Chat() {
                     maxWidth: '80%',
                     fontSize: isMobile ? '0.8rem' : '0.9rem',
                     lineHeight: 1.6,
-                    whiteSpace: 'pre-wrap',
+                    // The user's own text is shown verbatim (their literal
+                    // newlines from Shift+Enter preserved); the assistant's
+                    // is rendered markdown, which lays out its own breaks.
+                    whiteSpace: msg.role === 'user' ? 'pre-wrap' : 'normal',
                     wordBreak: 'break-word',
                   }}
                 >
-                  {msg.role === 'assistant' ? renderWithHashLinks(msg.content) : msg.content}
+                  {msg.role === 'assistant' ? renderMarkdown(msg.content) : msg.content}
                 </Box>
               </Box>
             </motion.div>

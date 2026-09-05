@@ -182,4 +182,57 @@ describe('Chat', () => {
       { role: 'user', content: 'Second question' },
     ]);
   });
+
+  describe('markdown rendering in assistant replies', () => {
+    async function sendAndGetReply(replyMarkdown: string) {
+      const fetchMock = vi.fn().mockResolvedValue(sseResponse([tokenFrame(replyMarkdown), DONE_FRAME]));
+      vi.stubGlobal('fetch', fetchMock);
+
+      render(<Chat />);
+      fireEvent.change(screen.getByPlaceholderText('Type a message...'), { target: { value: 'hi' } });
+      fireEvent.click(screen.getByRole('button', { name: 'Send message' }));
+
+      await waitFor(() => expect(screen.queryByText('Thinking...')).not.toBeInTheDocument());
+    }
+
+    it('renders **bold** markdown as an actual bold element, not literal asterisks', async () => {
+      await sendAndGetReply('He is skilled in **Next.js** development.');
+
+      const bold = screen.getByText('Next.js');
+      expect(bold.tagName).toBe('STRONG');
+      expect(screen.queryByText(/\*\*/)).not.toBeInTheDocument();
+    });
+
+    it('renders [text](url) markdown as a real link with the descriptive text, not raw brackets', async () => {
+      await sendAndGetReply('Check out [his GitHub](https://github.com/alex20m) for more.');
+
+      const link = screen.getByRole('link', { name: 'his GitHub' });
+      expect(link).toHaveAttribute('href', 'https://github.com/alex20m');
+      expect(link).toHaveAttribute('target', '_blank');
+      expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'));
+      expect(screen.queryByText(/\[his GitHub\]/)).not.toBeInTheDocument();
+    });
+
+    it('renders a bare #section token as a clickable internal link, not literal text', async () => {
+      await sendAndGetReply('Check out the #projects section for more.');
+
+      const link = screen.getByRole('link', { name: '#projects' });
+      expect(link).toHaveAttribute('href', '#projects');
+    });
+
+    it('renders a bare URL as a clickable external link', async () => {
+      await sendAndGetReply('You can read more at https://alexmecklin.com/blog.');
+
+      const link = screen.getByRole('link', { name: 'https://alexmecklin.com/blog' });
+      expect(link).toHaveAttribute('target', '_blank');
+      expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'));
+    });
+
+    it('renders a markdown bullet list as real list items', async () => {
+      await sendAndGetReply('His skills include:\n- Python\n- TypeScript\n- JavaScript');
+
+      const items = screen.getAllByRole('listitem');
+      expect(items.map((item) => item.textContent)).toEqual(['Python', 'TypeScript', 'JavaScript']);
+    });
+  });
 });
