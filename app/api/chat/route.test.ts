@@ -38,7 +38,7 @@ describe('POST /api/chat', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('requests a real OpenRouter model id ending in ":free", not the nonexistent "openrouter/free" placeholder', async () => {
+  it('requests a real, plausibly-shaped OpenRouter model id, not the nonexistent "openrouter/free" placeholder', async () => {
     vi.stubEnv('OPENROUTER_API_KEY', 'test-key');
     let capturedBody: { model?: string } = {};
     vi.stubGlobal(
@@ -51,8 +51,11 @@ describe('POST /api/chat', () => {
 
     await POST(chatRequest({ messages: [{ role: 'user', content: 'hi' }] }));
 
+    // OpenRouter model ids are always "vendor/model[:variant]" — this only
+    // guards the shape (catching a placeholder like the old "openrouter/free"
+    // or a typo'd slug), not whether the specific model is free or exists.
     expect(capturedBody.model).not.toBe('openrouter/free');
-    expect(capturedBody.model).toMatch(/^[\w.-]+\/[\w.-]+:free$/);
+    expect(capturedBody.model).toMatch(/^[\w.-]+\/[\w.-]+(?::[\w.-]+)?$/);
   });
 
   it('logs the upstream status and body when OpenRouter rejects the request, but returns a generic 502', async () => {

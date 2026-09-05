@@ -43,7 +43,7 @@ export async function POST(request: Request): Promise<Response> {
         'X-Title': 'Alex Mecklin Portfolio Chat',
       },
       body: JSON.stringify({
-        model: 'thinkingmachines/inkling-small:free',
+        model: 'google/gemini-3.8-flash',
         stream: true,
         messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...trimmedMessages],
       }),
