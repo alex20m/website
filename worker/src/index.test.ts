@@ -26,6 +26,35 @@ describe('chat worker CORS allowlist', () => {
   });
 });
 
+describe('chat worker upstream error logging', () => {
+  it('logs the upstream status and body when OpenRouter rejects the request, so wrangler tail shows why', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('{"error":{"message":"model not found"}}', { status: 400 }))
+    );
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const request = new Request('https://worker.example', {
+      method: 'POST',
+      headers: { Origin: 'https://alexmecklin.com', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [{ role: 'user', content: 'hi' }] }),
+    });
+
+    const response = await worker.fetch(request, { OPENROUTER_API_KEY: 'test-key' });
+
+    // The client still just gets the generic, non-leaky 502.
+    expect(response.status).toBe(502);
+    // But the worker's own logs (visible via `wrangler tail`) carry the real reason.
+    expect(errorSpy).toHaveBeenCalledWith(
+      expect.stringContaining('OpenRouter'),
+      400,
+      expect.stringContaining('model not found')
+    );
+
+    errorSpy.mockRestore();
+  });
+});
+
 describe('chat worker upstream model', () => {
   it('requests a real OpenRouter model id ending in ":free", not the nonexistent "openrouter/free" placeholder', async () => {
     let capturedBody: { model?: string } = {};
