@@ -343,7 +343,10 @@ export default function Chat() {
             sx={{
               '& .MuiOutlinedInput-root': {
                 borderRadius: 2,
-                fontSize: isMobile ? '0.85rem' : '0.9rem',
+                // Anything below 16px makes iOS Safari zoom the whole page in
+                // when this field gets focus, so mobile can't go as small as
+                // the rest of the chat UI.
+                fontSize: isMobile ? '16px' : '0.9rem',
               },
             }}
           />
