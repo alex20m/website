@@ -126,8 +126,7 @@ Sep 2022 - Dec 2022, Espoo, Finland
 - Website: https://job.alexmecklin.com
 
 ### Personal Website
-- Built using Cursor AI and GitHub Copilot to explore their AI capabilities.
-- Deployed automatically via Vercel from every push to main.
+- This personal portfolio website showcasing my projects and experience.
 - Technologies: TypeScript, Next.js, React
 - GitHub: https://github.com/alex20m/website
 - Website: https://alexmecklin.com
