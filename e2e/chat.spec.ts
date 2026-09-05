@@ -90,7 +90,7 @@ test.describe('Chat / Ask AI section', () => {
     await expect(chat(page).getByText('Thinking...')).toBeHidden();
   });
 
-  test('shows a fallback message when the worker responds with an HTTP error', async ({ page }) => {
+  test('shows a fallback message when the API responds with an HTTP error', async ({ page }) => {
     await mockChatHttpError(page, 502);
 
     await textbox(page).fill('This will fail');

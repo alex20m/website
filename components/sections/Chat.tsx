@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 import useIsMobile from '@/hooks/useIsMobile';
 import { parseSseChunk } from '@/lib/chatStream';
 
-const WORKER_URL = 'https://portfolio-chat-worker.alex-mecklin.workers.dev';
+const CHAT_API_URL = '/api/chat';
 
 const SUGGESTIONS = [
   'What is Alex working on?',
@@ -95,7 +95,7 @@ export default function Chat() {
     setLoading(true);
 
     try {
-      const response = await fetch(WORKER_URL, {
+      const response = await fetch(CHAT_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

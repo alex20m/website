@@ -75,7 +75,7 @@ describe('Chat', () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0]!;
-    expect(url).toBe('https://portfolio-chat-worker.alex-mecklin.workers.dev');
+    expect(url).toBe('/api/chat');
     expect(JSON.parse(init.body)).toEqual({ messages: [{ role: 'user', content: 'Hi Alex' }] });
   });
 
@@ -124,7 +124,7 @@ describe('Chat', () => {
     expect(screen.queryByText('Thinking...')).not.toBeInTheDocument();
   });
 
-  it('shows a fallback message when the worker responds with a non-ok status', async () => {
+  it('shows a fallback message when the API responds with a non-ok status', async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 502 }));
     vi.stubGlobal('fetch', fetchMock);
 

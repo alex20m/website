@@ -5,17 +5,18 @@ Standing up this website's hosting and its chat backend. Written so that
 opening a browser**, except for the few steps under
 [Has to be done by hand](#has-to-be-done-by-hand).
 
-There is no database and no auth here — it's a static-ish marketing site plus
-one small edge API — so this is shorter than the skeleton's own `SETUP.md`.
-Roughly 15 minutes end to end, plus DNS propagation if the domain is new.
+There is no database and no auth here — it's a static-ish marketing site with
+one API route for the chat assistant, all part of the same Next.js app — so
+this is shorter than the skeleton's own `SETUP.md`. Roughly 10 minutes end to
+end, plus DNS propagation if the domain is new.
 
 ## Prerequisites
 
 | You need | For | Notes |
 | --- | --- | --- |
 | This GitHub repository | Everything | Vercel's Git integration deploys from it |
-| A Vercel account | Hosting the website | `VERCEL_TOKEN` from Account Settings → Tokens |
-| A Cloudflare account | DNS for the custom domain, and hosting the chat worker | `CLOUDFLARE_API_TOKEN`, scoped narrowly (see step 4 and step 5) |
+| A Vercel account | Hosting the website and its chat API route | `VERCEL_TOKEN` from Account Settings → Tokens |
+| A Cloudflare account | DNS for the custom domain only | `CLOUDFLARE_API_TOKEN`, scoped narrowly (see step 4) |
 | An OpenRouter account | The chat assistant's LLM calls | An API key from openrouter.ai |
 
 Set tokens in your environment rather than passing them inline, and never
@@ -47,16 +48,27 @@ npx vercel link --yes --project website
 npx vercel project ls
 ```
 
-There is no database and no per-environment application variable to set —
-the only environment variable the website itself reads is the one already
-baked into `components/sections/Chat.tsx` (the worker's public URL), which is
-not a secret.
+## 3. The chat backend's secret
 
-## 3. Deploys
+The chat assistant (`app/api/chat/route.ts`) calls OpenRouter directly from
+the same Next.js app — no separate service, so its one secret is a normal
+Vercel environment variable rather than infrastructure of its own:
+
+```bash
+npx vercel env add OPENROUTER_API_KEY production
+npx vercel env add OPENROUTER_API_KEY preview
+```
+
+Do this before the first deploy (or redeploy afterward) — a serverless
+function only picks up an environment variable added after it was last
+built on a fresh deploy.
+
+## 4. Deploys
 
 Connect the repository to the Vercel project and leave automatic deploys
 **on**. Every pull request gets a preview; every merge to `main` goes to
-production.
+production — chat backend included, since it deploys as part of the same
+app rather than on its own track.
 
 Nothing in `.github/workflows/` deploys the website, and
 `tests/pipeline.test.ts` fails if that changes — two routes to production
@@ -68,7 +80,7 @@ Check it came up:
 curl -I https://website-<your-vercel-slug>.vercel.app
 ```
 
-## 4. A custom domain
+## 5. A custom domain
 
 Ask the platform what record it wants rather than hardcoding a target —
 published CNAME targets do change:
@@ -94,6 +106,12 @@ curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records
            "ttl":1,"proxied":false}'
 ```
 
+The site is reachable at both the apex domain and `www.` — repeat the same
+`vercel domains add` / DNS record steps for `www.alexmecklin.com`, pointed at
+whatever target `vercel domains inspect` gives for it. Since the chat backend
+is now same-origin (no separate worker with its own CORS allowlist to keep in
+sync), there is nothing extra to configure for either domain to reach it.
+
 **`"proxied": false` is not optional.** An orange-clouded record puts
 Cloudflare's proxy in front of a host that already terminates its own TLS —
 the visible symptom is certificate issuance that never completes, or a
@@ -101,60 +119,6 @@ redirect loop, and neither obviously points back at the proxy toggle.
 
 Verification is DNS-dependent, so `vercel domains verify alexmecklin.com` is
 the one step where "run it again in a few minutes" is a legitimate answer.
-
-## 5. The chat worker
-
-The worker is separate infrastructure — Cloudflare Workers, not Vercel — so
-it is provisioned and deployed on its own track.
-
-```bash
-cd worker
-npx wrangler@4.129.0 deploy   # first deploy, from your machine, to create the resource
-```
-
-Then set its one secret in the Cloudflare dashboard (Workers & Pages →
-`portfolio-chat-worker` → Settings → Variables and Secrets) — the Wrangler CLI
-also has `wrangler secret put`, but this repo has not driven it that way yet:
-
-```bash
-npx wrangler secret put OPENROUTER_API_KEY
-```
-
-From then on, deploys are automatic: `main.yml`'s `deploy-worker` job runs
-`wrangler deploy` after every push to `main` whose checks pass, using a GitHub
-Actions repository secret rather than your own machine's credentials:
-
-```bash
-gh secret set CLOUDFLARE_API_TOKEN --repo alex20m/website
-```
-
-That token needs **Workers Scripts: Edit** on the account the worker lives in
-— narrower than a full account token. If the secret is not set, the job
-notices and skips the deploy with a notice instead of failing.
-
-Verify the worker is live and enforcing its CORS allowlist. The site is
-reachable at both the apex domain and `www.`, and both are real browser
-origins visitors land on, so both need to be checked (and both are in
-`ALLOWED_ORIGINS` in `worker/src/index.ts`):
-
-```bash
-curl -i -X OPTIONS https://portfolio-chat-worker.alex-mecklin.workers.dev \
-  -H "Origin: https://alexmecklin.com"
-# expect: 200, with Access-Control-Allow-Origin echoing that origin
-
-curl -i -X OPTIONS https://portfolio-chat-worker.alex-mecklin.workers.dev \
-  -H "Origin: https://www.alexmecklin.com"
-# expect: 200, with Access-Control-Allow-Origin echoing that origin
-
-curl -i -X OPTIONS https://portfolio-chat-worker.alex-mecklin.workers.dev \
-  -H "Origin: https://evil.example"
-# expect: 403 — origins outside ALLOWED_ORIGINS in worker/src/index.ts are refused
-```
-
-If the website's own domain ever changes — including adding or dropping a
-`www` alias — `ALLOWED_ORIGINS` in `worker/src/index.ts` has to change with
-it — the worker will otherwise refuse the site's own chat requests with a
-CORS 403 that has nothing to do with Cloudflare being down.
 
 ## 6. Web analytics
 
@@ -181,36 +145,36 @@ is blocking the collection request.
 
 | Name | What it is | Who supplies it | Where |
 | --- | --- | --- | --- |
-| `OPENROUTER_API_KEY` | Auth for the LLM the chat assistant calls | You, via `wrangler secret put` | Cloudflare Worker only — never in this repo or in GitHub |
-| `CLOUDFLARE_API_TOKEN` | Lets `deploy-worker` deploy the worker | You, scoped to Workers Scripts: Edit | GitHub Actions repository secret |
+| `OPENROUTER_API_KEY` | Auth for the LLM the chat assistant calls | You, via `vercel env add` | Vercel project environment variable (Production and Preview) — never in this repo or in GitHub |
 
-Nothing here needs a variable inside the Next.js app itself — no database, no
-auth provider, and the worker's public URL is not a secret.
+`CLOUDFLARE_API_TOKEN` is only needed locally, for the one-time DNS record
+setup in step 5 — it is not a GitHub Actions secret, since nothing in CI
+touches Cloudflare.
 
 ## Checklist
 
 - [ ] `npm run lint && npm run typecheck && npm test && npm run build` passes locally
 - [ ] Vercel project created and linked, Git integration connected with automatic deploys on
-- [ ] Custom domain verified on Vercel, DNS record in Cloudflare with the proxy off
-- [ ] Chat worker deployed once by hand; `OPENROUTER_API_KEY` set on it in the Cloudflare dashboard
-- [ ] `CLOUDFLARE_API_TOKEN` set as a GitHub Actions repository secret
-- [ ] The two `curl -X OPTIONS` checks above both return the expected status
+- [ ] `OPENROUTER_API_KEY` set as a Vercel environment variable (Production and Preview)
+- [ ] Custom domain verified on Vercel for both the apex and `www`, DNS records in Cloudflare with the proxy off
 - [ ] Web Analytics enabled on the Vercel project
 
 ## Troubleshooting
 
 **The chat assistant just hangs, or every message errors** — check the
-worker's own logs (`npx wrangler tail` from `worker/`) before assuming the
-frontend is at fault; a missing `OPENROUTER_API_KEY` on the worker fails
-every request with a 500 that never reaches the browser's network tab.
+function's logs (Vercel dashboard → project → Logs, filtered to
+`/api/chat`, or `vercel logs`) before assuming the frontend is at fault; a
+missing `OPENROUTER_API_KEY` fails every request with a 500 that never
+reaches the browser's network tab. `app/api/chat/route.ts` also logs the
+upstream status and body whenever OpenRouter itself rejects a request (wrong
+model id, invalid key, rate limit), so an unexpected 502 is diagnosable from
+the same logs rather than guesswork.
 
-**`deploy-worker` shows as skipped in the Actions run** — expected when
-`CLOUDFLARE_API_TOKEN` isn't set as a repository secret yet; the job logs a
-notice rather than failing. Set the secret and re-run.
-
-**The chat feature works locally but not on the deployed site** — almost
-always the CORS allowlist in `worker/src/index.ts`; check what `Origin` the
-production site actually sends against `ALLOWED_ORIGINS`.
+**The chat feature works locally but not on the deployed site, or vice
+versa** — almost always `OPENROUTER_API_KEY` missing from one Vercel
+environment (Production and Preview are separate) rather than anything in
+the code; same-origin means there is no CORS allowlist to get out of sync
+anymore.
 
 **A Vercel preview deploy looks fine but the custom domain doesn't** — the
 domain is a separate, DNS-dependent step from the deploy itself;

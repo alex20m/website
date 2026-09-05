@@ -18,7 +18,7 @@ A single-page Next.js app with smooth-scrolling navigation between sections:
 
 - **About** — introduction with a skills overview
 - **Ask AI** — a chat assistant that answers questions about my background,
-  backed by a separate Cloudflare Worker
+  backed by a Next.js API route
 - **Experience** — timeline view of work history with company logos, parsed
   straight out of my LaTeX CV so the two never drift apart
 - **Projects** — grid of personal projects
@@ -40,10 +40,9 @@ A single-page Next.js app with smooth-scrolling navigation between sections:
 
 ### Backend (AI chat)
 
-- **Cloudflare Workers** (`worker/`, TypeScript) — a small edge API that
-  proxies chat requests. Deployed separately from the website itself, since
-  it's Cloudflare infrastructure rather than a Vercel one — see
-  [Deployment](#deployment).
+- **Next.js Route Handler** (`app/api/chat/route.ts`) — proxies chat requests
+  to OpenRouter. Same-origin, so it ships with the rest of the app on every
+  Vercel deploy — no separate infrastructure or deploy step.
 - **OpenRouter API** — LLM inference
 - **Server-Sent Events (SSE)** — streamed responses
 
@@ -52,7 +51,8 @@ A single-page Next.js app with smooth-scrolling navigation between sections:
 ```
 app/                          # Next.js App Router
 ├── layout.tsx                 # Root layout, metadata, MUI SSR cache provider
-└── page.tsx                   # Entry point; renders PortfolioApp
+├── page.tsx                   # Entry point; renders PortfolioApp
+└── api/chat/route.ts          # Chat backend: proxies to OpenRouter, streams SSE back
 components/
 ├── Navbar.tsx                  # Fixed navigation with mobile drawer
 ├── Section.tsx                 # Section wrapper + divider used between them
@@ -69,16 +69,12 @@ lib/                            # Pure logic, unit-tested independently of the U
 ├── parseLatexExperience.ts      # Extracts Experience entries out of the LaTeX CV
 ├── truncateDescription.ts       # Word-boundary truncation for the mobile view
 ├── companyLogo.ts               # Company name -> logo filename
-└── chatStream.ts                # SSE chunk parsing for the chat stream
+├── chatStream.ts                # SSE chunk parsing for the chat stream
+└── systemPrompt.ts               # The chat assistant's system prompt
 tests/                          # Vitest — the pure `lib/` functions, the page
                                  # render, and the CI pipeline's own shape
 public/                         # Static assets: favicons, profile photo, CV,
                                  # company logos
-
-worker/                         # Cloudflare Worker (chat backend), deployed
-├── src/index.ts                 # separately — see Deployment below
-├── src/systemPrompt.ts
-└── wrangler.toml
 ```
 
 ## Local Development
@@ -95,39 +91,26 @@ npm run lint && npm run typecheck && npm test && npm run build
 ```
 
 This is exactly what CI runs on every pull request and every push to `main`.
-
-### Chat backend (Cloudflare Worker)
-
-```bash
-cd worker
-npx wrangler dev
-```
-
-**Required environment variable:** `OPENROUTER_API_KEY`, set in the Cloudflare
-dashboard under the worker's Settings → Variables (not in this repo, and not
-in GitHub — see [`SETUP.md`](SETUP.md)).
+The chat backend (`app/api/chat/route.ts`) runs in the same `npm run dev`
+process as the rest of the app — no separate server to start. It needs
+`OPENROUTER_API_KEY` in your local `.env.local` (not committed — see
+[`SETUP.md`](SETUP.md)).
 
 ## Deployment
 
-Two independent, non-competing deploy paths:
-
-- **The website** deploys via **Vercel's Git integration** — connect the repo
-  once (see [`SETUP.md`](SETUP.md)) and every push gets a preview, every merge
-  to `main` goes to production automatically. Nothing in
-  `.github/workflows/` deploys it; a workflow that also ran `vercel deploy`
-  would just race the platform's own deploy and ship everything twice.
-- **The chat worker** (`worker/`) is Cloudflare infrastructure that Vercel
-  doesn't touch, so it has its own deploy job: `main.yml`'s `deploy-worker`
-  job, which runs only after the `verify` job (lint, typecheck, test, build)
-  passes, and only if the `CLOUDFLARE_API_TOKEN` repository secret is set —
-  otherwise it skips with a notice rather than failing.
+The website — including the chat backend, since it's a Next.js API route —
+deploys as one unit via **Vercel's Git integration**: connect the repo once
+(see [`SETUP.md`](SETUP.md)) and every push gets a preview, every merge to
+`main` goes to production automatically. Nothing in `.github/workflows/`
+deploys it; a workflow that also ran `vercel deploy` would just race the
+platform's own deploy and ship everything twice.
 
 ### CI
 
 ```
 .github/workflows/
 ├── pull-request.yml   # lint, typecheck, test, build — every pull request
-└── main.yml           # the same checks on push to main, plus the worker deploy
+└── main.yml           # the same checks on push to main
 ```
 
 `tests/pipeline.test.ts` asserts on the shape of both workflows (installs from

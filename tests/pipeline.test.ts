@@ -230,28 +230,13 @@ describe('deploying', () => {
     }
   });
 
-  it('deploys the chat worker only after the checks pass', () => {
-    // The single most valuable assertion for a deploy-adjacent job: it is
-    // what stops an untested commit from reaching Cloudflare.
-    const needs = jobOf(workflowOf(MAIN), 'deploy-worker').needs;
-    expect(needs === 'verify' || (Array.isArray(needs) && needs.includes('verify'))).toBe(true);
-  });
-
-  it('degrades the worker deploy to a skip when its credential is missing', () => {
-    // Secrets cannot be evaluated in a job-level `if:`, so the pattern is a
-    // step that reads the secret and writes an output, with later steps
-    // conditioned on that output — never on the secret directly.
-    const steps = jobOf(workflowOf(MAIN), 'deploy-worker').steps ?? [];
-    const check = steps.find((step) => (step.run ?? '').includes('GITHUB_OUTPUT'));
-    expect(check, 'deploy-worker must have a step that reports whether it is configured').toBeDefined();
-    expect(check?.run).toMatch(/CLOUDFLARE_API_TOKEN/);
-
-    const deploySteps = steps.filter((step) => /\bwrangler(?:@\S+)?\s+deploy\b/.test(step.run ?? ''));
-    expect(deploySteps.length, 'deploy-worker must actually deploy somewhere').toBeGreaterThan(0);
-    for (const step of deploySteps) {
-      expect(step.if, 'the deploy step must be guarded on the credential-check output').toMatch(
-        /steps\.\w+\.outputs\.configured/,
-      );
-    }
+  it('has no separate infrastructure of its own left to deploy', () => {
+    // The chat backend used to be a Cloudflare Worker with its own
+    // `deploy-worker` job here; it is now a Next.js API route
+    // (app/api/chat/), so it ships with the same Vercel deploy as the rest
+    // of the app. A `deploy-worker`-shaped job reappearing would mean that
+    // split — and the wrangler/Cloudflare credential it needed — crept
+    // back in.
+    expect(Object.keys(workflowOf(MAIN).jobs)).not.toContain('deploy-worker');
   });
 });
