@@ -90,6 +90,8 @@ export default {
       });
 
       if (!response.ok) {
+        const upstreamBody = await response.text().catch(() => '<unreadable body>');
+        console.error('OpenRouter request failed', response.status, upstreamBody);
         return jsonError('LLM request failed', 502, corsOrigin);
       }
 
