@@ -1,6 +1,5 @@
 # Dependencies
 /node_modules
-/worker/node_modules
 
 # Next.js
 /.next/
@@ -24,10 +23,6 @@ next-env.d.ts
 
 # Vercel
 .vercel
-
-# Wrangler
-/worker/.wrangler
-/worker/.dev.vars
 
 # Logs
 npm-debug.log*

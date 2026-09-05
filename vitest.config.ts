@@ -22,10 +22,6 @@ export default defineConfig({
     // — Playwright's own test files also match vitest's default `*.spec.ts`
     // glob, so without this exclude `npm test` tries to execute them here
     // and fails immediately on `test.describe()` outside a Playwright runner.
-    // worker/**/*.test.ts is left runnable (only node_modules and e2e are
-    // fully excluded) so the Cloudflare Worker's own logic gets unit tests
-    // too, checked under worker/tsconfig.json's Cloudflare types rather than
-    // the root project's DOM types.
     exclude: ['node_modules/**', 'e2e/**'],
   },
 });
