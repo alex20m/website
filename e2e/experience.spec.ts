@@ -81,34 +81,43 @@ test.describe('Experience section', () => {
       test.skip(!isMobileProject(testInfo), 'mobile-only truncation UI');
       await gotoExperience(page);
 
-      const exp0 = experiences[0]!;
-      const full0 = exp0.description;
+      // Entries at or under the limit (e.g. a one-line role) get no toggle,
+      // so pick the entries that do from the data rather than by position.
+      const truncatable = experiences
+        .map((exp, index) => ({ exp, index }))
+        .filter(({ exp }) => exp.description.join(' ').length > MOBILE_CHAR_LIMIT);
+      const [first, second] = truncatable;
+      if (!first || !second) {
+        throw new Error('fixture assumes at least two experience entries are truncated on mobile');
+      }
+
+      const full0 = first.exp.description;
       const truncated0 = truncateDescription(full0, MOBILE_CHAR_LIMIT);
       // truncateDescription can shorten the last item's text (appending
       // "...") without changing the array length, so comparing the actual
       // text — not just the count — is what proves truncation happened.
       if (JSON.stringify(truncated0) === JSON.stringify(full0)) {
-        throw new Error('fixture assumes the first experience entry is actually truncated on mobile');
+        throw new Error('fixture assumes the chosen experience entry is actually truncated on mobile');
       }
 
       const showMoreButtons = experienceSection(page).getByRole('button', { name: 'Show more' });
-      await expect(showMoreButtons).toHaveCount(experiences.length);
+      await expect(showMoreButtons).toHaveCount(truncatable.length);
 
-      const firstList = experienceSection(page).locator('ul:visible').nth(0);
+      const lists = experienceSection(page).locator('ul:visible');
+      const firstList = lists.nth(first.index);
       await expect(firstList.getByRole('listitem')).toHaveText(truncated0);
 
       await showMoreButtons.nth(0).click();
 
       await expect(firstList.getByRole('listitem')).toHaveText(full0);
-      await expect(experienceSection(page).getByRole('button', { name: 'Show less' }).first()).toBeVisible();
+      await expect(experienceSection(page).getByRole('button', { name: 'Show less' })).toHaveCount(1);
 
       // A second entry's toggle is untouched.
-      const secondList = experienceSection(page).locator('ul:visible').nth(1);
-      const exp1 = experiences[1]!;
-      const truncated1 = truncateDescription(exp1.description, MOBILE_CHAR_LIMIT);
+      const secondList = lists.nth(second.index);
+      const truncated1 = truncateDescription(second.exp.description, MOBILE_CHAR_LIMIT);
       await expect(secondList.getByRole('listitem')).toHaveText(truncated1);
 
-      await experienceSection(page).getByRole('button', { name: 'Show less' }).first().click();
+      await experienceSection(page).getByRole('button', { name: 'Show less' }).click();
       await expect(firstList.getByRole('listitem')).toHaveText(truncated0);
     });
   });

@@ -38,11 +38,11 @@ Everything below is factual context about Alex that you may use.
 ## Professional Identity
 Alex is an AI engineer, full-stack developer, and broadly capable software engineer, motivated by building software that is functional, reliable, scalable, and production-ready.
 
-His most recent work centers on agentic AI systems, full-stack development, and cloud infrastructure:
-- Building and deploying AI agents on AWS AgentCore
-- Implementing Model Context Protocol (MCP) servers for agent-to-tool communication
-- Developing full-stack features using TypeScript, React, and Next.js
-- Managing AWS-based infrastructure for AI agents and internal systems
+He currently works as a software engineering consultant at Netlight in Helsinki (from Oct 2026). Before that, his work centered on agentic AI systems, full-stack development, and cloud infrastructure:
+- Designing and building AI agents on AWS Bedrock AgentCore, including a LangGraph orchestrator agent coordinating specialized subagents
+- Building subagents with RAG and Model Context Protocol (MCP) tools
+- Developing full-stack chat applications using Next.js and React, streaming agent responses in real time
+- Owning agent-side DevOps: CI/CD, tests, response quality evals, AWS CDK infrastructure, and observability
 
 That sits on top of a broader software engineering background spanning:
 - Embedded systems and web application development
@@ -54,7 +54,7 @@ He emphasizes writing maintainable code, debugging complex issues, and designing
 ## Education
 
 ### Master of Science - Computer Science (Aalto University)
-Sep 2024 - Present, Espoo, Finland
+Jan 2025 - Present, Espoo, Finland
 Study Track: Big Data and Large Scale Computing
 Master's Thesis (completed): Design and Evaluation of the Model Context Protocol for AI Agent Tool Integration
 
@@ -66,7 +66,7 @@ Thesis Focus:
 - Architecture of agentic AI systems
 
 ### Bachelor of Science - Automation and Robotics (Aalto University)
-Sep 2021 - May 2024, Espoo, Finland
+Sep 2021 - Jan 2025, Espoo, Finland
 Minor: Computer Science
 Bachelor's Thesis: Explainability for Autonomous Driving — Grade: 5/5
 
@@ -76,33 +76,40 @@ Completed coursework in Computer Science and Economics.
 
 ## Work Experience
 
-### AI & Cloud Developer Intern - KONE
-Jun 2026 - Present, Espoo, Finland
-- Building and deploying AI agents on AWS AgentCore as part of an internal agentic AI platform.
-- Developing full stack features across the platform using TypeScript and React.
+### Consultant - Netlight
+Oct 2026 - Present, Helsinki, Finland
+- Software engineering consulting.
+
+### AI & Cloud Developer - KONE
+Jun 2026 - Sep 2026, Espoo, Finland
+- Owned end-to-end design and implementation of an AI assistant for a company-wide internal AI portal.
+- Designed a LangGraph orchestrator agent coordinating specialized subagents on AWS Bedrock AgentCore.
+- Built subagents using RAG and MCP tools to help employees find knowledge and take actions via chat.
+- Designed and built the chat as a full-stack Next.js and React application, streaming agent responses in real time.
+- Owned agent-side DevOps: CI/CD, tests, response quality evals, AWS CDK infrastructure and observability.
 
 ### Master's Thesis Worker - KONE
 Jan 2026 - May 2026, Espoo, Finland
-- Developed agentic AI systems as part of his Master's thesis.
-- Designed and built AI agents and supporting infrastructure on AWS.
-- Integrated MCP servers to enable communication between AI agents and internal systems.
+- Researched MCP-based tool integration for AI agents as part of a Master's thesis.
+- Built AI agents and supporting infrastructure on AWS Bedrock AgentCore.
+- Connected the agents to internal systems through MCP servers, giving them access to company tools and data.
 
-### Software Engineer Intern - KONE
+### Software Engineer - KONE
 May 2025 - Dec 2025, Espoo, Finland
-- Created automated tests for web applications using Python, Robot Framework, Selenium, and Playwright.
-- Designed and implemented CI/CD pipelines and supporting infrastructure using Docker and YAML to automate development, testing, and deployment processes.
-- Developed backend services using Python for an internal platform, leveraging AWS Lambda and DynamoDB.
-- Used AWS to interact with cloud-hosted systems and manage data storage.
+- Led test migration from Selenium to Playwright, improving test stability and reducing test execution time.
+- Mapped cross-team dependencies and wrote Robot Framework tests that catch breaking changes before releases, reducing manual testing.
+- Designed CI/CD pipelines and supporting infrastructure with Docker and YAML to automate deployments.
+- Developed a Python backend for a shared test-resource booking service built on AWS Lambda and DynamoDB.
 
-### Software Engineer Intern - Danfoss Drives
+### Software Engineer - Danfoss Drives
 May 2024 - Aug 2024, Vaasa, Finland
-- Developed automated tests for embedded systems using Python and Robot Framework.
-- Embedded software development in C.
-- Created Python automation scripts.
+- Developed safety-critical temperature control firmware in C for variable frequency drives.
+- Wrote automated tests in Python and Robot Framework to verify temperature control logic on drive simulators.
+- Maintained and extended the drive simulators and built Python scripts to automate repetitive development tasks.
 
-### Automation Engineer Intern - Wärtsilä
+### Automation Engineer - Wärtsilä
 May 2022 - Aug 2023, Vaasa, Finland
-- Investigated returned automation parts from field installations.
+- Conducted investigations on returned automation parts from field installations.
 - Handled customer deliveries of engine automation software tools.
 
 ### Teaching Assistant - Aalto University
@@ -143,56 +150,59 @@ Sep 2022 - Dec 2022, Espoo, Finland
 
 ## Technical Skills
 
-### AI, Agentic Systems & Machine Learning
-- Agentic AI
-- Model Context Protocol (MCP)
-- A2A (Agent2Agent Protocol)
-- AG-UI (Agent-User Interaction Protocol)
-- PyTorch
-- Scikit-learn
-- Pandas
-- NumPy
-- Matplotlib
-
-### Full-Stack & Web Development
-- Next.js
-- React.js
-- TypeScript
-- JavaScript
-- HTML
-
-### Cloud & DevOps
-- AWS (Lambda, DynamoDB, AgentCore, EC2)
-- Azure
-- Azure AI Foundry
-- Google Cloud
-- Docker
-- CI/CD
-- Git
-- GitHub
-- Shell scripting
-- YAML
-
 ### Programming Languages
 - Python
 - TypeScript
 - JavaScript
 - C / C++
 - SQL
-- Scala
+- HTML / CSS
 
-### Testing & Automation
-- Robot Framework
-- Selenium
-- Playwright
+### AI Engineering
+- Agentic AI
+- LLMs
+- Model Context Protocol (MCP)
+- A2A (Agent2Agent Protocol)
+- AG-UI (Agent-User Interaction Protocol)
+- RAG
+- LLM Evals
+
+### AI Platforms & Frameworks
+- AWS Bedrock AgentCore
+- Microsoft Foundry
+- LangGraph
+- Strands SDK
+
+### Cloud & DevOps
+- AWS
+- Azure
+- GCP
+- AWS CDK
+- Docker
+- CI/CD
+- GitHub Actions
+- Git
+- Open Telemetry
+- Shell scripting
+
+### Web Frameworks
+- React
+- Next.js
+- Node.js
+
+### Data Science & ML
+- PyTorch
+- Scikit-learn
+- Pandas
+- NumPy
+- Matplotlib
 
 ### Databases
 - PostgreSQL
 - DynamoDB
-- SQLite
 
 ## Notes
-The information in this prompt is accurate as of June 2026.
+The information in this prompt is accurate as of October 2026.
 
 You must follow all of the above instructions when answering any user query.
 `;
