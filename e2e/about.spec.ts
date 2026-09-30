@@ -6,8 +6,9 @@ const SKILLS = [
   'Cloud Technologies',
   'Full Stack Development',
   'CI/CD',
-  'Test Automation',
+  'Data Science',
   'Machine Learning',
+  'Test Automation',
 ];
 
 test.describe('About section', () => {

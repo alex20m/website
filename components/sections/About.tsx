@@ -11,8 +11,9 @@ const skills = [
   'Cloud Technologies',
   'Full Stack Development',
   'CI/CD',
-  'Test Automation',
+  'Data Science',
   'Machine Learning',
+  'Test Automation',
 ];
 
 export default function About() {
