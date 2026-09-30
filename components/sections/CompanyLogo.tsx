@@ -31,10 +31,7 @@ export default function CompanyLogo({ company }: { company: string }) {
   return (
     <Box
       sx={{
-        // Wide wordmarks (e.g. Netlight) would be unreadably small in a fixed
-        // square, so the box grows with the image up to maxWidth.
-        minWidth: 40,
-        maxWidth: 120,
+        width: 40,
         height: 40,
         display: 'flex',
         alignItems: 'center',
@@ -53,8 +50,8 @@ export default function CompanyLogo({ company }: { company: string }) {
         alt={company}
         onError={() => setFailed(true)}
         sx={{
-          maxHeight: 30,
-          maxWidth: 110,
+          maxHeight: '100%',
+          maxWidth: '100%',
           width: 'auto',
           height: 'auto',
           objectFit: 'contain',
