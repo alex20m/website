@@ -9,7 +9,7 @@ import { contacts, cv, profile } from '@/data/personal';
 const skills = [
   'Agentic AI',
   'Cloud Technologies',
-  'Software Development',
+  'Full Stack Development',
   'CI/CD',
   'Data Science',
   'Machine Learning',

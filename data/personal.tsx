@@ -7,7 +7,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 export const profile = {
   name: 'Alex Mecklin',
   title: 'AI & Cloud Engineer',
-  bio: 'AI-focused developer with hands-on experience building agentic AI systems and full stack applications. Background spanning web development, data science, test automation, and embedded systems.',
+  bio: 'AI-focused engineer with hands-on experience building agentic AI systems and cloud-based full stack applications. Background spanning test automation and embedded systems. Now working as a consultant at Netlight.',
   // focalX/focalY/zoom mirror CSS's object-position + transform: scale() —
   // the single crop definition both the live Avatar and the generated OG
   // image (which can't use those CSS properties directly) render from.

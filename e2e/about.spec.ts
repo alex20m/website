@@ -4,7 +4,7 @@ import { contacts, cv } from '@/data/personal';
 const SKILLS = [
   'Agentic AI',
   'Cloud Technologies',
-  'Software Development',
+  'Full Stack Development',
   'CI/CD',
   'Data Science',
   'Machine Learning',
@@ -32,7 +32,7 @@ test.describe('About section', () => {
   });
 
   test('shows the bio paragraph', async ({ page }) => {
-    await expect(about(page).getByText(/AI-focused developer/)).toBeVisible();
+    await expect(about(page).getByText(/AI-focused engineer/)).toBeVisible();
   });
 
   test('lists every skill chip', async ({ page }) => {
