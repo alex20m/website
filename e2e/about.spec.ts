@@ -5,7 +5,7 @@ const SKILLS = [
   'Agentic AI',
   'Cloud Technologies',
   'Full Stack Development',
-  'CI/CD',
+  'DevOps',
   'Data Science',
   'Machine Learning',
   'Test Automation',
