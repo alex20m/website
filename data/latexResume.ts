@@ -8,56 +8,57 @@ const latexResume = String.raw`
 \resumeSubHeadingListStart
 
     \resumeSubheading
-    {AI \& Cloud Developer Intern}{Jun 2026 -- Present}
-    {KONE}{Espoo, Finland}
+    {Consultant}{Oct 2026 -- Present}
+    {Netlight}{Helsinki, Finland}
     \resumeItemListStart
-        \resumeItem{Building and deploying AI agents on AWS AgentCore as part of an internal agentic AI platform}
-        \resumeItem{Developing full stack features across the platform using TypeScript and React}
+        \resumeItem{Software engineering consulting}
     \resumeItemListEnd
 
     \resumeSubheading
-    {Master’s Thesis Worker}{Jan 2026 -- May 2026}
+    {AI \& Cloud Developer}{Jun 2026 -- Sep 2026}
     {KONE}{Espoo, Finland}
     \resumeItemListStart
-        \resumeItem{Developed agentic AI systems as part of my Master’s thesis}
-        \resumeItem{Designed and built AI agents and supporting infrastructure on AWS}
-        \resumeItem{Integrated MCP servers to enable communication between AI agents and internal systems}
+        \resumeItem{Owned end-to-end design and implementation of an AI assistant for a company-wide internal AI portal}
+        \resumeItem{Designed a LangGraph orchestrator agent coordinating specialized subagents on AWS Bedrock AgentCore}
+        \resumeItem{Built subagents using RAG and MCP tools to help employees find knowledge and take actions via chat}
+        \resumeItem{Designed and built the chat as a full-stack Next.js and React application, streaming agent responses in real time}
+        \resumeItem{Owned agent-side DevOps: CI/CD, tests, response quality evals, AWS CDK infrastructure and observability}
     \resumeItemListEnd
 
     \resumeSubheading
-    {Software Engineer Intern}{May 2025 -- Dec 2025}
+    {Master's Thesis Worker}{Jan 2026 -- May 2026}
     {KONE}{Espoo, Finland}
     \resumeItemListStart
-        \resumeItem{Created automated tests for web applications using Python, Robot Framework, Selenium and Playwright}
-        \resumeItem{Designed and implemented CI/CD pipelines and supporting infrastructure using Docker and YAML to automate development, testing, and deployment processes}
-        \resumeItem{Developed backend services using Python for an internal platform, leveraging AWS Lambda and DynamoDB}
-        \resumeItem{Used AWS to interact with cloud-hosted systems and manage data storage}
+        \resumeItem{Researched MCP-based tool integration for AI agents as part of a Master's thesis}
+        \resumeItem{Built AI agents and supporting infrastructure on AWS Bedrock AgentCore}
+        \resumeItem{Connected the agents to internal systems through MCP servers, giving them access to company tools and data}
     \resumeItemListEnd
 
     \resumeSubheading
-    {Software Engineer Intern}{May 2024 -- Aug 2024}
+    {Software Engineer}{May 2025 -- Dec 2025}
+    {KONE}{Espoo, Finland}
+    \resumeItemListStart
+        \resumeItem{Led test migration from Selenium to Playwright, improving test stability and reducing test execution time}
+        \resumeItem{Mapped cross-team dependencies and wrote Robot Framework tests that catch breaking changes before releases, reducing manual testing}
+        \resumeItem{Designed CI/CD pipelines and supporting infrastructure with Docker and YAML to automate deployments}
+        \resumeItem{Developed a Python backend for a shared test-resource booking service built on AWS Lambda and DynamoDB}
+    \resumeItemListEnd
+
+    \resumeSubheading
+    {Software Engineer}{May 2024 -- Aug 2024}
     {Danfoss Drives}{Vaasa, Finland}
     \resumeItemListStart
-        \resumeItem{Developed automated tests for embedded systems using Python and Robot Framework}
-        \resumeItem{Software development for embedded systems using C}
-        \resumeItem{Built Python scripts to automate repetitive tasks in the development process}
+        \resumeItem{Developed safety-critical temperature control firmware in C for variable frequency drives}
+        \resumeItem{Wrote automated tests in Python and Robot Framework to verify temperature control logic on drive simulators}
+        \resumeItem{Maintained and extended the drive simulators and built Python scripts to automate repetitive development tasks}
     \resumeItemListEnd
 
     \resumeSubheading
-    {Automation Engineer Intern}{May 2022 -- Aug 2023}
+    {Automation Engineer}{May 2022 -- Aug 2023}
     {Wärtsilä}{Vaasa, Finland}
     \resumeItemListStart
         \resumeItem{Conducted investigations on returned automation parts from field installations}
         \resumeItem{Handled customer deliveries of engine automation software tools}
-    \resumeItemListEnd
-    
-    \resumeSubheading
-    {Teaching Assistant}{Sep 2022 -- Dec 2022}
-    {Aalto University}{Espoo, Finland}
-    \resumeItemListStart
-        \resumeItem{Worked part-time as a teaching assistant in a basics in Python programming course}
-        \resumeItem{Assisted students with their homework}
-        \resumeItem{Graded home assignments}
     \resumeItemListEnd
 
 \resumeSubHeadingListEnd
