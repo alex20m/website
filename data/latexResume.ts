@@ -61,6 +61,15 @@ const latexResume = String.raw`
         \resumeItem{Handled customer deliveries of engine automation software tools}
     \resumeItemListEnd
 
+    \resumeSubheading
+    {Teaching Assistant}{Sep 2022 -- Dec 2022}
+    {Aalto University}{Espoo, Finland}
+    \resumeItemListStart
+        \resumeItem{Worked part-time as a teaching assistant in a basics in Python programming course}
+        \resumeItem{Assisted students with their homework}
+        \resumeItem{Graded home assignments}
+    \resumeItemListEnd
+
 \resumeSubHeadingListEnd
 `;
 

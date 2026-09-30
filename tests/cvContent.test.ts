@@ -14,6 +14,7 @@ describe('experience matches the current CV', () => {
       'Software Engineer | KONE | May 2025 - Dec 2025',
       'Software Engineer | Danfoss Drives | May 2024 - Aug 2024',
       'Automation Engineer | Wärtsilä | May 2022 - Aug 2023',
+      'Teaching Assistant | Aalto University | Sep 2022 - Dec 2022',
     ]);
   });
 
@@ -34,8 +35,7 @@ describe('experience matches the current CV', () => {
     ]);
   });
 
-  it('no longer lists roles that are absent from the CV', () => {
-    expect(experiences.map((e) => e.title)).not.toContain('Teaching Assistant');
+  it('drops the "Intern" title suffixes the CV no longer uses', () => {
     expect(experiences.some((e) => e.title.includes('Intern'))).toBe(false);
   });
 });
@@ -55,11 +55,12 @@ describe('AI assistant knowledge matches the current CV', () => {
     'safety-critical temperature control firmware',
     'Jan 2025 - Present',
     'Sep 2021 - Jan 2025',
+    'Teaching Assistant - Aalto University',
   ])('mentions %s', (fact) => {
     expect(SYSTEM_PROMPT).toContain(fact);
   });
 
-  it.each(['Teaching Assistant', 'Intern - KONE', 'Jun 2026 - Present, Espoo', 'Azure AI Foundry'])(
+  it.each(['Intern - KONE', 'Jun 2026 - Present, Espoo', 'Azure AI Foundry'])(
     'no longer mentions the outdated %s',
     (stale) => {
       expect(SYSTEM_PROMPT).not.toContain(stale);

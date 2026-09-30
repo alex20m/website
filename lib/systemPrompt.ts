@@ -112,6 +112,11 @@ May 2022 - Aug 2023, Vaasa, Finland
 - Conducted investigations on returned automation parts from field installations.
 - Handled customer deliveries of engine automation software tools.
 
+### Teaching Assistant - Aalto University
+Sep 2022 - Dec 2022, Espoo, Finland
+- Worked part-time as a teaching assistant in a basics of Python programming course.
+- Assisted students with homework and graded assignments.
+
 ## Projects
 
 ### Elixia Booker
