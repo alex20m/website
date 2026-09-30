@@ -39,7 +39,7 @@ test.describe('Open Graph / link preview metadata', () => {
     await page.goto('/');
     const about = page.locator('#about');
     const aboutName = await about.getByRole('heading', { level: 2 }).innerText();
-    const aboutBio = await about.getByText(/AI-focused developer/).innerText();
+    const aboutBio = await about.getByText(/AI-focused engineer/).innerText();
 
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', aboutName);
     await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', aboutBio);
