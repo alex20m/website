@@ -27,7 +27,7 @@ test.describe('About section', () => {
   test('shows the name and title', async ({ page }) => {
     await expect(about(page).getByRole('heading', { level: 2, name: 'Alex Mecklin' })).toBeVisible();
     await expect(
-      about(page).getByRole('heading', { level: 5, name: 'M.Sc. Student · Aalto University' }),
+      about(page).getByRole('heading', { level: 5, name: 'AI & Cloud Engineer' }),
     ).toBeVisible();
   });
 
