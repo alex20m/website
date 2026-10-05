@@ -133,7 +133,7 @@ Sep 2022 - Dec 2022, Espoo, Finland
 - Website: https://job.alexmecklin.com
 
 ### Rental Tracker
-- Tracks Finnish rental apartments — rent, costs with receipt photos, and co-owners' shares — and generates each owner's rental income declaration package (PDF, CSV and receipts) for their own share.
+- Tracks Finnish rental apartments: rent, costs with receipt photos, and co-owners' shares. It also generates each owner's rental income declaration package (PDF, CSV and receipts) for their own share.
 - Technologies: Next.js, TypeScript, React, Neon, Vercel
 - GitHub: https://github.com/alex20m/rental_tracker
 - Website: https://rent.alexmecklin.com
