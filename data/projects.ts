@@ -35,7 +35,7 @@ const projects: Project[] = [
   },
   {
     title: 'Rental Tracker',
-    description: 'Tracks Finnish rental apartments — rent, costs with receipt photos, and co-owners\' shares — and generates each owner\'s rental income declaration package (PDF, CSV and receipts) for their own share.',
+    description: 'Tracks Finnish rental apartments: rent, costs with receipt photos, and co-owners\' shares. It also generates each owner\'s rental income declaration package (PDF, CSV and receipts) for their own share.',
     technologies: ['Next.js', 'TypeScript', 'React', 'Neon', 'Vercel'],
     github: 'https://github.com/alex20m/rental_tracker',
     link: 'https://rent.alexmecklin.com',
