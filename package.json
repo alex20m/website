@@ -11,10 +11,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
-    "test:e2e:desktop": "playwright test --project=desktop",
-    "test:e2e:mobile": "playwright test --project=mobile",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e": "E2E_COVERAGE=1 next build && playwright test",
+    "test:e2e:desktop": "E2E_COVERAGE=1 next build && E2E_PROJECTS=desktop playwright test --project=desktop",
+    "test:e2e:mobile": "E2E_COVERAGE=1 next build && E2E_PROJECTS=mobile playwright test --project=mobile"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -42,6 +41,7 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.1",
     "jsdom": "^30.0.1",
+    "monocart-coverage-reports": "^2.13.0",
     "typescript": "^5.7.2",
     "vitest": "^5.0.0",
     "yaml": "^2.9.0"

@@ -3,18 +3,13 @@
 import { Typography, Box, Button } from '@mui/material';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import latexResume from '@/data/latexResume';
-import { parseLatexExperience } from '@/lib/parseLatexExperience';
-import { truncateDescription } from '@/lib/truncateDescription';
+import type { ExperienceEntry } from '@/lib/experiences';
 import useIsMobile from '@/hooks/useIsMobile';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import CompanyLogo from '@/components/sections/CompanyLogo';
 
-const experiences = parseLatexExperience(latexResume);
-const MOBILE_CHAR_LIMIT = 100;
-
-export default function Experience() {
+export default function Experience({ experiences }: { experiences: ExperienceEntry[] }) {
   const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
   const isMobile = useIsMobile();
 
@@ -38,10 +33,7 @@ export default function Experience() {
           }}
         />
         {experiences.map((exp, index) => {
-          const isTruncatable = exp.description.join(' ').length > MOBILE_CHAR_LIMIT;
-          const mobileItems = expandedItems[index]
-            ? exp.description
-            : truncateDescription(exp.description, MOBILE_CHAR_LIMIT);
+          const mobileItems = expandedItems[index] ? exp.description : exp.preview;
 
           return (
             <motion.div
@@ -112,7 +104,7 @@ export default function Experience() {
                       ))}
                     </Box>
 
-                    {isTruncatable && (
+                    {exp.truncatable && (
                       <Button
                         size="small"
                         onClick={() => toggleExpand(index)}

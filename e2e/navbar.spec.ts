@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
-import { isMobileProject, NAV_ITEMS } from './fixtures/helpers';
+import { test, expect } from './fixtures/test';
+import { DESKTOP, PHONE, isMobileProject, NAV_ITEMS } from './fixtures/helpers';
 
 const SECTION_HEADING: Record<string, { name: string; level: number }> = {
   about: { name: 'Alex Mecklin', level: 2 },
@@ -38,18 +38,28 @@ test.describe('Navbar', () => {
   });
 
   test.describe('on desktop', () => {
-    test('shows the full nav bar and no hamburger button', async ({ page }, testInfo) => {
-      test.skip(isMobileProject(testInfo), 'desktop-only nav chrome');
+    test.use(DESKTOP);
 
+    test('shows the full nav bar and no hamburger button', async ({ page }) => {
       for (const item of NAV_ITEMS) {
         await expect(page.getByRole('button', { name: item.label, exact: true })).toBeVisible();
       }
       await expect(page.getByRole('button', { name: 'Open navigation menu' })).toBeHidden();
     });
 
+    test('does nothing when the section a nav item points at is not on the page', async ({ page }) => {
+      // Renamed rather than removed: React owns the node, and pulling it out of the DOM would break its next render.
+      await page.evaluate(() => document.getElementById('projects')!.setAttribute('id', 'elsewhere'));
+      const before = await page.evaluate(() => window.scrollY);
+
+      await page.getByRole('button', { name: 'Projects', exact: true }).click();
+      await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => resolve(null))));
+
+      expect(await page.evaluate(() => window.scrollY)).toBe(before);
+    });
+
     for (const item of NAV_ITEMS) {
-      test(`clicking "${item.label}" scrolls the ${item.id} section into view`, async ({ page }, testInfo) => {
-        test.skip(isMobileProject(testInfo), 'desktop-only nav chrome');
+      test(`clicking "${item.label}" scrolls the ${item.id} section into view`, async ({ page }) => {
         const heading = SECTION_HEADING[item.id];
         if (!heading) throw new Error(`missing heading fixture for ${item.id}`);
 
@@ -62,28 +72,44 @@ test.describe('Navbar', () => {
     }
   });
 
-  test.describe('on mobile', () => {
-    test('hides the full nav bar and shows a hamburger button', async ({ page }, testInfo) => {
-      test.skip(!isMobileProject(testInfo), 'mobile-only nav chrome');
+  test.describe('on a phone', () => {
+    test.use(PHONE);
 
+    test('hides the full nav bar and shows a hamburger button', async ({ page }) => {
       await expect(page.getByRole('button', { name: 'Open navigation menu' })).toBeVisible();
       for (const item of NAV_ITEMS) {
         await expect(page.getByRole('button', { name: item.label, exact: true })).toBeHidden();
       }
     });
 
-    test('opens a drawer with every nav link when the hamburger is tapped', async ({ page }, testInfo) => {
-      test.skip(!isMobileProject(testInfo), 'mobile-only nav chrome');
-
+    test('opens a drawer with every nav link when the hamburger is tapped', async ({ page }) => {
       await page.getByRole('button', { name: 'Open navigation menu' }).click();
       for (const item of NAV_ITEMS) {
         await expect(page.getByRole('button', { name: item.label, exact: true })).toBeVisible();
       }
     });
 
+    test('closes the drawer on Escape and leaves the page where it was', async ({ page }) => {
+      await page.getByRole('button', { name: 'Open navigation menu' }).click();
+      await expect(page.getByRole('button', { name: 'About', exact: true })).toBeVisible();
+
+      await page.keyboard.press('Escape');
+
+      await expect(page.getByRole('button', { name: 'About', exact: true })).toBeHidden();
+      expect(await page.evaluate(() => window.scrollY)).toBe(0);
+    });
+
+    test('closes the drawer when the page behind it is tapped', async ({ page }) => {
+      await page.getByRole('button', { name: 'Open navigation menu' }).click();
+      await expect(page.getByRole('button', { name: 'About', exact: true })).toBeVisible();
+
+      await page.mouse.click(20, 400);
+
+      await expect(page.getByRole('button', { name: 'About', exact: true })).toBeHidden();
+    });
+
     for (const item of NAV_ITEMS) {
-      test(`selecting "${item.label}" in the drawer scrolls to ${item.id} and closes the drawer`, async ({ page }, testInfo) => {
-        test.skip(!isMobileProject(testInfo), 'mobile-only nav chrome');
+      test(`selecting "${item.label}" in the drawer scrolls to ${item.id} and closes the drawer`, async ({ page }) => {
         const heading = SECTION_HEADING[item.id];
         if (!heading) throw new Error(`missing heading fixture for ${item.id}`);
 

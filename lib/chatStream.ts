@@ -18,7 +18,8 @@ export interface ParsedChunk {
 
 export function parseSseChunk(buffer: string): ParsedChunk {
   const lines = buffer.split('\n');
-  const remainder = lines.pop() ?? '';
+  // `split` always yields at least one element, so there is always a last line.
+  const remainder = lines.pop()!;
 
   let text = '';
   let done = false;

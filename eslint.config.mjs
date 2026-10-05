@@ -10,7 +10,13 @@ const config = [
   ...nextConfig,
   ...typescriptConfig,
   {
-    ignores: ['worker/**'],
+    ignores: ['worker/**', '.next-e2e/**', 'coverage-e2e/**', 'playwright-report/**', 'test-results/**'],
+  },
+  {
+    // Playwright fixtures hand the test their value through a callback named
+    // `use`, which the hooks rule mistakes for React's `use`.
+    files: ['e2e/**'],
+    rules: { 'react-hooks/rules-of-hooks': 'off' },
   },
   {
     rules: {

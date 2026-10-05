@@ -24,14 +24,17 @@ const launchOptions = {
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  forbidOnly: true,
+  // A test that needs a retry to pass is broken; fix it rather than hide it.
+  retries: 0,
   // GitHub's standard ubuntu-latest runners have 2 vCPUs; a higher worker
   // count there oversubscribes and trades flakiness for a small speedup.
   workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI
     ? [['github'], ['html', { open: 'never', outputFolder: 'playwright-report' }]]
     : [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
+  globalSetup: './e2e/globalSetup.ts',
+  globalTeardown: './e2e/globalTeardown.ts',
   timeout: 30_000,
   expect: { timeout: 10_000 },
   use: {
@@ -41,9 +44,11 @@ export default defineConfig({
     video: 'retain-on-failure',
   },
   webServer: {
-    command: `npm run build && npm run start -- -p ${PORT}`,
+    // The coverage build (`npm run test:e2e*` makes it first) is what runs.
+    command: `next start -p ${PORT}`,
+    env: { E2E_COVERAGE: '1' },
     url: baseURL,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 180_000,
   },
   projects: [

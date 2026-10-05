@@ -23,3 +23,13 @@ export const NAV_ITEMS: { label: string; id: (typeof SECTION_IDS)[number] }[] = 
   { label: 'CV', id: 'cv' },
   { label: 'Contact', id: 'contact' },
 ];
+
+/**
+ * The two layouts the site has, as context options. The Playwright projects
+ * start each test in one of them; a test about a layout other than its
+ * project's default says so with `test.use(PHONE)` or `test.use(DESKTOP)`, so
+ * every layout-specific behaviour is exercised under both projects instead of
+ * being skipped under one.
+ */
+export const PHONE = { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true } as const;
+export const DESKTOP = { viewport: { width: 1440, height: 900 }, isMobile: false, hasTouch: false } as const;

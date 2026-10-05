@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
 
@@ -238,5 +238,66 @@ describe('deploying', () => {
     // split — and the wrangler/Cloudflare credential it needed — crept
     // back in.
     expect(Object.keys(workflowOf(MAIN).jobs)).not.toContain('deploy-worker');
+  });
+});
+
+describe('the end-to-end coverage gate', () => {
+  const config = read('playwright.config.ts');
+  const teardown = read('e2e/globalTeardown.ts');
+  const scripts = (JSON.parse(read('package.json')) as { scripts: Record<string, string> }).scripts;
+
+  /** What a config says about retries, read as the number it sets for CI. */
+  const retriesIn = (text: string) => /^\s*retries:\s*(.+?),\s*$/m.exec(text)?.[1];
+
+  it('reads retries out of a config, so the check below cannot pass by finding nothing', () => {
+    // The previous setting retried twice on CI, which is what this guards against coming back.
+    expect(retriesIn('  retries: process.env.CI ? 2 : 0,\n')).toBe('process.env.CI ? 2 : 0');
+    expect(retriesIn('  retries: 0,\n')).toBe('0');
+  });
+
+  it('runs every test once, so a test that needs a retry to pass is a failure', () => {
+    expect(retriesIn(config)).toBe('0');
+  });
+
+  it('fails the run from a global teardown that checks every browser module', () => {
+    expect(config).toMatch(/globalTeardown:\s*'\.\/e2e\/globalTeardown\.ts'/);
+    expect(teardown).toMatch(/shortfalls\(/);
+    expect(teardown).toMatch(/browserModules\(\)/);
+    expect(teardown).toMatch(/throw new Error/);
+  });
+
+  it('builds with browser source maps before every e2e script runs Playwright', () => {
+    for (const name of ['test:e2e', 'test:e2e:desktop', 'test:e2e:mobile']) {
+      expect(scripts[name], `${name} must build with E2E_COVERAGE=1 first`).toMatch(
+        /^E2E_COVERAGE=1 next build && .*playwright test/,
+      );
+    }
+  });
+
+  it('gates the same project each CI job runs, and no other', () => {
+    for (const project of ['desktop', 'mobile']) {
+      const script = scripts[`test:e2e:${project}`] ?? '';
+      expect(script, `test:e2e:${project} must run only the ${project} project`).toContain(`--project=${project}`);
+      expect(script, `test:e2e:${project} must gate only the ${project} project`).toContain(`E2E_PROJECTS=${project}`);
+    }
+  });
+
+  it('imports test and expect from the coverage fixture in every spec', () => {
+    // A spec that imports from '@playwright/test' directly records no coverage,
+    // so whatever it exercises would still read as untested.
+    for (const file of readdirSync(fileURLToPath(new URL('../e2e', import.meta.url))).filter((f) => f.endsWith('.spec.ts'))) {
+      const text = read(`e2e/${file}`);
+      expect(text, `${file} must take test from ./fixtures/test`).toMatch(/import \{[^}]*\btest\b[^}]*\} from '\.\/fixtures\/test'/);
+      expect(text, `${file} must not take test from @playwright/test`).not.toMatch(
+        /import \{[^}]*\btest\b[^}]*\} from '@playwright\/test'/,
+      );
+    }
+  });
+
+  it('skips nothing', () => {
+    // A skipped test is a layout or behaviour the suite does not run.
+    for (const file of readdirSync(fileURLToPath(new URL('../e2e', import.meta.url))).filter((f) => f.endsWith('.spec.ts'))) {
+      expect(read(`e2e/${file}`), `${file} must not skip tests`).not.toMatch(/test\.(skip|fixme)\(|\.skip\(/);
+    }
   });
 });

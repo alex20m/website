@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/test';
 import { mockChatSuccess } from './fixtures/chatMock';
 import { NAV_ITEMS, isMobileProject } from './fixtures/helpers';
 
