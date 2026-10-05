@@ -1,7 +1,6 @@
-'use client';
-
 import PortfolioApp from '@/components/PortfolioApp';
+import { loadExperiences } from '@/lib/experiences';
 
 export default function Home() {
-  return <PortfolioApp />;
+  return <PortfolioApp experiences={loadExperiences()} />;
 }

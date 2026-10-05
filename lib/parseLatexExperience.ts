@@ -30,10 +30,12 @@ export function parseLatexExperience(latexString: string): Experience[] {
   const subheadingRegex = /\\resumeSubheading\s*\{([^}]*)\}\{([^}]*)\}\s*\{([^}]*)\}\{([^}]*)\}/g;
   let match: RegExpExecArray | null;
   while ((match = subheadingRegex.exec(cleanedLatex)) !== null) {
-    const title = decodeLatex(match[1]?.trim() ?? '');
-    const period = (match[2]?.trim() ?? '').replace(/--/g, '-');
-    const company = decodeLatex(match[3]?.trim() ?? '');
-    const location = decodeLatex(match[4]?.trim() ?? '');
+    // All four groups are required by the pattern, so they exist on a match.
+    const [rawTitle, rawPeriod, rawCompany, rawLocation] = match.slice(1) as [string, string, string, string];
+    const title = decodeLatex(rawTitle.trim());
+    const period = rawPeriod.trim().replace(/--/g, '-');
+    const company = decodeLatex(rawCompany.trim());
+    const location = decodeLatex(rawLocation.trim());
     const startPos = match.index + match[0].length;
     const remainingText = cleanedLatex.substring(startPos);
     const itemsMatch = remainingText.match(/\\resumeItemListStart([\s\S]*?)\\resumeItemListEnd/);
@@ -43,7 +45,7 @@ export function parseLatexExperience(latexString: string): Experience[] {
       const itemRegex = /\\resumeItem\{([^}]*)\}/g;
       let itemMatch: RegExpExecArray | null;
       while ((itemMatch = itemRegex.exec(itemsText)) !== null) {
-        description.push(decodeLatex(itemMatch[1]?.trim() ?? ''));
+        description.push(decodeLatex((itemMatch[1] as string).trim()));
       }
     }
     experiences.push({ title, company, location, description, period });

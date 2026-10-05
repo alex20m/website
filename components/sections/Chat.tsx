@@ -139,10 +139,10 @@ export default function Chat() {
             firstToken = false;
           } else {
             setMessages((prev) => {
-              const updated = [...prev];
-              const last = updated[updated.length - 1];
-              if (last) updated[updated.length - 1] = { ...last, content: last.content + chunkContent };
-              return updated;
+              // The assistant's message was added with the first token, so it is the last one.
+              return prev.map((message, i) =>
+                i === prev.length - 1 ? { ...message, content: message.content + chunkContent } : message,
+              );
             });
           }
         }

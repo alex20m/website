@@ -10,8 +10,9 @@ import Contact from '@/components/sections/Contact';
 import Experience from '@/components/sections/Experience';
 import { ThemeProvider, createTheme, CssBaseline, Box } from '@mui/material';
 import useIsMobile from '@/hooks/useIsMobile';
+import type { ExperienceEntry } from '@/lib/experiences';
 
-export default function PortfolioApp() {
+export default function PortfolioApp({ experiences }: { experiences: ExperienceEntry[] }) {
   const isMobile = useIsMobile();
 
   const theme = createTheme({
@@ -53,7 +54,7 @@ export default function PortfolioApp() {
         <SectionDivider />
         <Section id="chat" bg="#ffffff"><Chat /></Section>
         <SectionDivider />
-        <Section id="experience"><Experience /></Section>
+        <Section id="experience"><Experience experiences={experiences} /></Section>
         <SectionDivider />
         <Section id="projects" bg="#ffffff"><Projects /></Section>
         <SectionDivider />
