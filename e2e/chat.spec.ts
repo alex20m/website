@@ -1,10 +1,14 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from './fixtures/test';
+import { type Page } from '@playwright/test';
 import {
   mockChatSuccess,
   mockChatSuccessDelayed,
   mockChatHttpError,
   mockChatNetworkFailure,
   mockChatEmptyStream,
+  mockChatChunked,
+  chatStreamEnded,
+  sseToken,
 } from './fixtures/chatMock';
 
 const SUGGESTIONS = ['What is Alex working on?', 'What are his skills?', 'Tell me about his experience'];
@@ -165,5 +169,92 @@ test.describe('Chat / Ask AI section', () => {
     await textbox(page).press('Enter');
 
     await expect(chat(page).getByText('Ask me anything about Alex')).toBeVisible();
+  });
+});
+
+const DONE = 'data: [DONE]\n\n';
+
+test.describe('Chat streaming', () => {
+  // Each test arms its stream before the first navigation (see mockChatChunked).
+  async function ask(page: Page, question: string) {
+    await page.goto('/');
+    await chat(page).scrollIntoViewIfNeeded();
+    await textbox(page).fill(question);
+    await sendButton(page).click();
+  }
+
+  test('builds the reply up from tokens that arrive in separate chunks', async ({ page }) => {
+    await mockChatChunked(page, [sseToken('Hello'), sseToken(', '), sseToken('world!'), DONE]);
+    await ask(page, 'Greet me');
+
+    await expect(chat(page).getByText('Hello, world!', { exact: true })).toBeVisible();
+    await expect(chat(page).getByText('Thinking...')).toBeHidden();
+  });
+
+  test('keeps what has streamed when the connection ends without a [DONE] marker', async ({ page }) => {
+    await mockChatChunked(page, [sseToken('Partial '), sseToken('answer')]);
+    await ask(page, 'Cut me off');
+
+    await expect(chat(page).getByText('Partial answer', { exact: true })).toBeVisible();
+    await chatStreamEnded(page);
+    await expect(chat(page).getByText('Partial answer', { exact: true })).toBeVisible();
+  });
+
+  test('puts a token back together when a frame is split across two chunks', async ({ page }) => {
+    await mockChatChunked(page, ['data: {"choices":[{"delta":{"con', 'tent":"Joined"}}]}\n\n', DONE]);
+    await ask(page, 'Split it');
+
+    await expect(chat(page).getByText('Joined', { exact: true })).toBeVisible();
+  });
+
+  test('skips comment, malformed and tokenless frames and still shows the real tokens', async ({ page }) => {
+    await mockChatChunked(page, [
+      ': keep-alive\n\n',
+      'data: {not json\n\n',
+      'data: {}\n\n',
+      'data: {"choices":[]}\n\n',
+      'data: {"choices":[{"delta":{}}]}\n\n',
+      sseToken('Clean.'),
+      DONE,
+    ]);
+    await ask(page, 'Be noisy');
+
+    await expect(chat(page).getByText('Clean.', { exact: true })).toBeVisible();
+    await expect(chat(page).getByText('Sorry', { exact: false })).toHaveCount(0);
+  });
+});
+
+test.describe('Chat replies', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+    await chat(page).scrollIntoViewIfNeeded();
+  });
+
+  test('renders bulleted and numbered lists in a reply as lists', async ({ page }) => {
+    await mockChatSuccess(page, ['Skills:\n\n- Python\n- TypeScript\n\n1. First step\n2. Second step']);
+    await textbox(page).fill('List things');
+    await sendButton(page).click();
+
+    await expect(chat(page).getByRole('list')).toHaveCount(2);
+    await expect(chat(page).getByRole('listitem')).toHaveText(['Python', 'TypeScript', 'First step', 'Second step']);
+  });
+
+  test('leaves the page where it is when a reply links to a section that does not exist', async ({ page }) => {
+    await mockChatSuccess(page, ['Look under #nowhere for that.']);
+    await textbox(page).fill('Where?');
+    await sendButton(page).click();
+
+    const link = chat(page).getByRole('link', { name: '#nowhere' });
+    await expect(link).toBeVisible();
+    const before = await page.evaluate(() => window.scrollY);
+    // Dispatched rather than clicked: Playwright's own click scrolls to chase a
+    // reply that is still animating into place, which would move the page
+    // whatever the app does.
+    await link.dispatchEvent('click');
+    await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => resolve(null))));
+
+    expect(await page.evaluate(() => window.scrollY)).toBe(before);
+    // The link is handled in the page, so the address does not gain a #nowhere.
+    expect(new URL(page.url()).hash).toBe('');
   });
 });

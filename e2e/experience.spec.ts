@@ -1,9 +1,10 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from './fixtures/test';
+import { type Page } from '@playwright/test';
 import { parseLatexExperience } from '@/lib/parseLatexExperience';
 import { truncateDescription } from '@/lib/truncateDescription';
 import { companyLogoName } from '@/lib/companyLogo';
 import latexResume from '@/data/latexResume';
-import { isMobileProject } from './fixtures/helpers';
+import { DESKTOP, PHONE, isMobileProject } from './fixtures/helpers';
 
 const experiences = parseLatexExperience(latexResume);
 // Mirrors components/sections/Experience.tsx's own constant.
@@ -74,11 +75,26 @@ test.describe('Experience section', () => {
     await expect(experienceSection(page).getByText('KONE · Espoo, Finland', { exact: true }).first()).toBeVisible();
   });
 
-  test.describe('on mobile', () => {
+  test('hides a company logo whose image only fails after the page has loaded', async ({ page }) => {
+    // A slow 404 lands after React has attached the image's error handler,
+    // which is the path a fast one (above) skips.
+    await page.route('**/logos/kone.png', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await route.fulfill({ status: 404, body: 'not found' });
+    });
+    await gotoExperience(page);
+    // `goto` resolves once the page has loaded, which includes this held
+    // image, so by now it has failed and been removed.
+    await expect(experienceSection(page).locator('img[alt="KONE"]')).toHaveCount(0);
+    await expect(experienceSection(page).getByText('KONE · Espoo, Finland', { exact: true }).first()).toBeVisible();
+  });
+
+  test.describe('on a phone', () => {
+    test.use(PHONE);
+
     test('expands a truncated entry on "Show more" and collapses it again on "Show less", independently of others', async ({
       page,
-    }, testInfo) => {
-      test.skip(!isMobileProject(testInfo), 'mobile-only truncation UI');
+    }) => {
       await gotoExperience(page);
 
       // Entries at or under the limit (e.g. a one-line role) get no toggle,
@@ -123,8 +139,9 @@ test.describe('Experience section', () => {
   });
 
   test.describe('on desktop', () => {
-    test('the mobile "Show more" toggle is not visible', async ({ page }, testInfo) => {
-      test.skip(isMobileProject(testInfo), 'desktop-only assertion');
+    test.use(DESKTOP);
+
+    test('the mobile "Show more" toggle is not visible', async ({ page }) => {
       await gotoExperience(page);
       await expect(experienceSection(page).getByRole('button', { name: 'Show more' }).first()).toBeHidden();
     });

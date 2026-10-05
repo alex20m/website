@@ -66,13 +66,16 @@ data/
 ├── projects.ts, personal.tsx    # Project cards, contact info, CV reference
 └── latexResume.ts               # Raw LaTeX CV content
 lib/                            # Pure logic, unit-tested independently of the UI
+├── experiences.ts               # Server-side: parsed + pre-truncated Experience entries
 ├── parseLatexExperience.ts      # Extracts Experience entries out of the LaTeX CV
 ├── truncateDescription.ts       # Word-boundary truncation for the mobile view
 ├── companyLogo.ts               # Company name -> logo filename
 ├── chatStream.ts                # SSE chunk parsing for the chat stream
 └── systemPrompt.ts               # The chat assistant's system prompt
 tests/                          # Vitest — the pure `lib/` functions, the page
-                                 # render, and the CI pipeline's own shape
+                                 # render, the e2e coverage gate, and the CI
+                                 # pipeline's own shape
+e2e/                            # Playwright, desktop + mobile, 100 % UI coverage
 public/                         # Static assets: favicons, profile photo, CV,
                                  # company logos
 ```
@@ -90,7 +93,18 @@ npm run dev          # http://localhost:3000
 npm run lint && npm run typecheck && npm test && npm run build
 ```
 
-This is exactly what CI runs on every pull request and every push to `main`.
+This is exactly what CI runs on every pull request and every push to `main`,
+plus the end-to-end suite:
+
+```bash
+npx playwright install chromium   # once
+npm run test:e2e                  # builds with source maps, runs both viewports
+```
+
+`npm run test:e2e` fails unless every module that runs in the browser is
+**100 %** covered (statements, branches, functions, lines), measured from the
+browser and held separately for the `desktop` and `mobile` projects. The report
+is in `coverage-e2e/<project>/index.html`; see the `e2e-ui-coverage` skill.
 The chat backend (`app/api/chat/route.ts`) runs in the same `npm run dev`
 process as the rest of the app — no separate server to start. It needs
 `OPENROUTER_API_KEY` in your local `.env.local` (not committed — see
@@ -109,7 +123,7 @@ platform's own deploy and ship everything twice.
 
 ```
 .github/workflows/
-├── pull-request.yml   # lint, typecheck, test, build — every pull request
+├── pull-request.yml   # lint, typecheck, test, build, e2e (desktop + mobile, 100 % coverage)
 └── main.yml           # the same checks on push to main
 ```
 

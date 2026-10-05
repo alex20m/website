@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from './fixtures/test';
+import { type Page } from '@playwright/test';
 import projects from '@/data/projects';
 
 const projectsSection = (page: Page) => page.locator('#projects');

@@ -1,5 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/test';
 import { contacts, cv } from '@/data/personal';
+import { DESKTOP } from './fixtures/helpers';
 
 const SKILLS = [
   'Agentic AI',
@@ -70,17 +71,19 @@ test.describe('About section', () => {
       await expect(link).toHaveAttribute('aria-label', contact.value);
     });
 
-    test(`the ${contact.label} icon shows its value in a floating tooltip on hover`, async ({ page }, testInfo) => {
-      // Tooltips are hover-driven; skip on the mobile project where there is
-      // no pointer to hover with.
-      test.skip(testInfo.project.name === 'mobile', 'no hover on touch devices');
+    test.describe(`with a pointer to hover with`, () => {
+      // Tooltips are hover-driven, so this runs as a desktop with a mouse
+      // under both projects rather than being skipped on the touch one.
+      test.use(DESKTOP);
 
-      const link = about(page).locator(`a[href="${contact.href}"]`);
-      await link.hover();
+      test(`the ${contact.label} icon shows its value in a floating tooltip on hover`, async ({ page }) => {
+        const link = about(page).locator(`a[href="${contact.href}"]`);
+        await link.hover();
 
-      const tooltip = page.locator('.MuiTooltip-tooltip');
-      await expect(tooltip).toBeVisible();
-      await expect(tooltip).toHaveText(contact.value);
+        const tooltip = page.locator('.MuiTooltip-tooltip');
+        await expect(tooltip).toBeVisible();
+        await expect(tooltip).toHaveText(contact.value);
+      });
     });
   }
 });

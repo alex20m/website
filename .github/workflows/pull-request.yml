@@ -96,7 +96,7 @@ jobs:
       # This single command builds the production bundle, starts it, and runs
       # the suite against it (see playwright.config.ts's `webServer`) — a
       # separate build step would just duplicate `verify`'s.
-      - name: Run desktop e2e suite
+      - name: Run desktop e2e suite (fails below 100 % UI coverage)
         run: npm run test:e2e:desktop
 
       - name: Upload Playwright report (desktop)
@@ -125,7 +125,7 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Run mobile e2e suite
+      - name: Run mobile e2e suite (fails below 100 % UI coverage)
         run: npm run test:e2e:mobile
 
       - name: Upload Playwright report (mobile)
