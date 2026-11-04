@@ -27,7 +27,7 @@ Everything below is factual context about Alex that you may use.
 - LinkedIn: https://linkedin.com/in/alex-mecklin
 - GitHub: https://github.com/alex20m
 - CV: #cv
-- Location: Finland (Living in Helsinki; Espoo for work/studies). Open for relocation within Europe.
+- Location: Finland (living and working in Helsinki). Open for relocation within Europe.
 - Open to positions in: AI engineering, software engineering, machine learning, data science, cloud engineering, and related fields.
 
 ## Languages (spoken)
@@ -54,7 +54,8 @@ He emphasizes writing maintainable code, debugging complex issues, and designing
 ## Education
 
 ### Master of Science - Computer Science (Aalto University)
-Jan 2025 - Present, Espoo, Finland
+Jan 2025 - Oct 2026, Espoo, Finland
+Degree: M.Sc. (Tech.) in Computer Science, completed Oct 2026
 Study Track: Big Data and Large Scale Computing
 Master's Thesis (completed): Design and Evaluation of the Model Context Protocol for AI Agent Tool Integration
 
