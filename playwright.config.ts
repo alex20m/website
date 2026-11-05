@@ -56,6 +56,12 @@ export default defineConfig({
       name: 'desktop',
       use: {
         ...devices['Desktop Chrome'],
+        // The full Chromium build in headless mode, not the stripped-down
+        // headless shell Playwright uses by default. The shell has no PDF
+        // viewer, so a link that should open the CV in a tab just leaves a
+        // blank one, and the CV tests could not tell "opens the PDF" apart
+        // from "breaks". `playwright install chromium` fetches both builds.
+        channel: 'chromium',
         viewport: { width: 1440, height: 900 },
         launchOptions: Object.keys(launchOptions).length ? launchOptions : undefined,
       },
@@ -72,6 +78,8 @@ export default defineConfig({
         // bugs from the narrow viewport and isMobile branch, not from a
         // different browser.
         browserName: 'chromium',
+        // Same full Chromium as desktop (see there): the PDF tests need its viewer.
+        channel: 'chromium',
         launchOptions: Object.keys(launchOptions).length ? launchOptions : undefined,
       },
     },

@@ -1,5 +1,7 @@
 import { test, expect } from './fixtures/test';
 import { type Page } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 import { contacts, cv } from '@/data/personal';
 
 const cvSection = (page: Page) => page.locator('#cv');
@@ -72,6 +74,39 @@ test.describe('CV section', () => {
     expect(response.headers()['content-type']).toContain('pdf');
     expect(response.headers()['content-disposition'] ?? '').not.toContain('attachment');
   });
+
+  // What a visitor gets when they tap the buttons, checked the same way in the
+  // desktop and the mobile project: Download saves the file, while View and
+  // the preview open it in a new tab without downloading it.
+  test('tapping Download CV saves the published CV as a file and stays on the page', async ({ page }) => {
+    const download = page.waitForEvent('download');
+    await cvSection(page).getByRole('link', { name: 'Download CV' }).click();
+    const saved = await download;
+
+    expect(saved.suggestedFilename()).toBe(cv.filename);
+    const published = await readFile(path.join(process.cwd(), 'public', cv.file));
+    expect(Buffer.compare(await readFile(await saved.path()), published)).toBe(0);
+    await expect(page).toHaveURL(/\/$/);
+  });
+
+  for (const name of ['View in browser', 'First page of my CV']) {
+    test(`tapping "${name}" opens the CV in a new tab instead of downloading it`, async ({ page }) => {
+      const downloads: string[] = [];
+      page.on('download', (d) => downloads.push(d.suggestedFilename()));
+      page.context().on('page', (tab) => tab.on('download', (d) => downloads.push(d.suggestedFilename())));
+
+      const newTab = page.waitForEvent('popup');
+      await cvSection(page).getByRole('link', { name }).click();
+      const tab = await newTab;
+
+      // A link that downloads instead closes its new tab before it ever shows
+      // the PDF's address, so this fails for a download as well as a wrong URL.
+      await expect(tab).toHaveURL(new RegExp(`${cv.file.replace(/\./g, '\\.')}$`));
+      await tab.waitForLoadState('load');
+      expect(tab.isClosed()).toBe(false);
+      expect(downloads).toEqual([]);
+    });
+  }
 
   test('the CV file the button links to actually exists and is a PDF', async ({ page, request }) => {
     const href = await cvSection(page).getByRole('link', { name: 'Download CV' }).getAttribute('href');
