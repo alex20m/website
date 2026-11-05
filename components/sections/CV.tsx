@@ -61,7 +61,7 @@ export default function CV() {
         >
           <Button
             variant="contained"
-            href={cv.file}
+            href={cv.downloadUrl}
             download={cv.filename}
             startIcon={<DownloadIcon />}
             sx={{ backgroundColor: '#0a1929', '&:hover': { backgroundColor: '#1565c0' } }}

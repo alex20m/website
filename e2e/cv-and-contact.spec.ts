@@ -47,11 +47,30 @@ test.describe('CV section', () => {
     await expect(cvSection(page).getByText(/detailed overview of my education/)).toHaveCount(0);
   });
 
-  test('the Download CV button links to the CV file for download', async ({ page }) => {
+  test('the Download CV button links to the CV\'s download URL for download', async ({ page }) => {
     const button = cvSection(page).getByRole('link', { name: 'Download CV' });
     await expect(button).toBeVisible();
-    await expect(button).toHaveAttribute('href', cv.file);
+    await expect(button).toHaveAttribute('href', cv.downloadUrl);
     await expect(button).toHaveAttribute('download', cv.filename);
+  });
+
+  // iPhone Chrome ignores the `download` attribute on a PDF the server marks
+  // as viewable: the tap shows activity but nothing lands in Downloads. A
+  // response sent as an attachment is a download in every browser.
+  test('the Download CV button\'s URL is served as a file attachment, so mobile browsers save it', async ({ page, request }) => {
+    const href = await cvSection(page).getByRole('link', { name: 'Download CV' }).getAttribute('href');
+    const response = await request.get(href!);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('pdf');
+    expect(response.headers()['content-disposition']).toBe(`attachment; filename="${cv.filename}"`);
+  });
+
+  test('the View in browser button\'s URL is not served as an attachment, so it opens instead of downloading', async ({ page, request }) => {
+    const href = await cvSection(page).getByRole('link', { name: 'View in browser' }).getAttribute('href');
+    const response = await request.get(href!);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('pdf');
+    expect(response.headers()['content-disposition'] ?? '').not.toContain('attachment');
   });
 
   test('the CV file the button links to actually exists and is a PDF', async ({ page, request }) => {
