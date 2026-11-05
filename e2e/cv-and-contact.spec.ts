@@ -11,9 +11,40 @@ test.describe('CV section', () => {
     await cvSection(page).scrollIntoViewIfNeeded();
   });
 
-  test('shows the CV heading and blurb', async ({ page }) => {
+  test('shows the CV heading and a loaded preview of the CV\'s first page', async ({ page }) => {
     await expect(cvSection(page).getByRole('heading', { level: 2, name: 'CV', exact: true })).toBeVisible();
-    await expect(cvSection(page).getByText(/detailed overview of my education/)).toBeVisible();
+    const preview = cvSection(page).getByRole('img', { name: 'First page of my CV' });
+    await expect(preview).toBeVisible();
+    await expect(preview).toHaveAttribute('src', cv.preview.src);
+    // naturalWidth is 0 for a broken image, so this proves the PNG really loaded.
+    await expect.poll(() => preview.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBe(cv.preview.width);
+  });
+
+  test('the preview image is served as a PNG', async ({ request }) => {
+    const response = await request.get(cv.preview.src);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toBe('image/png');
+  });
+
+  test('clicking the preview opens the PDF in a new tab', async ({ page }) => {
+    const link = cvSection(page).getByRole('link', { name: 'First page of my CV' });
+    await expect(link).toHaveAttribute('href', cv.file);
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', /noopener/);
+  });
+
+  test('the View in browser button opens the PDF in a new tab instead of downloading it', async ({ page }) => {
+    const button = cvSection(page).getByRole('link', { name: 'View in browser' });
+    await expect(button).toBeVisible();
+    await expect(button).toHaveAttribute('href', cv.file);
+    await expect(button).toHaveAttribute('target', '_blank');
+    await expect(button).toHaveAttribute('rel', /noopener/);
+    await expect(button).not.toHaveAttribute('download');
+  });
+
+  test('shows only the preview and the two buttons, with no upload-style blurb', async ({ page }) => {
+    await expect(cvSection(page).getByRole('link')).toHaveCount(3);
+    await expect(cvSection(page).getByText(/detailed overview of my education/)).toHaveCount(0);
   });
 
   test('the Download CV button links to the CV file for download', async ({ page }) => {
