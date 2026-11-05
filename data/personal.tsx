@@ -32,4 +32,9 @@ export const contacts: Contact[] = [
 export const cv = {
   file: '/Alex_Mecklin_CV.pdf',
   filename: 'Alex_Mecklin_CV.pdf',
+  // Rendered from `file` at build time by app/cv-preview.png/route.ts, so it
+  // always shows the PDF that is actually deployed. width/height are that
+  // render's pixel size (an A4 page at PREVIEW_WIDTH), given to the <img> so
+  // the layout does not jump while it loads.
+  preview: { src: '/cv-preview.png', width: 900, height: 1274 },
 };

@@ -22,7 +22,9 @@ A single-page Next.js app with smooth-scrolling navigation between sections:
 - **Experience** — timeline view of work history with company logos, parsed
   straight out of my LaTeX CV so the two never drift apart
 - **Projects** — grid of personal projects
-- **CV** — downloadable resume
+- **CV** — a preview of the resume's first page, with download and view buttons.
+  The preview is rendered from the PDF in `public/` while the site builds, so
+  replacing the PDF is all it takes to update both
 - **Contact** — email, phone, LinkedIn, GitHub
 
 ## Tech Stack
@@ -52,7 +54,8 @@ A single-page Next.js app with smooth-scrolling navigation between sections:
 app/                          # Next.js App Router
 ├── layout.tsx                 # Root layout, metadata, MUI SSR cache provider
 ├── page.tsx                   # Entry point; renders PortfolioApp
-└── api/chat/route.ts          # Chat backend: proxies to OpenRouter, streams SSE back
+├── api/chat/route.ts          # Chat backend: proxies to OpenRouter, streams SSE back
+└── cv-preview.png/route.ts    # CV preview image, rendered from the PDF at build time
 components/
 ├── Navbar.tsx                  # Fixed navigation with mobile drawer
 ├── Section.tsx                 # Section wrapper + divider used between them
@@ -71,6 +74,7 @@ lib/                            # Pure logic, unit-tested independently of the U
 ├── truncateDescription.ts       # Word-boundary truncation for the mobile view
 ├── companyLogo.ts               # Company name -> logo filename
 ├── chatStream.ts                # SSE chunk parsing for the chat stream
+├── cvPreview.ts                 # Server-side: renders a PDF's first page to PNG
 └── systemPrompt.ts               # The chat assistant's system prompt
 tests/                          # Vitest — the pure `lib/` functions, the page
                                  # render, the e2e coverage gate, and the CI
