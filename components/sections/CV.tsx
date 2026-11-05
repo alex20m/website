@@ -1,8 +1,7 @@
 'use client';
 
-import { Typography, Box, Button, Stack } from '@mui/material';
-import DownloadIcon from '@mui/icons-material/Download';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import { Typography, Box, Button } from '@mui/material';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import useIsMobile from '@/hooks/useIsMobile';
 import { cv } from '@/data/personal';
 
@@ -54,35 +53,17 @@ export default function CV() {
             }}
           />
         </Box>
-        <Stack
-          direction={isMobile ? 'column' : 'row'}
-          spacing={1.5}
-          sx={{ width: isMobile ? '100%' : 'auto' }}
+        <Button
+          variant="contained"
+          href={cv.file}
+          target="_blank"
+          rel="noopener noreferrer"
+          fullWidth={isMobile}
+          startIcon={<OpenInNewIcon />}
+          sx={{ backgroundColor: '#0a1929', '&:hover': { backgroundColor: '#1565c0' } }}
         >
-          <Button
-            variant="contained"
-            href={cv.downloadUrl}
-            download={cv.filename}
-            startIcon={<DownloadIcon />}
-            sx={{ backgroundColor: '#0a1929', '&:hover': { backgroundColor: '#1565c0' } }}
-          >
-            Download CV
-          </Button>
-          <Button
-            variant="outlined"
-            href={cv.file}
-            target="_blank"
-            rel="noopener noreferrer"
-            startIcon={<VisibilityOutlinedIcon />}
-            sx={{
-              color: '#0a1929',
-              borderColor: '#c8d6e5',
-              '&:hover': { borderColor: '#1565c0', color: '#1565c0' },
-            }}
-          >
-            View in browser
-          </Button>
-        </Stack>
+          Open CV
+        </Button>
       </Box>
     </>
   );

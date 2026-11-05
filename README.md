@@ -22,7 +22,8 @@ A single-page Next.js app with smooth-scrolling navigation between sections:
 - **Experience** — timeline view of work history with company logos, parsed
   straight out of my LaTeX CV so the two never drift apart
 - **Projects** — grid of personal projects
-- **CV** — a preview of the resume's first page, with download and view buttons.
+- **CV** — a preview of the resume's first page and an Open CV button, both
+  opening the PDF in a new tab (saving it is left to the device's PDF viewer).
   The preview is rendered from the PDF in `public/` while the site builds, so
   replacing the PDF is all it takes to update both
 - **Contact** — email, phone, LinkedIn, GitHub

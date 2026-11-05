@@ -1,8 +1,7 @@
 import { test, expect } from './fixtures/test';
 import { type Page } from '@playwright/test';
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
 import { contacts, cv } from '@/data/personal';
+import { waitForFinalLayout } from './fixtures/helpers';
 
 const cvSection = (page: Page) => page.locator('#cv');
 const contactSection = (page: Page) => page.locator('#contact');
@@ -28,75 +27,31 @@ test.describe('CV section', () => {
     expect(response.headers()['content-type']).toBe('image/png');
   });
 
-  test('clicking the preview opens the PDF in a new tab', async ({ page }) => {
-    const link = cvSection(page).getByRole('link', { name: 'First page of my CV' });
-    await expect(link).toHaveAttribute('href', cv.file);
-    await expect(link).toHaveAttribute('target', '_blank');
-    await expect(link).toHaveAttribute('rel', /noopener/);
-  });
+  // The section offers one way in: open the PDF. Every device can open one,
+  // and every PDF viewer has its own save button, whereas a separate Download
+  // button behaved differently from browser to browser (iPhone Chrome ignored
+  // it). Both controls are checked as links and by tapping them, in the
+  // desktop and the mobile project alike.
+  const openControls = ['Open CV', 'First page of my CV'];
 
-  test('the View in browser button opens the PDF in a new tab instead of downloading it', async ({ page }) => {
-    const button = cvSection(page).getByRole('link', { name: 'View in browser' });
-    await expect(button).toBeVisible();
-    await expect(button).toHaveAttribute('href', cv.file);
-    await expect(button).toHaveAttribute('target', '_blank');
-    await expect(button).toHaveAttribute('rel', /noopener/);
-    await expect(button).not.toHaveAttribute('download');
-  });
+  for (const name of openControls) {
+    test(`"${name}" links to the CV in a new tab, with no download attribute`, async ({ page }) => {
+      const link = cvSection(page).getByRole('link', { name, exact: true });
+      await expect(link).toBeVisible();
+      await expect(link).toHaveAttribute('href', cv.file);
+      await expect(link).toHaveAttribute('target', '_blank');
+      await expect(link).toHaveAttribute('rel', /noopener/);
+      await expect(link).not.toHaveAttribute('download');
+    });
 
-  test('shows only the preview and the two buttons, with no upload-style blurb', async ({ page }) => {
-    await expect(cvSection(page).getByRole('link')).toHaveCount(3);
-    await expect(cvSection(page).getByText(/detailed overview of my education/)).toHaveCount(0);
-  });
-
-  test('the Download CV button links to the CV\'s download URL for download', async ({ page }) => {
-    const button = cvSection(page).getByRole('link', { name: 'Download CV' });
-    await expect(button).toBeVisible();
-    await expect(button).toHaveAttribute('href', cv.downloadUrl);
-    await expect(button).toHaveAttribute('download', cv.filename);
-  });
-
-  // iPhone Chrome ignores the `download` attribute on a PDF the server marks
-  // as viewable: the tap shows activity but nothing lands in Downloads. A
-  // response sent as an attachment is a download in every browser.
-  test('the Download CV button\'s URL is served as a file attachment, so mobile browsers save it', async ({ page, request }) => {
-    const href = await cvSection(page).getByRole('link', { name: 'Download CV' }).getAttribute('href');
-    const response = await request.get(href!);
-    expect(response.status()).toBe(200);
-    expect(response.headers()['content-type']).toContain('pdf');
-    expect(response.headers()['content-disposition']).toBe(`attachment; filename="${cv.filename}"`);
-  });
-
-  test('the View in browser button\'s URL is not served as an attachment, so it opens instead of downloading', async ({ page, request }) => {
-    const href = await cvSection(page).getByRole('link', { name: 'View in browser' }).getAttribute('href');
-    const response = await request.get(href!);
-    expect(response.status()).toBe(200);
-    expect(response.headers()['content-type']).toContain('pdf');
-    expect(response.headers()['content-disposition'] ?? '').not.toContain('attachment');
-  });
-
-  // What a visitor gets when they tap the buttons, checked the same way in the
-  // desktop and the mobile project: Download saves the file, while View and
-  // the preview open it in a new tab without downloading it.
-  test('tapping Download CV saves the published CV as a file and stays on the page', async ({ page }) => {
-    const download = page.waitForEvent('download');
-    await cvSection(page).getByRole('link', { name: 'Download CV' }).click();
-    const saved = await download;
-
-    expect(saved.suggestedFilename()).toBe(cv.filename);
-    const published = await readFile(path.join(process.cwd(), 'public', cv.file));
-    expect(Buffer.compare(await readFile(await saved.path()), published)).toBe(0);
-    await expect(page).toHaveURL(/\/$/);
-  });
-
-  for (const name of ['View in browser', 'First page of my CV']) {
     test(`tapping "${name}" opens the CV in a new tab instead of downloading it`, async ({ page }) => {
       const downloads: string[] = [];
       page.on('download', (d) => downloads.push(d.suggestedFilename()));
       page.context().on('page', (tab) => tab.on('download', (d) => downloads.push(d.suggestedFilename())));
 
+      await waitForFinalLayout(page);
       const newTab = page.waitForEvent('popup');
-      await cvSection(page).getByRole('link', { name }).click();
+      await cvSection(page).getByRole('link', { name, exact: true }).click();
       const tab = await newTab;
 
       // A link that downloads instead closes its new tab before it ever shows
@@ -108,11 +63,18 @@ test.describe('CV section', () => {
     });
   }
 
-  test('the CV file the button links to actually exists and is a PDF', async ({ page, request }) => {
-    const href = await cvSection(page).getByRole('link', { name: 'Download CV' }).getAttribute('href');
+  test('shows only the preview and the Open CV button: no Download button, no blurb', async ({ page }) => {
+    await expect(cvSection(page).getByRole('link')).toHaveCount(2);
+    await expect(cvSection(page).getByRole('link', { name: /download/i })).toHaveCount(0);
+    await expect(cvSection(page).getByText(/detailed overview of my education/)).toHaveCount(0);
+  });
+
+  test('the CV the button opens exists and is served to be displayed, not as an attachment', async ({ page, request }) => {
+    const href = await cvSection(page).getByRole('link', { name: 'Open CV', exact: true }).getAttribute('href');
     const response = await request.get(href!);
     expect(response.status()).toBe(200);
     expect(response.headers()['content-type']).toContain('pdf');
+    expect(response.headers()['content-disposition'] ?? '').not.toContain('attachment');
   });
 });
 

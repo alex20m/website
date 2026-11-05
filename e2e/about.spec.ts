@@ -1,6 +1,6 @@
 import { test, expect } from './fixtures/test';
 import { contacts, cv } from '@/data/personal';
-import { DESKTOP } from './fixtures/helpers';
+import { DESKTOP, waitForFinalLayout } from './fixtures/helpers';
 
 const SKILLS = [
   'Agentic AI',
@@ -42,11 +42,27 @@ test.describe('About section', () => {
     }
   });
 
-  test('the Download CV button links to the CV file', async ({ page }) => {
-    const button = about(page).getByRole('link', { name: 'Download CV' });
+  // Opens rather than downloads, like the CV section: every device can open
+  // a PDF and save it from its viewer, while the `download` attribute did
+  // nothing visible on iPhone Chrome.
+  test('the Open CV button opens the CV in a new tab instead of downloading it', async ({ page }) => {
+    const button = about(page).getByRole('link', { name: 'Open CV', exact: true });
     await expect(button).toBeVisible();
     await expect(button).toHaveAttribute('href', cv.file);
-    await expect(button).toHaveAttribute('download', cv.filename);
+    await expect(button).not.toHaveAttribute('download');
+
+    const downloads: string[] = [];
+    page.on('download', (d) => downloads.push(d.suggestedFilename()));
+    page.context().on('page', (tab) => tab.on('download', (d) => downloads.push(d.suggestedFilename())));
+    await waitForFinalLayout(page);
+    const newTab = page.waitForEvent('popup');
+    await button.click();
+    const tab = await newTab;
+
+    await expect(tab).toHaveURL(new RegExp(`${cv.file.replace(/\./g, '\\.')}$`));
+    await tab.waitForLoadState('load');
+    expect(tab.isClosed()).toBe(false);
+    expect(downloads).toEqual([]);
   });
 
   for (const contact of contacts) {
