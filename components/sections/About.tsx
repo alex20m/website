@@ -1,7 +1,7 @@
 'use client';
 
 import { Typography, Box, Avatar, Chip, Stack, Button, IconButton, Tooltip } from '@mui/material';
-import DownloadIcon from '@mui/icons-material/Download';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { motion } from 'framer-motion';
 import useIsMobile from '@/hooks/useIsMobile';
 import { contacts, cv, profile } from '@/data/personal';
@@ -83,8 +83,9 @@ export default function About() {
             <Button
               variant="outlined"
               href={cv.file}
-              download={cv.filename}
-              startIcon={<DownloadIcon />}
+              target="_blank"
+              rel="noopener noreferrer"
+              startIcon={<OpenInNewIcon />}
               size={isMobile ? 'small' : 'medium'}
               sx={{
                 borderColor: '#0a1929',
@@ -94,7 +95,7 @@ export default function About() {
                 '&:hover': { backgroundColor: '#0a1929', color: '#fff' },
               }}
             >
-              Download CV
+              Open CV
             </Button>
             {contacts.map((c) => (
               <Tooltip key={c.label} title={c.value}>
