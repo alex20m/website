@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
   // Surfacing type errors at build time is the point of using TypeScript here:
   // a deploy that silently ships a type error would defeat it.
   typescript: { ignoreBuildErrors: false },
+  // The CV preview route renders the PDF with pdf.js on a native canvas.
+  // Bundling pdf.js breaks its own module loading at build time, so Node loads
+  // these from node_modules as they are.
+  serverExternalPackages: ['pdf-to-img', 'pdfjs-dist', '@napi-rs/canvas'],
 };
 
 export default nextConfig;
