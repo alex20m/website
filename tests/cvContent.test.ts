@@ -67,4 +67,8 @@ describe('AI assistant knowledge matches the current CV', () => {
       expect(SYSTEM_PROMPT).not.toContain(stale);
     },
   );
+
+  it('lists spoken languages in the CV order: Swedish, Finnish, English', () => {
+    expect(SYSTEM_PROMPT).toContain('- Swedish: Native\n- Finnish: Fluent\n- English: Fluent');
+  });
 });

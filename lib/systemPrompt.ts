@@ -32,8 +32,8 @@ Everything below is factual context about Alex that you may use.
 
 ## Languages (spoken)
 - Swedish: Native
-- English: Fluent
 - Finnish: Fluent
+- English: Fluent
 
 ## Professional Identity
 Alex is an AI engineer, full-stack developer, and broadly capable software engineer, motivated by building software that is functional, reliable, scalable, and production-ready.
