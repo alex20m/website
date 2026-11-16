@@ -32,7 +32,7 @@ function tokenFrame(token: string): string {
 
 const DONE_FRAME = 'data: [DONE]\n\n';
 
-const GREETING = /I'm AI Alex Mecklin/;
+const GREETING = /I'm an AI version of Alex\./;
 const SUGGESTIONS = ['What are you working on?', 'What are your skills?', 'Tell me about your experience'];
 const TYPING = { name: 'Alex is typing' };
 

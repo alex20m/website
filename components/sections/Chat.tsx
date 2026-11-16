@@ -19,7 +19,7 @@ const SUGGESTIONS = [
   'Tell me about your experience',
 ];
 
-const GREETING = "Hi 👋 I'm AI Alex Mecklin. Ask me anything about my work, projects or skills!";
+const GREETING = "Hi 👋 I'm an AI version of Alex. Ask me anything about my work, projects or skills!";
 
 interface ChatMessage {
   role: 'user' | 'assistant';
