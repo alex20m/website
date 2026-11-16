@@ -36,6 +36,30 @@ npm run lint && npm run typecheck && npm test && npm run build
 
 All four pass before any service exists. If they do not, stop here.
 
+The end-to-end suite also needs the Chromium build that matches the pinned
+`@playwright/test` version. CI installs it the same way:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
+
+### Cloud agent sessions (Claude Code on the web)
+
+The cloud environment these sessions run in has this as its setup script, so
+each fresh session starts with dependencies and the matching browser
+installed:
+
+```bash
+if [ -d website ]; then (cd website && npm ci && npx playwright install chromium); fi
+```
+
+The sandbox image ships a Chromium of its own, but its revision follows the
+image, not this repo's lockfile. Don't point `playwright.config.ts` at it
+(`tests/pipeline.test.ts` fails if `executablePath` appears there). Install
+the matching browser instead, so local runs test against the same browser
+as CI.
+
 ## 2. The hosting project
 
 Everything else attaches to this. `vercel link` writes
@@ -154,12 +178,19 @@ touches Cloudflare.
 ## Checklist
 
 - [ ] `npm run lint && npm run typecheck && npm test && npm run build` passes locally
+- [ ] `npx playwright install chromium && npm run test:e2e` passes locally (100 % UI coverage)
 - [ ] Vercel project created and linked, Git integration connected with automatic deploys on
 - [ ] `OPENROUTER_API_KEY` set as a Vercel environment variable (Production and Preview)
 - [ ] Custom domain verified on Vercel for both the apex and `www`, DNS records in Cloudflare with the proxy off
 - [ ] Web Analytics enabled on the Vercel project
 
 ## Troubleshooting
+
+**Every e2e test fails with "Executable doesn't exist at …/chromium…"** —
+the browser for the pinned Playwright version isn't installed, usually right
+after a Playwright upgrade or in a fresh environment. Run
+`npx playwright install chromium`. Don't work around it with a path to some
+other browser; see [Cloud agent sessions](#cloud-agent-sessions-claude-code-on-the-web).
 
 **The chat assistant just hangs, or every message errors** — check the
 function's logs (Vercel dashboard → project → Logs, filtered to

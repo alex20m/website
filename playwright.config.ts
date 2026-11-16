@@ -1,25 +1,18 @@
 import { defineConfig, devices } from '@playwright/test';
-import { existsSync } from 'node:fs';
-import { sandboxChromium } from './e2e/sandboxChromium';
 
 const PORT = process.env.PLAYWRIGHT_PORT ? Number(process.env.PLAYWRIGHT_PORT) : 3100;
 const baseURL = `http://127.0.0.1:${PORT}`;
 
-// The cloud sandbox ships a pre-installed Chromium whose revision need not
-// match this @playwright/test version's download, so local runs launch it
-// directly instead of triggering (and failing) a network download. CI always
-// installs its own matching browser, so this never applies there. See
-// e2e/sandboxChromium.ts for the rules, including the override variable.
-const executablePath = sandboxChromium(process.env, existsSync);
+// The browser is always the one this @playwright/test version installs
+// (`npx playwright install chromium`), locally and on CI alike, so a local run
+// tests against exactly what CI does. Don't point it at a binary that happens
+// to be on the machine: its revision drifts from the pinned version.
 
 // Chromium refuses to run its own sandbox as root (common for containerized
 // dev sandboxes, not for CI runners, which run unprivileged) — detect that
 // rather than disabling the sandbox unconditionally.
 const runningAsRoot = process.platform !== 'win32' && typeof process.getuid === 'function' && process.getuid() === 0;
-const launchOptions = {
-  ...(executablePath ? { executablePath } : {}),
-  ...(runningAsRoot ? { args: ['--no-sandbox'] } : {}),
-};
+const launchOptions = runningAsRoot ? { args: ['--no-sandbox'] } : {};
 
 export default defineConfig({
   testDir: './e2e',

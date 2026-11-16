@@ -154,26 +154,25 @@ test would catch.
 - **Next edits `tsconfig.json` on the first coverage build**, adding the
   separate build directory's generated types to `include`. Commit that change
   with the harness; otherwise every local run leaves the tree dirty.
-- **A sandbox's browser may not match the Playwright version.** Pass the
-  pre-installed binary through an environment variable into
-  `launchOptions.executablePath` rather than downloading; CI installs its own
-  with `npx playwright install --with-deps chromium`. Launch with
-  `--no-proxy-server` where an HTTP proxy is set, or it swallows `localhost`.
-- **Default to the sandbox's stable browser path, never a revision
-  directory.** Sandboxes that pre-install Chromium usually keep a symlink that
-  follows whatever revision is installed (at the time of writing, Claude Code's
-  cloud sandbox has `/opt/pw-browsers/chromium`), next to versioned directories
-  such as `chromium-1194/` and `chromium-1243/`. The versioned path looks more
-  precise, which is why it gets pinned, and it is the wrong choice: the next
-  image update removes it, and every local run then fails with "Executable
-  doesn't exist" — or quietly falls back to a download the sandbox cannot
-  reach. Resolve the path in a small function of `(env, exists)`: return
-  nothing on CI, use the override variable if it is set (and throw if it
-  points nowhere, so a typo fails once with a clear message rather than in
-  every test), use the stable path if it exists, and otherwise nothing. Then
-  unit-test that function, because the config file itself never runs under the
-  unit suite. Check what the sandbox actually provides (`ls -la` the browsers
-  directory) instead of trusting a path from memory, this one included.
+- **Run the browser your Playwright version installs, everywhere.** Each
+  `@playwright/test` release expects one Chromium revision. Install it with
+  `npx playwright install chromium` (CI: `--with-deps`), and in a cloud or
+  container environment do that in its setup script, after the dependency
+  install. Don't set `launchOptions.executablePath` to a browser the machine
+  already has, even when a sandbox ships one: that browser follows the
+  machine's image, not your lockfile. A pinned path to it breaks every local
+  run with "Executable doesn't exist" once the image moves on. A path that
+  follows the image (a symlink or an environment variable) keeps running, but
+  against a different browser from CI's, so "green locally" stops meaning
+  "green on CI". Assert in the pipeline test that the config sets no
+  `executablePath`, so the override cannot quietly come back. Only if the
+  environment truly cannot reach the browser download host is an override
+  justified; then make it opt-in through an environment variable, never the
+  default. Unsure: this assumes the download host is reachable, which it was
+  from a cloud sandbox with unrestricted network at Playwright 1.62. Check
+  with a throwaway `PLAYWRIGHT_BROWSERS_PATH` before you rely on it.
+- **Launch with `--no-proxy-server` where an HTTP proxy is set**, or it
+  swallows `localhost`.
 - **Coverage vanishes across a full navigation on newer Chromium.** With
   Chromium's RenderDocument on, each cross-document navigation (`page.reload`,
   `window.location.assign`, a plain link) gets a new frame host and DevTools
