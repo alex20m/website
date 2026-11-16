@@ -21,7 +21,7 @@ describe('experience matches the current CV', () => {
   it('places Netlight in Helsinki with its single CV bullet', () => {
     expect(experiences[0]).toMatchObject({
       location: 'Helsinki, Finland',
-      description: ['Software engineering consulting'],
+      description: ['AI engineering consulting'],
     });
   });
 
@@ -44,6 +44,8 @@ describe('AI assistant knowledge matches the current CV', () => {
   it.each([
     'Consultant - Netlight',
     'Oct 2026 - Present, Helsinki, Finland',
+    '- AI engineering consulting.',
+    'works as an AI engineering consultant at Netlight',
     'AI & Cloud Developer - KONE',
     'Jun 2026 - Sep 2026',
     'LangGraph',
@@ -61,7 +63,7 @@ describe('AI assistant knowledge matches the current CV', () => {
     expect(SYSTEM_PROMPT).toContain(fact);
   });
 
-  it.each(['Intern - KONE', 'Jun 2026 - Present, Espoo', 'Azure AI Foundry', 'Jan 2025 - Present', 'work/studies'])(
+  it.each(['Intern - KONE', 'Jun 2026 - Present, Espoo', 'Azure AI Foundry', 'Jan 2025 - Present', 'work/studies', 'oftware engineering consult'])(
     'no longer mentions the outdated %s',
     (stale) => {
       expect(SYSTEM_PROMPT).not.toContain(stale);

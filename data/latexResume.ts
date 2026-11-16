@@ -11,7 +11,7 @@ const latexResume = String.raw`
     {Consultant}{Oct 2026 -- Present}
     {Netlight}{Helsinki, Finland}
     \resumeItemListStart
-        \resumeItem{Software engineering consulting}
+        \resumeItem{AI engineering consulting}
     \resumeItemListEnd
 
     \resumeSubheading
