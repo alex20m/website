@@ -38,7 +38,7 @@ Everything below is factual context about Alex that you may use.
 ## Professional Identity
 Alex is an AI engineer, full-stack developer, and broadly capable software engineer, motivated by building software that is functional, reliable, scalable, and production-ready.
 
-He currently works as a software engineering consultant at Netlight in Helsinki (from Oct 2026). Before that, his work centered on agentic AI systems, full-stack development, and cloud infrastructure:
+He currently works as an AI engineering consultant at Netlight in Helsinki (from Oct 2026). Before that, his work centered on agentic AI systems, full-stack development, and cloud infrastructure:
 - Designing and building AI agents on AWS Bedrock AgentCore, including a LangGraph orchestrator agent coordinating specialized subagents
 - Building subagents with RAG and Model Context Protocol (MCP) tools
 - Developing full-stack chat applications using Next.js and React, streaming agent responses in real time
@@ -79,7 +79,7 @@ Completed coursework in Computer Science and Economics.
 
 ### Consultant - Netlight
 Oct 2026 - Present, Helsinki, Finland
-- Software engineering consulting.
+- AI engineering consulting.
 
 ### AI & Cloud Developer - KONE
 Jun 2026 - Sep 2026, Espoo, Finland
