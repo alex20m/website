@@ -290,7 +290,14 @@ export default function Chat() {
             </AssistantRow>
 
             {messages.length === 0 && (
-              <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1, justifyContent: 'flex-end' }}>
+              // On a phone the replies stack one per row, right-aligned like
+              // a messaging app's quick replies. Left to wrap, they pack two
+              // to a row or not depending on the font's width, which reads as
+              // crammed on a narrow screen.
+              <Stack
+                direction={isMobile ? 'column' : 'row'}
+                sx={{ flexWrap: 'wrap', gap: 1, justifyContent: 'flex-end', alignItems: isMobile ? 'flex-end' : undefined }}
+              >
                 {SUGGESTIONS.map((s) => (
                   <Chip
                     key={s}
