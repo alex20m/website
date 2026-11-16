@@ -243,11 +243,8 @@ export default function Chat() {
   return (
     <Box>
       <Typography variant="h2" sx={{ mb: 1, fontWeight: 'bold', color: '#0a1929' }}>Ask AI</Typography>
-      <Typography variant="body1" sx={{ mb: 0.5 }}>
-        Have a question about me? Ask the AI version of me — it knows my experience, skills, and projects.
-      </Typography>
-      <Typography variant="body2" sx={{ mb: isMobile ? 2 : 3 }}>
-        ⚠️ AI responses may not always be accurate. Verify important information through my CV or contact details.
+      <Typography variant="body1" sx={{ mb: isMobile ? 2 : 3, color: '#4a5568' }}>
+        Curious about my work? Ask the AI version of me.
       </Typography>
 
       <Paper
