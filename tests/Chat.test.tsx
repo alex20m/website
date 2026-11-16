@@ -32,13 +32,49 @@ function tokenFrame(token: string): string {
 
 const DONE_FRAME = 'data: [DONE]\n\n';
 
+const GREETING = /I'm Alex's AI assistant/;
+const SUGGESTIONS = ['What is Alex working on?', 'What are his skills?', 'Tell me about his experience'];
+const TYPING = { name: 'Alex is typing' };
+
 describe('Chat', () => {
-  it('shows the empty state with every suggestion', () => {
+  it('opens with a greeting from the assistant and every suggestion as a quick reply', () => {
     render(<Chat />);
-    expect(screen.getByText('Ask me anything about Alex')).toBeVisible();
-    for (const suggestion of ['What is Alex working on?', 'What are his skills?', 'Tell me about his experience']) {
-      expect(screen.getByText(suggestion)).toBeVisible();
+    expect(screen.getByText(GREETING)).toBeVisible();
+    for (const suggestion of SUGGESTIONS) {
+      expect(screen.getByRole('button', { name: suggestion })).toBeVisible();
     }
+  });
+
+  it("shows Alex's photo and name in the chat header", () => {
+    render(<Chat />);
+    const [headerPhoto] = screen.getAllByRole('img', { name: 'Alex Mecklin' });
+    expect(headerPhoto).toHaveAttribute('src', '/profile.png');
+    expect(screen.getByText('Alex Mecklin')).toBeVisible();
+  });
+
+  it("puts Alex's photo beside each assistant reply", async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sseResponse([tokenFrame('Hello!'), DONE_FRAME])));
+    render(<Chat />);
+    // Header + greeting before anything is sent.
+    expect(screen.getAllByRole('img', { name: 'Alex Mecklin' })).toHaveLength(2);
+
+    fireEvent.change(screen.getByPlaceholderText('Type a message...'), { target: { value: 'Hi' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Send message' }));
+    await waitFor(() => expect(screen.getByText('Hello!')).toBeVisible());
+
+    expect(screen.getAllByRole('img', { name: 'Alex Mecklin' })).toHaveLength(3);
+  });
+
+  it('hides the quick replies once the conversation starts but keeps the greeting', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sseResponse([tokenFrame('Sure!'), DONE_FRAME])));
+    render(<Chat />);
+    fireEvent.click(screen.getByRole('button', { name: 'What are his skills?' }));
+
+    await waitFor(() => expect(screen.getByText('Sure!')).toBeVisible());
+    for (const suggestion of SUGGESTIONS) {
+      expect(screen.queryByRole('button', { name: suggestion })).not.toBeInTheDocument();
+    }
+    expect(screen.getByText(GREETING)).toBeVisible();
   });
 
   it('disables the send button until there is non-whitespace input', () => {
@@ -84,7 +120,7 @@ describe('Chat', () => {
     vi.stubGlobal('fetch', fetchMock);
 
     render(<Chat />);
-    fireEvent.click(screen.getByText('What is Alex working on?'));
+    fireEvent.click(screen.getByRole('button', { name: 'What is Alex working on?' }));
 
     // The suggestion re-appears as the echoed user message bubble, which is
     // also framer-motion-animated — see the note above.
@@ -107,7 +143,7 @@ describe('Chat', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
-  it('shows a "Thinking..." indicator while the request is in flight', async () => {
+  it('shows a typing indicator while the request is in flight', async () => {
     let resolveFetch!: (value: Response) => void;
     const fetchMock = vi.fn().mockReturnValue(new Promise<Response>((resolve) => (resolveFetch = resolve)));
     vi.stubGlobal('fetch', fetchMock);
@@ -117,11 +153,11 @@ describe('Chat', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Send message' }));
 
     // The indicator is also framer-motion-animated in — see the note above.
-    await waitFor(() => expect(screen.getByText('Thinking...')).toBeVisible());
+    await waitFor(() => expect(screen.getByRole('status', TYPING)).toBeVisible());
 
     resolveFetch(sseResponse([tokenFrame('Done.'), DONE_FRAME]));
     await waitFor(() => expect(screen.getByText('Done.')).toBeVisible());
-    expect(screen.queryByText('Thinking...')).not.toBeInTheDocument();
+    expect(screen.queryByRole('status', TYPING)).not.toBeInTheDocument();
   });
 
   it('shows a fallback message when the API responds with a non-ok status', async () => {
@@ -192,7 +228,7 @@ describe('Chat', () => {
       fireEvent.change(screen.getByPlaceholderText('Type a message...'), { target: { value: 'hi' } });
       fireEvent.click(screen.getByRole('button', { name: 'Send message' }));
 
-      await waitFor(() => expect(screen.queryByText('Thinking...')).not.toBeInTheDocument());
+      await waitFor(() => expect(screen.queryByRole('status', TYPING)).not.toBeInTheDocument());
     }
 
     it('renders **bold** markdown as an actual bold element, not literal asterisks', async () => {

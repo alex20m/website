@@ -31,7 +31,7 @@ export async function mockChatSuccess(page: Page, tokens: string[]): Promise<voi
 
 /**
  * Fulfils the next chat request with a successful reply, but only after
- * `delayMs` — used to assert the "Thinking..." indicator is visible while a
+ * `delayMs` — used to assert the typing indicator is visible while a
  * response is in flight.
  */
 export async function mockChatSuccessDelayed(page: Page, tokens: string[], delayMs: number): Promise<void> {

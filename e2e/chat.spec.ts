@@ -13,7 +13,11 @@ import {
 
 const SUGGESTIONS = ['What is Alex working on?', 'What are his skills?', 'Tell me about his experience'];
 
+const GREETING = /I'm Alex's AI assistant/;
+
 const chat = (page: Page) => page.locator('#chat');
+const quickReply = (page: Page, text: string) => chat(page).getByRole('button', { name: text, exact: true });
+const typing = (page: Page) => chat(page).getByRole('status', { name: 'Alex is typing' });
 const textbox = (page: Page) => chat(page).getByRole('textbox');
 const sendButton = (page: Page) => chat(page).getByRole('button', { name: 'Send message' });
 
@@ -23,11 +27,19 @@ test.describe('Chat / Ask AI section', () => {
     await chat(page).scrollIntoViewIfNeeded();
   });
 
-  test('shows the empty state with every suggestion chip', async ({ page }) => {
-    await expect(chat(page).getByText('Ask me anything about Alex')).toBeVisible();
+  test('opens with a greeting and every suggestion as a quick reply', async ({ page }) => {
+    await expect(chat(page).getByText(GREETING)).toBeVisible();
     for (const suggestion of SUGGESTIONS) {
-      await expect(chat(page).getByText(suggestion, { exact: true })).toBeVisible();
+      await expect(quickReply(page, suggestion)).toBeVisible();
     }
+  });
+
+  test("shows Alex's photo, actually loaded, in the chat header", async ({ page }) => {
+    const headerPhoto = chat(page).getByRole('img', { name: 'Alex Mecklin' }).first();
+    await expect(headerPhoto).toBeVisible();
+    await expect(headerPhoto).toHaveAttribute('src', '/profile.png');
+    // A broken path still renders an <img>; only a decoded image has a width.
+    await expect.poll(() => headerPhoto.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
   });
 
   test('the send button is disabled until there is input, and disabled while sending', async ({ page }) => {
@@ -41,15 +53,22 @@ test.describe('Chat / Ask AI section', () => {
     await expect(sendButton(page)).toBeDisabled();
   });
 
+  test("sets Alex's name in the header in white on the dark bar, so it is legible", async ({ page }) => {
+    await expect(chat(page).getByText(/^Alex Mecklin/)).toHaveCSS('color', 'rgb(255, 255, 255)');
+  });
+
   test('clicking a suggestion chip sends it as a message', async ({ page }) => {
     await mockChatSuccess(page, ['Alex is building agentic AI tools.']);
 
-    await chat(page).getByText(SUGGESTIONS[0]!, { exact: true }).click();
+    await quickReply(page, SUGGESTIONS[0]!).click();
 
     await expect(chat(page).getByText(SUGGESTIONS[0]!, { exact: true })).toBeVisible();
     await expect(chat(page).getByText('Alex is building agentic AI tools.')).toBeVisible();
-    // Empty-state suggestions disappear once a conversation has started.
-    await expect(chat(page).getByText('Ask me anything about Alex')).toBeHidden();
+    // Quick replies disappear once a conversation has started; the greeting stays.
+    for (const suggestion of SUGGESTIONS) {
+      await expect(quickReply(page, suggestion)).toBeHidden();
+    }
+    await expect(chat(page).getByText(GREETING)).toBeVisible();
   });
 
   test('typing a message and pressing the send button shows both sides of the exchange', async ({ page }) => {
@@ -79,19 +98,19 @@ test.describe('Chat / Ask AI section', () => {
     await textbox(page).type('Line two');
 
     await expect(textbox(page)).toHaveValue('Line one\nLine two');
-    // Nothing was sent: the empty-state suggestions are still showing.
-    await expect(chat(page).getByText('Ask me anything about Alex')).toBeVisible();
+    // Nothing was sent: the quick replies are still showing.
+    await expect(quickReply(page, SUGGESTIONS[0]!)).toBeVisible();
   });
 
-  test('shows a "Thinking..." indicator while the reply streams in', async ({ page }) => {
+  test('shows a typing indicator while the reply streams in', async ({ page }) => {
     await mockChatSuccessDelayed(page, ['Delayed reply.'], 800);
 
     await textbox(page).fill('Take your time');
     await sendButton(page).click();
 
-    await expect(chat(page).getByText('Thinking...')).toBeVisible();
+    await expect(typing(page)).toBeVisible();
     await expect(chat(page).getByText('Delayed reply.')).toBeVisible({ timeout: 5000 });
-    await expect(chat(page).getByText('Thinking...')).toBeHidden();
+    await expect(typing(page)).toBeHidden();
   });
 
   test('shows a fallback message when the API responds with an HTTP error', async ({ page }) => {
@@ -168,7 +187,7 @@ test.describe('Chat / Ask AI section', () => {
     await expect(sendButton(page)).toBeDisabled();
     await textbox(page).press('Enter');
 
-    await expect(chat(page).getByText('Ask me anything about Alex')).toBeVisible();
+    await expect(quickReply(page, SUGGESTIONS[0]!)).toBeVisible();
   });
 });
 
@@ -188,7 +207,7 @@ test.describe('Chat streaming', () => {
     await ask(page, 'Greet me');
 
     await expect(chat(page).getByText('Hello, world!', { exact: true })).toBeVisible();
-    await expect(chat(page).getByText('Thinking...')).toBeHidden();
+    await expect(typing(page)).toBeHidden();
   });
 
   test('keeps what has streamed when the connection ends without a [DONE] marker', async ({ page }) => {

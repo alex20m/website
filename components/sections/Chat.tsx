@@ -1,16 +1,15 @@
 'use client';
 
 import { useState, useEffect, useRef, type ReactNode, type KeyboardEvent, type MouseEvent } from 'react';
-import { Typography, Box, TextField, IconButton, Stack, Paper, Chip } from '@mui/material';
+import { Typography, Box, TextField, IconButton, Stack, Paper, Chip, Avatar } from '@mui/material';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import SendIcon from '@mui/icons-material/Send';
-import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutlined';
 import { motion } from 'framer-motion';
 import useIsMobile from '@/hooks/useIsMobile';
 import { parseSseChunk } from '@/lib/chatStream';
+import { profile } from '@/data/personal';
 
 const CHAT_API_URL = '/api/chat';
 
@@ -19,6 +18,8 @@ const SUGGESTIONS = [
   'What are his skills?',
   'Tell me about his experience',
 ];
+
+const GREETING = "Hi 👋 I'm Alex's AI assistant. Ask me anything about his work, projects or skills!";
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -80,12 +81,85 @@ function renderMarkdown(text: string): ReactNode {
   );
 }
 
+const assistantBubbleSx = {
+  px: 1.75,
+  py: 1,
+  maxWidth: '78%',
+  borderRadius: '18px 18px 18px 6px',
+  backgroundColor: '#fff',
+  color: '#1c1e21',
+  lineHeight: 1.55,
+  wordBreak: 'break-word',
+} as const;
+
+/** Alex's photo, cropped the same way as the About section's avatar. */
+function ProfileAvatar({ size }: { size: number }) {
+  return (
+    <Avatar
+      src={profile.photo.src}
+      alt={profile.name}
+      sx={{
+        width: size,
+        height: size,
+        flexShrink: 0,
+        '& img': {
+          objectFit: 'cover',
+          objectPosition: `${profile.photo.focalX}% ${profile.photo.focalY}%`,
+          transform: `scale(${profile.photo.zoom})`,
+        },
+      }}
+    />
+  );
+}
+
+function AssistantRow({ children }: { children: ReactNode }) {
+  return (
+    <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
+      <ProfileAvatar size={28} />
+      {children}
+    </Box>
+  );
+}
+
+function TypingDots() {
+  return (
+    <Box
+      aria-hidden
+      sx={{
+        display: 'flex',
+        gap: 0.5,
+        alignItems: 'center',
+        height: 18,
+        '@keyframes chatTypingBounce': {
+          '0%, 80%, 100%': { transform: 'translateY(0)', opacity: 0.4 },
+          '40%': { transform: 'translateY(-4px)', opacity: 1 },
+        },
+        '& > span': {
+          width: 7,
+          height: 7,
+          borderRadius: '50%',
+          backgroundColor: '#8a94a6',
+          animation: 'chatTypingBounce 1.2s infinite ease-in-out',
+        },
+        '& > span:nth-of-type(2)': { animationDelay: '0.15s' },
+        '& > span:nth-of-type(3)': { animationDelay: '0.3s' },
+        '@media (prefers-reduced-motion: reduce)': { '& > span': { animation: 'none', opacity: 0.7 } },
+      }}
+    >
+      <span />
+      <span />
+      <span />
+    </Box>
+  );
+}
+
 export default function Chat() {
   const isMobile = useIsMobile();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const messageFontSize = isMobile ? '0.875rem' : '0.9375rem';
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -133,7 +207,7 @@ export default function Chat() {
 
         if (chunkContent) {
           if (firstToken) {
-            // First chunk: hide "Thinking..." and add assistant message
+            // First chunk: swap the typing indicator for the assistant message
             setLoading(false);
             setMessages([...newMessages, { role: 'assistant', content: chunkContent }]);
             firstToken = false;
@@ -179,34 +253,50 @@ export default function Chat() {
       <Paper
         variant="outlined"
         sx={{
-          borderRadius: 3,
-          border: '1px solid #e3eaf6',
+          borderRadius: 4,
+          border: '1px solid #e5e9f0',
+          boxShadow: '0 10px 30px -12px rgba(10,25,41,0.2)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
-          height: isMobile ? 400 : 480,
+          height: isMobile ? 460 : 540,
         }}
       >
+        {/* Header */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, px: 2, py: 1.25, backgroundColor: '#0a1929', color: '#fff' }}>
+          <ProfileAvatar size={40} />
+          <Box>
+            <Typography sx={{ fontWeight: 600, fontSize: '0.95rem', lineHeight: 1.2, color: '#fff' }}>
+              {profile.name}
+              <Box
+                component="span"
+                sx={{ ml: 0.75, px: 0.75, py: '1px', borderRadius: 1, fontSize: '0.65rem', backgroundColor: 'rgba(255,255,255,0.15)', verticalAlign: 'middle' }}
+              >
+                AI
+              </Box>
+            </Typography>
+            <Typography sx={{ fontSize: '0.75rem', color: '#8fb3dd', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Box component="span" sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#22c55e' }} />
+              Typically replies instantly
+            </Typography>
+          </Box>
+        </Box>
+
         {/* Messages area */}
-        <Box
-          ref={scrollRef}
-          sx={{
-            flex: 1,
-            overflowY: 'auto',
-            p: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 1.5,
-            backgroundColor: '#f8f9fb',
-          }}
-        >
-          {messages.length === 0 && !loading && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: 2 }}>
-              <SmartToyOutlinedIcon sx={{ fontSize: 40, color: '#c8d6e5' }} />
-              <Typography variant="body1" sx={{ color: '#8a9bb5', textAlign: 'center' }}>
-                Ask me anything about Alex
-              </Typography>
-              <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1, justifyContent: 'center' }}>
+        <Box ref={scrollRef} sx={{ flex: 1, overflowY: 'auto', p: 2, display: 'flex', flexDirection: 'column', backgroundColor: '#f0f2f5' }}>
+          {/* margin-top: auto keeps a short conversation anchored to the
+              bottom, next to the input, the way a messaging app does —
+              without justify-content: flex-end, which would clip the top of a
+              long one instead of letting it scroll. */}
+          <Box sx={{ mt: 'auto', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+            <Typography sx={{ alignSelf: 'center', fontSize: '0.7rem', color: '#8a94a6' }}>Today</Typography>
+
+            <AssistantRow>
+              <Box sx={{ ...assistantBubbleSx, fontSize: messageFontSize }}>{GREETING}</Box>
+            </AssistantRow>
+
+            {messages.length === 0 && (
+              <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1, justifyContent: 'flex-end' }}>
                 {SUGGESTIONS.map((s) => (
                   <Chip
                     key={s}
@@ -214,123 +304,70 @@ export default function Chat() {
                     onClick={() => sendMessage(s)}
                     variant="outlined"
                     sx={{
-                      borderColor: '#e3eaf6',
+                      borderWidth: 1.5,
+                      borderColor: '#1565c0',
                       backgroundColor: '#fff',
-                      color: '#4a5568',
-                      fontSize: '0.8rem',
-                      '&:hover': { borderColor: '#1565c0', color: '#1565c0' },
+                      color: '#1565c0',
+                      fontWeight: 500,
+                      fontSize: '0.82rem',
+                      '&&:hover': { backgroundColor: '#1565c0', color: '#fff' },
                     }}
                   />
                 ))}
               </Stack>
-            </Box>
-          )}
+            )}
 
-          {messages.map((msg, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: 1,
-                  alignItems: 'flex-start',
-                  flexDirection: msg.role === 'user' ? 'row-reverse' : 'row',
-                }}
+            {messages.map((msg, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+                style={{ display: 'flex', flexDirection: 'column' }}
               >
-                <Box
-                  sx={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: msg.role === 'user' ? '#0a1929' : '#e3eaf6',
-                    color: msg.role === 'user' ? '#fff' : '#1565c0',
-                    flexShrink: 0,
-                    mt: 0.5,
-                  }}
-                >
-                  {msg.role === 'user' ? <PersonOutlineIcon sx={{ fontSize: 16 }} /> : <SmartToyOutlinedIcon sx={{ fontSize: 16 }} />}
-                </Box>
-                <Box
-                  sx={{
-                    px: 2,
-                    py: 1,
-                    borderRadius: 2,
-                    backgroundColor: msg.role === 'user' ? '#0a1929' : '#fff',
-                    color: msg.role === 'user' ? '#fff' : '#0a1929',
-                    border: msg.role === 'assistant' ? '1px solid #e3eaf6' : 'none',
-                    maxWidth: '80%',
-                    fontSize: isMobile ? '0.8rem' : '0.9rem',
-                    lineHeight: 1.6,
-                    // The user's own text is shown verbatim (their literal
-                    // newlines from Shift+Enter preserved); the assistant's
-                    // is rendered markdown, which lays out its own breaks.
-                    whiteSpace: msg.role === 'user' ? 'pre-wrap' : 'normal',
-                    wordBreak: 'break-word',
-                  }}
-                >
-                  {msg.role === 'assistant' ? renderMarkdown(msg.content) : msg.content}
-                </Box>
-              </Box>
-            </motion.div>
-          ))}
+                {msg.role === 'user' ? (
+                  <Box
+                    sx={{
+                      alignSelf: 'flex-end',
+                      px: 1.75,
+                      py: 1,
+                      maxWidth: '78%',
+                      borderRadius: '18px 18px 6px 18px',
+                      backgroundColor: '#1565c0',
+                      color: '#fff',
+                      fontSize: messageFontSize,
+                      lineHeight: 1.5,
+                      // The user's own text is shown verbatim (their literal
+                      // newlines from Shift+Enter preserved); the assistant's
+                      // is rendered markdown, which lays out its own breaks.
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word',
+                    }}
+                  >
+                    {msg.content}
+                  </Box>
+                ) : (
+                  <AssistantRow>
+                    <Box sx={{ ...assistantBubbleSx, fontSize: messageFontSize }}>{renderMarkdown(msg.content)}</Box>
+                  </AssistantRow>
+                )}
+              </motion.div>
+            ))}
 
-          {loading && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-start' }}>
-                <Box
-                  sx={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: '#e3eaf6',
-                    color: '#1565c0',
-                    flexShrink: 0,
-                    mt: 0.5,
-                  }}
-                >
-                  <SmartToyOutlinedIcon sx={{ fontSize: 16 }} />
-                </Box>
-                <Box
-                  sx={{
-                    px: 2,
-                    py: 1,
-                    borderRadius: 2,
-                    backgroundColor: '#fff',
-                    border: '1px solid #e3eaf6',
-                    color: '#8a9bb5',
-                    fontSize: isMobile ? '0.8rem' : '0.9rem',
-                  }}
-                >
-                  Thinking...
-                </Box>
-              </Box>
-            </motion.div>
-          )}
-
-          <div />
+            {loading && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <AssistantRow>
+                  <Box role="status" aria-label="Alex is typing" sx={{ ...assistantBubbleSx, py: 1.25 }}>
+                    <TypingDots />
+                  </Box>
+                </AssistantRow>
+              </motion.div>
+            )}
+          </Box>
         </Box>
 
         {/* Input area */}
-        <Box
-          sx={{
-            p: 1.5,
-            borderTop: '1px solid #e3eaf6',
-            backgroundColor: '#fff',
-            display: 'flex',
-            gap: 1,
-            alignItems: 'flex-end',
-          }}
-        >
+        <Box sx={{ p: 1.25, borderTop: '1px solid #e5e9f0', backgroundColor: '#fff', display: 'flex', gap: 1, alignItems: 'flex-end' }}>
           <TextField
             fullWidth
             placeholder="Type a message..."
@@ -342,12 +379,16 @@ export default function Chat() {
             size="small"
             sx={{
               '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
+                borderRadius: '20px',
+                backgroundColor: '#f0f2f5',
+                px: 2,
                 // Anything below 16px makes iOS Safari zoom the whole page in
                 // when this field gets focus, so mobile can't go as small as
                 // the rest of the chat UI.
-                fontSize: isMobile ? '16px' : '0.9rem',
+                fontSize: isMobile ? '16px' : '0.9375rem',
               },
+              '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: '1.5px solid #1565c0' },
             }}
           />
           <IconButton
@@ -355,16 +396,14 @@ export default function Chat() {
             onClick={() => sendMessage()}
             disabled={!input.trim() || loading}
             sx={{
-              backgroundColor: '#0a1929',
-              color: '#fff',
-              borderRadius: 2,
+              color: '#1565c0',
               width: 40,
               height: 40,
-              '&:hover': { backgroundColor: '#1565c0' },
-              '&.Mui-disabled': { backgroundColor: '#e3eaf6', color: '#8a9bb5' },
+              '&:hover': { backgroundColor: '#e3edfb' },
+              '&.Mui-disabled': { color: '#b8c2d1' },
             }}
           >
-            <SendIcon sx={{ fontSize: 18 }} />
+            <SendIcon sx={{ fontSize: 24 }} />
           </IconButton>
         </Box>
       </Paper>
