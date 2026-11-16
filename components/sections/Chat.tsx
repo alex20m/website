@@ -364,7 +364,7 @@ export default function Chat() {
         </Box>
 
         {/* Input area */}
-        <Box sx={{ p: 1.25, pb: 0.75, borderTop: '1px solid #e5e9f0', backgroundColor: '#fff', display: 'flex', gap: 1, alignItems: 'flex-end' }}>
+        <Box sx={{ p: 1.25, borderTop: '1px solid #e5e9f0', backgroundColor: '#fff', display: 'flex', gap: 1, alignItems: 'flex-end' }}>
           <TextField
             fullWidth
             placeholder="Type a message..."
@@ -403,9 +403,6 @@ export default function Chat() {
             <SendIcon sx={{ fontSize: 24 }} />
           </IconButton>
         </Box>
-        <Typography sx={{ textAlign: 'center', color: '#8a94a6', fontSize: '0.7rem', px: 2, pb: 1, backgroundColor: '#fff' }}>
-          AI can make mistakes. Check my CV or contact me for anything important.
-        </Typography>
       </Paper>
     </Box>
   );
