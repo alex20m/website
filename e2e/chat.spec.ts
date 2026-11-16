@@ -13,7 +13,7 @@ import {
 
 const SUGGESTIONS = ['What are you working on?', 'What are your skills?', 'Tell me about your experience'];
 
-const GREETING = /I'm AI Alex Mecklin/;
+const GREETING = /I'm an AI version of Alex\./;
 
 const chat = (page: Page) => page.locator('#chat');
 const quickReply = (page: Page, text: string) => chat(page).getByRole('button', { name: text, exact: true });
