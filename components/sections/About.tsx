@@ -23,7 +23,6 @@ export default function About() {
     <Box
       sx={{
         pt: isMobile ? 8 : 14,
-        pb: 2,
         display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
         alignItems: isMobile ? 'center' : 'flex-start',

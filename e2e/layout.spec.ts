@@ -1,5 +1,5 @@
 import { test, expect } from './fixtures/test';
-import { DESKTOP, PHONE } from './fixtures/helpers';
+import { DESKTOP, PHONE, waitForFinalLayout } from './fixtures/helpers';
 import { mockChatSuccess, mockChatSuccessDelayed } from './fixtures/chatMock';
 
 /**
@@ -62,6 +62,29 @@ for (const layout of LAYOUTS) {
     test('lays out the About block and its photo for the layout', async ({ page }) => {
       await expect(page.locator('#about .MuiAvatar-root')).toHaveCSS('width', layout.avatar);
       await expect(page.locator('#about .MuiContainer-root > div')).toHaveCSS('flex-direction', layout.aboutDirection);
+    });
+
+    test('leaves the same space under the About block as every other section does', async ({ page }) => {
+      // Space from the bottom of the About block's content (photo or text,
+      // whichever reaches lower) to the section's bottom edge. Every other
+      // section's gap is just its section padding, so About's must be too.
+      // Measured from layout offsets, not getBoundingClientRect: the photo and
+      // text animate in with a transform, and a mid-animation reading would
+      // be off by however far they still have to travel. A phone also starts
+      // in the server-rendered desktop layout, so wait for its own first.
+      await waitForFinalLayout(page);
+      const gap = await page.locator('#about').evaluate((section) => {
+        const el = section as HTMLElement;
+        const block = el.querySelector('.MuiContainer-root > div')!;
+        const contentBottom = Math.max(
+          ...[...block.children].map((child) => {
+            const c = child as HTMLElement;
+            return c.offsetTop + c.offsetHeight;
+          }),
+        );
+        return `${el.offsetTop + el.offsetHeight - contentBottom}px`;
+      });
+      expect(gap).toBe(layout.sectionPadding);
     });
 
     test('pads project cards, contact tiles and the CV box for the layout', async ({ page }) => {
