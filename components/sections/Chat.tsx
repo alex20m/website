@@ -243,11 +243,8 @@ export default function Chat() {
   return (
     <Box>
       <Typography variant="h2" sx={{ mb: 1, fontWeight: 'bold', color: '#0a1929' }}>Ask AI</Typography>
-      <Typography variant="body1" sx={{ mb: 0.5 }}>
-        Have a question about me? Ask the AI version of me — it knows my experience, skills, and projects.
-      </Typography>
-      <Typography variant="body2" sx={{ mb: isMobile ? 2 : 3 }}>
-        ⚠️ AI responses may not always be accurate. Verify important information through my CV or contact details.
+      <Typography variant="body1" sx={{ mb: isMobile ? 2 : 3, color: '#4a5568' }}>
+        Curious about my work? Ask the AI version of me.
       </Typography>
 
       <Paper
@@ -367,7 +364,7 @@ export default function Chat() {
         </Box>
 
         {/* Input area */}
-        <Box sx={{ p: 1.25, borderTop: '1px solid #e5e9f0', backgroundColor: '#fff', display: 'flex', gap: 1, alignItems: 'flex-end' }}>
+        <Box sx={{ p: 1.25, pb: 0.75, borderTop: '1px solid #e5e9f0', backgroundColor: '#fff', display: 'flex', gap: 1, alignItems: 'flex-end' }}>
           <TextField
             fullWidth
             placeholder="Type a message..."
@@ -406,6 +403,9 @@ export default function Chat() {
             <SendIcon sx={{ fontSize: 24 }} />
           </IconButton>
         </Box>
+        <Typography sx={{ textAlign: 'center', color: '#8a94a6', fontSize: '0.7rem', px: 2, pb: 1, backgroundColor: '#fff' }}>
+          AI can make mistakes. Check my CV or contact me for anything important.
+        </Typography>
       </Paper>
     </Box>
   );

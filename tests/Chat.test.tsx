@@ -77,6 +77,16 @@ describe('Chat', () => {
     expect(screen.getByText(GREETING)).toBeVisible();
   });
 
+  it('introduces the chat in one first-person line', () => {
+    render(<Chat />);
+    expect(screen.getByText('Curious about my work? Ask the AI version of me.')).toBeVisible();
+  });
+
+  it('warns that AI replies can be wrong and points to the CV and contact details', () => {
+    render(<Chat />);
+    expect(screen.getByText('AI can make mistakes. Check my CV or contact me for anything important.')).toBeVisible();
+  });
+
   it('disables the send button until there is non-whitespace input', () => {
     render(<Chat />);
     const sendButton = screen.getByRole('button', { name: 'Send message' });

@@ -57,6 +57,14 @@ test.describe('Chat / Ask AI section', () => {
     await expect(chat(page).getByText(/^Alex Mecklin/)).toHaveCSS('color', 'rgb(255, 255, 255)');
   });
 
+  test('shows the accuracy note inside the chat window, under the message box', async ({ page }) => {
+    const note = chat(page).locator('.MuiPaper-root').getByText('AI can make mistakes. Check my CV or contact me for anything important.');
+    await expect(note).toBeVisible();
+    const noteTop = (await note.boundingBox())!.y;
+    const inputBottom = await textbox(page).evaluate((el) => el.getBoundingClientRect().bottom);
+    expect(noteTop).toBeGreaterThan(inputBottom);
+  });
+
   test('clicking a suggestion chip sends it as a message', async ({ page }) => {
     await mockChatSuccess(page, ['Alex is building agentic AI tools.']);
 
