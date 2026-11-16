@@ -259,6 +259,14 @@ describe('the end-to-end coverage gate', () => {
     expect(retriesIn(config)).toBe('0');
   });
 
+  it('launches the browser its own Playwright version installs, the same one CI runs', () => {
+    // Pointing local runs at a pre-installed binary (twice: chromium-1194, then
+    // a sandbox symlink) tested against a different browser than CI, and broke
+    // every local run whenever the machine's browser moved. Environments install
+    // the matching browser instead (`npx playwright install chromium`).
+    expect(config).not.toMatch(/executablePath/);
+  });
+
   it('fails the run from a global teardown that checks every browser module', () => {
     expect(config).toMatch(/globalTeardown:\s*'\.\/e2e\/globalTeardown\.ts'/);
     expect(teardown).toMatch(/shortfalls\(/);
