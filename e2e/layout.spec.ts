@@ -22,9 +22,9 @@ const LAYOUTS = [
     contactTilePadding: '16px',
     cvPadding: '20px',
     experienceListFont: '13.6px',
-    chatHeight: '400px',
+    chatHeight: '460px',
     chatInputFont: '16px',
-    chatMessageFont: '12.8px',
+    chatMessageFont: '14px',
   },
   {
     name: 'a desktop',
@@ -37,9 +37,9 @@ const LAYOUTS = [
     contactTilePadding: '20px',
     cvPadding: '32px',
     experienceListFont: '15.2px',
-    chatHeight: '480px',
-    chatInputFont: '14.4px',
-    chatMessageFont: '14.4px',
+    chatHeight: '540px',
+    chatInputFont: '15px',
+    chatMessageFont: '15px',
   },
 ] as const;
 
@@ -85,7 +85,7 @@ for (const layout of LAYOUTS) {
 
       await chat.getByRole('textbox').fill('Hello');
       await chat.getByRole('button', { name: 'Send message' }).click();
-      await expect(chat.getByText('Thinking...')).toHaveCSS('font-size', layout.chatMessageFont);
+      await expect(chat.getByRole('status', { name: 'Alex is typing' })).toBeVisible();
       await expect(chat.getByText('Hi there.')).toHaveCSS('font-size', layout.chatMessageFont);
     });
 
