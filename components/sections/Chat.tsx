@@ -242,10 +242,7 @@ export default function Chat() {
 
   return (
     <Box>
-      <Typography variant="h2" sx={{ mb: 1, fontWeight: 'bold', color: '#0a1929' }}>Ask AI</Typography>
-      <Typography variant="body1" sx={{ mb: isMobile ? 2 : 3, color: '#4a5568' }}>
-        Curious about my work? Ask the AI version of me.
-      </Typography>
+      <Typography variant="h2" sx={{ mb: isMobile ? 3 : 5, fontWeight: 'bold', color: '#0a1929' }}>Ask AI</Typography>
 
       <Paper
         variant="outlined"
