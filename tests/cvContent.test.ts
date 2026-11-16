@@ -9,7 +9,7 @@ describe('experience matches the current CV', () => {
   it('lists the CV roles newest first', () => {
     expect(experiences.map((e) => `${e.title} | ${e.company} | ${e.period}`)).toEqual([
       'Consultant | Netlight | Oct 2026 - Present',
-      'AI & Cloud Developer | KONE | Jun 2026 - Sep 2026',
+      'AI Engineer | KONE | Jun 2026 - Sep 2026',
       "Master's Thesis Worker | KONE | Jan 2026 - May 2026",
       'Software Engineer | KONE | May 2025 - Dec 2025',
       'Software Engineer | Danfoss Drives | May 2024 - Aug 2024',
@@ -25,7 +25,7 @@ describe('experience matches the current CV', () => {
     });
   });
 
-  it('keeps the CV wording of the KONE AI & Cloud Developer bullets', () => {
+  it('keeps the CV wording of the KONE AI Engineer bullets', () => {
     expect(experiences[1]?.description).toEqual([
       'Owned end-to-end design and implementation of an AI assistant for a company-wide internal AI portal',
       'Designed a LangGraph orchestrator agent coordinating specialized subagents on AWS Bedrock AgentCore',
@@ -46,7 +46,7 @@ describe('AI assistant knowledge matches the current CV', () => {
     'Oct 2026 - Present, Helsinki, Finland',
     '- AI engineering consulting.',
     'works as an AI engineering consultant at Netlight',
-    'AI & Cloud Developer - KONE',
+    'AI Engineer - KONE',
     'Jun 2026 - Sep 2026',
     'LangGraph',
     'Strands SDK',
@@ -63,7 +63,7 @@ describe('AI assistant knowledge matches the current CV', () => {
     expect(SYSTEM_PROMPT).toContain(fact);
   });
 
-  it.each(['Intern - KONE', 'Jun 2026 - Present, Espoo', 'Azure AI Foundry', 'Jan 2025 - Present', 'work/studies', 'oftware engineering consult'])(
+  it.each(['Intern - KONE', 'Jun 2026 - Present, Espoo', 'Azure AI Foundry', 'Jan 2025 - Present', 'work/studies', 'oftware engineering consult', 'AI & Cloud Developer'])(
     'no longer mentions the outdated %s',
     (stale) => {
       expect(SYSTEM_PROMPT).not.toContain(stale);

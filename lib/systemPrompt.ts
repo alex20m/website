@@ -81,7 +81,7 @@ Completed coursework in Computer Science and Economics.
 Oct 2026 - Present, Helsinki, Finland
 - AI engineering consulting.
 
-### AI & Cloud Developer - KONE
+### AI Engineer - KONE
 Jun 2026 - Sep 2026, Espoo, Finland
 - Owned end-to-end design and implementation of an AI assistant for a company-wide internal AI portal.
 - Designed a LangGraph orchestrator agent coordinating specialized subagents on AWS Bedrock AgentCore.
