@@ -16,6 +16,7 @@ const LAYOUTS = [
     context: PHONE,
     sectionHeading: '25.6px',
     sectionPadding: '48px',
+    sectionHeadingGap: '24px',
     aboutDirection: 'column',
     avatar: '120px',
     projectCardPadding: '16px',
@@ -31,6 +32,7 @@ const LAYOUTS = [
     context: DESKTOP,
     sectionHeading: '35.2px',
     sectionPadding: '64px',
+    sectionHeadingGap: '40px',
     aboutDirection: 'row',
     avatar: '180px',
     projectCardPadding: '24px',
@@ -57,6 +59,20 @@ for (const layout of LAYOUTS) {
         layout.sectionHeading,
       );
       await expect(page.locator('#projects')).toHaveCSS('padding-top', layout.sectionPadding);
+    });
+
+    test('leaves the same gap under every section heading before its content', async ({ page }) => {
+      for (const id of ['chat', 'experience', 'projects', 'cv', 'contact']) {
+        const heading = page.locator(`#${id}`).getByRole('heading', { level: 2 });
+        // The server renders the desktop layout and the phone one only takes
+        // over after hydration; wait for the layout's own heading size first,
+        // or a desktop gap that happens to equal the phone one passes early.
+        await expect(heading).toHaveCSS('font-size', layout.sectionHeading);
+        await expect(heading).toHaveCSS(
+          'margin-bottom',
+          layout.sectionHeadingGap,
+        );
+      }
     });
 
     test('lays out the About block and its photo for the layout', async ({ page }) => {
