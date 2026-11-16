@@ -15,7 +15,7 @@ const latexResume = String.raw`
     \resumeItemListEnd
 
     \resumeSubheading
-    {AI \& Cloud Developer}{Jun 2026 -- Sep 2026}
+    {AI Engineer}{Jun 2026 -- Sep 2026}
     {KONE}{Espoo, Finland}
     \resumeItemListStart
         \resumeItem{Owned end-to-end design and implementation of an AI assistant for a company-wide internal AI portal}
