@@ -45,24 +45,27 @@ describe('Chat', () => {
     }
   });
 
-  it("shows Alex's photo and name in the chat header", () => {
+  it("names Alex in the chat header, with the photo only beside the greeting", () => {
     render(<Chat />);
-    const [headerPhoto] = screen.getAllByRole('img', { name: 'Alex Mecklin' });
-    expect(headerPhoto).toHaveAttribute('src', '/profile.png');
     expect(screen.getByText('Alex Mecklin')).toBeVisible();
+    // The header is text only: the one photo on screen is the greeting's.
+    const photos = screen.getAllByRole('img', { name: 'Alex Mecklin' });
+    expect(photos).toHaveLength(1);
+    expect(photos[0]).toHaveAttribute('src', '/profile.png');
+    expect(screen.getByText(GREETING).parentElement).toContainElement(photos[0]!);
   });
 
   it("puts Alex's photo beside each assistant reply", async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sseResponse([tokenFrame('Hello!'), DONE_FRAME])));
     render(<Chat />);
-    // Header + greeting before anything is sent.
-    expect(screen.getAllByRole('img', { name: 'Alex Mecklin' })).toHaveLength(2);
+    // Only the greeting's photo before anything is sent — none in the header.
+    expect(screen.getAllByRole('img', { name: 'Alex Mecklin' })).toHaveLength(1);
 
     fireEvent.change(screen.getByPlaceholderText('Type a message...'), { target: { value: 'Hi' } });
     fireEvent.click(screen.getByRole('button', { name: 'Send message' }));
     await waitFor(() => expect(screen.getByText('Hello!')).toBeVisible());
 
-    expect(screen.getAllByRole('img', { name: 'Alex Mecklin' })).toHaveLength(3);
+    expect(screen.getAllByRole('img', { name: 'Alex Mecklin' })).toHaveLength(2);
   });
 
   it('hides the quick replies once the conversation starts but keeps the greeting', async () => {

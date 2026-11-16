@@ -256,9 +256,10 @@ export default function Chat() {
           height: isMobile ? 460 : 540,
         }}
       >
-        {/* Header */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, px: 2, py: 1.25, backgroundColor: '#0a1929', color: '#fff' }}>
-          <ProfileAvatar size={40} />
+        {/* Header — text only. The photo already sits beside every reply,
+            so repeating it up here made the card photo-heavy. The min height
+            keeps the bar the size it was when it held the 40px photo. */}
+        <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 64, px: 2, py: 1.25, backgroundColor: '#0a1929', color: '#fff' }}>
           <Box>
             <Typography sx={{ fontWeight: 600, fontSize: '0.95rem', lineHeight: 1.2, color: '#fff' }}>
               {profile.name}
