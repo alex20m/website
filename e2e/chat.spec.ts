@@ -84,12 +84,20 @@ test.describe('Chat / Ask AI section', () => {
     });
   });
 
-  test("shows Alex's photo, actually loaded, in the chat header", async ({ page }) => {
-    const headerPhoto = chat(page).getByRole('img', { name: 'Alex Mecklin' }).first();
-    await expect(headerPhoto).toBeVisible();
-    await expect(headerPhoto).toHaveAttribute('src', '/profile.png');
+  test("keeps the chat header text only, with Alex's photo, actually loaded, beside the greeting", async ({ page }) => {
+    await expect(chat(page).getByText('Alex Mecklin')).toBeVisible();
+    // One photo on screen, and it sits below the header's name — beside the
+    // greeting — not up in the header with it.
+    const photos = chat(page).getByRole('img', { name: 'Alex Mecklin' });
+    await expect(photos).toHaveCount(1);
+    const photo = photos.first();
+    await expect(photo).toBeVisible();
+    await expect(photo).toHaveAttribute('src', '/profile.png');
+    const photoBox = (await photo.boundingBox())!;
+    const greetingBox = (await chat(page).getByText(GREETING).boundingBox())!;
+    expect(photoBox.y).toBeGreaterThan(greetingBox.y);
     // A broken path still renders an <img>; only a decoded image has a width.
-    await expect.poll(() => headerPhoto.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
+    await expect.poll(() => photo.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
   });
 
   test('the send button is disabled until there is input, and disabled while sending', async ({ page }) => {
