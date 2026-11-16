@@ -100,6 +100,26 @@ for (const layout of LAYOUTS) {
       await expect(page.locator('#experience ul:visible').first()).toHaveCSS('font-size', layout.experienceListFont);
     });
 
+    test('centres every section divider on the seam between two sections', async ({ page }) => {
+      const dividers = page.getByTestId('section-divider');
+      await expect(dividers).toHaveCount(5);
+      const seams = await dividers.evaluateAll((els) =>
+        els.map((el) => {
+          const dot = el.querySelector('[data-divider-dot]') as HTMLElement;
+          const r = dot.getBoundingClientRect();
+          const above = el.previousElementSibling!.getBoundingClientRect();
+          const below = el.nextElementSibling!.getBoundingClientRect();
+          return { dotCentre: r.top + r.height / 2, aboveBottom: above.bottom, belowTop: below.top };
+        }),
+      );
+      for (const seam of seams) {
+        // The sections touch, so the colour change happens on one line ...
+        expect(seam.belowTop).toBeCloseTo(seam.aboveBottom, 0);
+        // ... and the divider's dots are centred on that line, not beside it.
+        expect(seam.dotCentre).toBeCloseTo(seam.aboveBottom, 0);
+      }
+    });
+
     test('sizes the chat window, its input and its messages for the layout', async ({ page }) => {
       await mockChatSuccessDelayed(page, ['Hi there.'], 600);
       const chat = page.locator('#chat');

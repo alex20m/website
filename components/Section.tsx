@@ -6,11 +6,25 @@ import useIsMobile from '@/hooks/useIsMobile';
 
 export function SectionDivider() {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, py: 0 }}>
+    // Zero height, so the sections above and below meet on one line and the
+    // dots and rules overflow evenly across it — centred on the colour change
+    // rather than sitting in a strip of either section's background.
+    <Box
+      data-testid="section-divider"
+      sx={{
+        position: 'relative',
+        zIndex: 1,
+        height: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 1.5,
+      }}
+    >
       <Box sx={{ flex: 1, height: '2px', background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.3))' }} />
-      <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: 'rgba(0,0,0,0.35)' }} />
-      <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: 'rgba(0,0,0,0.35)' }} />
-      <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: 'rgba(0,0,0,0.35)' }} />
+      <Box data-divider-dot sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: 'rgba(0,0,0,0.35)' }} />
+      <Box data-divider-dot sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: 'rgba(0,0,0,0.35)' }} />
+      <Box data-divider-dot sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: 'rgba(0,0,0,0.35)' }} />
       <Box sx={{ flex: 1, height: '2px', background: 'linear-gradient(to left, transparent, rgba(0,0,0,0.3))' }} />
     </Box>
   );
