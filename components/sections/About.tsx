@@ -14,6 +14,7 @@ const skills = [
   'Data Science',
   'Machine Learning',
   'Test Automation',
+  'Embedded Systems',
 ];
 
 export default function About() {

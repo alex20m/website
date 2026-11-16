@@ -10,6 +10,7 @@ const SKILLS = [
   'Data Science',
   'Machine Learning',
   'Test Automation',
+  'Embedded Systems',
 ];
 
 test.describe('About section', () => {
@@ -28,18 +29,21 @@ test.describe('About section', () => {
   test('shows the name and title', async ({ page }) => {
     await expect(about(page).getByRole('heading', { level: 2, name: 'Alex Mecklin' })).toBeVisible();
     await expect(
-      about(page).getByRole('heading', { level: 5, name: 'AI & Cloud Engineer' }),
+      about(page).getByRole('heading', { level: 5, name: 'AI Engineer', exact: true }),
     ).toBeVisible();
   });
 
   test('shows the bio paragraph', async ({ page }) => {
-    await expect(about(page).getByText(/AI-focused engineer/)).toBeVisible();
+    await expect(
+      about(page).getByText(/^AI engineer with hands-on experience building agentic AI systems/),
+    ).toBeVisible();
   });
 
-  test('lists every skill chip', async ({ page }) => {
+  test('lists every skill chip, in order, ending with Embedded Systems', async ({ page }) => {
     for (const skill of SKILLS) {
       await expect(about(page).getByText(skill, { exact: true })).toBeVisible();
     }
+    await expect(about(page).locator('.MuiChip-label')).toHaveText(SKILLS);
   });
 
   // Opens rather than downloads, like the CV section: every device can open
