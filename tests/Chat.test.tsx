@@ -32,8 +32,8 @@ function tokenFrame(token: string): string {
 
 const DONE_FRAME = 'data: [DONE]\n\n';
 
-const GREETING = /I'm Alex's AI assistant/;
-const SUGGESTIONS = ['What is Alex working on?', 'What are his skills?', 'Tell me about his experience'];
+const GREETING = /I'm AI Alex Mecklin/;
+const SUGGESTIONS = ['What are you working on?', 'What are your skills?', 'Tell me about your experience'];
 const TYPING = { name: 'Alex is typing' };
 
 describe('Chat', () => {
@@ -68,7 +68,7 @@ describe('Chat', () => {
   it('hides the quick replies once the conversation starts but keeps the greeting', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(sseResponse([tokenFrame('Sure!'), DONE_FRAME])));
     render(<Chat />);
-    fireEvent.click(screen.getByRole('button', { name: 'What are his skills?' }));
+    fireEvent.click(screen.getByRole('button', { name: 'What are your skills?' }));
 
     await waitFor(() => expect(screen.getByText('Sure!')).toBeVisible());
     for (const suggestion of SUGGESTIONS) {
@@ -120,11 +120,11 @@ describe('Chat', () => {
     vi.stubGlobal('fetch', fetchMock);
 
     render(<Chat />);
-    fireEvent.click(screen.getByRole('button', { name: 'What is Alex working on?' }));
+    fireEvent.click(screen.getByRole('button', { name: 'What are you working on?' }));
 
     // The suggestion re-appears as the echoed user message bubble, which is
     // also framer-motion-animated — see the note above.
-    await waitFor(() => expect(screen.getByText('What is Alex working on?')).toBeVisible());
+    await waitFor(() => expect(screen.getByText('What are you working on?')).toBeVisible());
     await waitFor(() => expect(screen.getByText('Sure!')).toBeVisible());
   });
 

@@ -11,9 +11,9 @@ import {
   sseToken,
 } from './fixtures/chatMock';
 
-const SUGGESTIONS = ['What is Alex working on?', 'What are his skills?', 'Tell me about his experience'];
+const SUGGESTIONS = ['What are you working on?', 'What are your skills?', 'Tell me about your experience'];
 
-const GREETING = /I'm Alex's AI assistant/;
+const GREETING = /I'm AI Alex Mecklin/;
 
 const chat = (page: Page) => page.locator('#chat');
 const quickReply = (page: Page, text: string) => chat(page).getByRole('button', { name: text, exact: true });

@@ -14,12 +14,12 @@ import { profile } from '@/data/personal';
 const CHAT_API_URL = '/api/chat';
 
 const SUGGESTIONS = [
-  'What is Alex working on?',
-  'What are his skills?',
-  'Tell me about his experience',
+  'What are you working on?',
+  'What are your skills?',
+  'Tell me about your experience',
 ];
 
-const GREETING = "Hi 👋 I'm Alex's AI assistant. Ask me anything about his work, projects or skills!";
+const GREETING = "Hi 👋 I'm AI Alex Mecklin. Ask me anything about my work, projects or skills!";
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -244,7 +244,7 @@ export default function Chat() {
     <Box>
       <Typography variant="h2" sx={{ mb: 1, fontWeight: 'bold', color: '#0a1929' }}>Ask AI</Typography>
       <Typography variant="body1" sx={{ mb: 0.5 }}>
-        Have a question about me? Ask the AI assistant — it knows about my experience, skills, and projects.
+        Have a question about me? Ask the AI version of me — it knows my experience, skills, and projects.
       </Typography>
       <Typography variant="body2" sx={{ mb: isMobile ? 2 : 3 }}>
         ⚠️ AI responses may not always be accurate. Verify important information through my CV or contact details.
