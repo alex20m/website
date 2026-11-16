@@ -10,6 +10,7 @@ import {
   chatStreamEnded,
   sseToken,
 } from './fixtures/chatMock';
+import { DESKTOP, PHONE, waitForFinalLayout } from './fixtures/helpers';
 
 const SUGGESTIONS = ['What are you working on?', 'What are your skills?', 'Tell me about your experience'];
 
@@ -32,6 +33,55 @@ test.describe('Chat / Ask AI section', () => {
     for (const suggestion of SUGGESTIONS) {
       await expect(quickReply(page, suggestion)).toBeVisible();
     }
+  });
+
+  // Each quick reply's on-screen box, top to bottom, once the layout has settled.
+  const quickReplyBoxes = async (page: Page) => {
+    await waitForFinalLayout(page);
+    const boxes = [];
+    for (const suggestion of SUGGESTIONS) {
+      const box = await quickReply(page, suggestion).boundingBox();
+      if (!box) throw new Error(`quick reply "${suggestion}" has no box`);
+      boxes.push(box);
+    }
+    return boxes;
+  };
+
+  // A portrait phone alone cannot catch the replies sharing a row: whether two
+  // fit side by side there depends on the font's width, which differs between
+  // iOS and the test browser. A phone on its side has room for all three in a
+  // row, so it fails for certain unless the stacking is deliberate.
+  const phones = [
+    { name: 'phone held upright', options: PHONE },
+    { name: 'phone on its side', options: { ...PHONE, viewport: { width: 844, height: 390 } } },
+  ];
+  for (const phone of phones) {
+    test.describe(`on a ${phone.name}`, () => {
+      test.use(phone.options);
+
+      test('stacks the quick replies one per row, right-aligned, with space between them', async ({ page }) => {
+        const boxes = await quickReplyBoxes(page);
+        for (let i = 1; i < boxes.length; i++) {
+          const above = boxes[i - 1]!;
+          const below = boxes[i]!;
+          // A clear gap below the previous reply, not a shared row.
+          expect(below.y - (above.y + above.height)).toBeGreaterThanOrEqual(6);
+          // Flush to the same right edge, like replies in a messaging app.
+          expect(Math.abs(below.x + below.width - (above.x + above.width))).toBeLessThan(1);
+        }
+      });
+    });
+  }
+
+  test.describe('on desktop', () => {
+    test.use(DESKTOP);
+
+    test('lays the quick replies out side by side in one row', async ({ page }) => {
+      const boxes = await quickReplyBoxes(page);
+      for (const box of boxes.slice(1)) {
+        expect(box.y).toBeCloseTo(boxes[0]!.y, 0);
+      }
+    });
   });
 
   test("shows Alex's photo, actually loaded, in the chat header", async ({ page }) => {
