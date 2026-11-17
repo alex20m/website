@@ -378,6 +378,12 @@ export default function Chat() {
             onKeyDown={handleKeyDown}
             multiline
             maxRows={3}
+            // One row from the very first paint. MUI means to server-render
+            // the textarea with rows={minRows}, but InputBase overwrites that
+            // with its own (unset) `rows`, so the server's textarea falls back
+            // to the browser default of two rows and shrinks to one only once
+            // the page hydrates, dragging the whole conversation down ~20px.
+            slotProps={{ htmlInput: { rows: 1 } }}
             size="small"
             sx={{
               '& .MuiOutlinedInput-root': {

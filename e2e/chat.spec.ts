@@ -82,6 +82,65 @@ test.describe('Chat / Ask AI section', () => {
         expect(box.y).toBeCloseTo(boxes[0]!.y, 0);
       }
     });
+
+    // The server's markup is what a visitor sees until the page hydrates. If
+    // the message box is drawn taller there than it is once React takes over,
+    // the greeting and quick replies above it jump down when the page wakes
+    // up — a visible shift on every load, and a race for any test that reads
+    // the chat's layout while it happens.
+    test('keeps the conversation where it is when the page hydrates', async ({ page, browser, baseURL }) => {
+      // Where the greeting and first quick reply sit below the chat header's
+      // name, and how tall the message box is: all relative to the card, so
+      // page scroll and the sections above don't come into it.
+      const layout = async (p: Page) => {
+        const top = (await chat(p).getByText(/^Alex Mecklin/).boundingBox())!.y;
+        return {
+          greeting: (await chat(p).getByText(GREETING).boundingBox())!.y - top,
+          quickReply: (await quickReply(p, SUGGESTIONS[0]!).boundingBox())!.y - top,
+          messageBox: (await textbox(p).boundingBox())!.height,
+        };
+      };
+
+      // The server-rendered first paint, which no script ever touches.
+      const firstPaintContext = await browser.newContext({ ...DESKTOP, baseURL, javaScriptEnabled: false });
+      const firstPaintPage = await firstPaintContext.newPage();
+      await firstPaintPage.goto('/');
+      const firstPaint = await layout(firstPaintPage);
+      await firstPaintContext.close();
+
+      // The same page once React has taken over: only a hydrated page turns
+      // the send button on when there is something to send.
+      await textbox(page).fill('x');
+      await expect(sendButton(page)).toBeEnabled();
+      await textbox(page).fill('');
+      await expect(sendButton(page)).toBeDisabled();
+      const hydrated = await layout(page);
+
+      expect(hydrated.messageBox).toBeCloseTo(firstPaint.messageBox, 0);
+      expect(hydrated.greeting).toBeCloseTo(firstPaint.greeting, 0);
+      expect(hydrated.quickReply).toBeCloseTo(firstPaint.quickReply, 0);
+    });
+
+    test('grows the message box line by line up to three lines, then scrolls inside it', async ({ page }) => {
+      await waitForFinalLayout(page);
+      const height = async () => (await textbox(page).boundingBox())!.height;
+      const heightWith = async (text: string) => {
+        await textbox(page).fill(text);
+        return height();
+      };
+      const one = await height();
+      const two = await heightWith('one\ntwo');
+      const three = await heightWith('one\ntwo\nthree');
+      const five = await heightWith('one\ntwo\nthree\nfour\nfive');
+
+      // Each extra line adds about one line's height.
+      expect(two - one).toBeGreaterThan(one * 0.8);
+      expect(three - two).toBeGreaterThan(one * 0.8);
+      // Past three lines it stops growing and scrolls instead.
+      // (MUI rounds the three-row cap and the three lines of content
+      // separately, so they can differ by a pixel — never by a line.)
+      expect(Math.abs(five - three)).toBeLessThan(one * 0.2);
+    });
   });
 
   test("keeps the chat header text only, with Alex's photo, actually loaded, beside the greeting", async ({ page }) => {
