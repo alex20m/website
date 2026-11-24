@@ -55,15 +55,27 @@ describe('AI assistant knowledge matches the current CV', () => {
     'Open Telemetry',
     'Led test migration from Selenium to Playwright',
     'safety-critical temperature control firmware',
-    'Jan 2025 - Oct 2026, Espoo, Finland',
-    'M.Sc. (Tech.) in Computer Science, completed Oct 2026',
-    'Sep 2021 - Jan 2025',
+    'Dec 2024 - Nov 2026, Espoo, Finland',
+    'M.Sc. (Tech.) in Computer Science, completed Nov 2026',
+    'Sep 2021 - Dec 2024, Espoo, Finland',
+    'accurate as of November 2026',
     'Teaching Assistant - Aalto University',
   ])('mentions %s', (fact) => {
     expect(SYSTEM_PROMPT).toContain(fact);
   });
 
-  it.each(['Intern - KONE', 'Jun 2026 - Present, Espoo', 'Azure AI Foundry', 'Jan 2025 - Present', 'work/studies', 'oftware engineering consult', 'AI & Cloud Developer'])(
+  it.each([
+    'Intern - KONE',
+    'Jun 2026 - Present, Espoo',
+    'Azure AI Foundry',
+    'Jan 2025 - Present',
+    'work/studies',
+    'oftware engineering consult',
+    'AI & Cloud Developer',
+    'Jan 2025 - Oct 2026',
+    'completed Oct 2026',
+    'Sep 2021 - Jan 2025',
+  ])(
     'no longer mentions the outdated %s',
     (stale) => {
       expect(SYSTEM_PROMPT).not.toContain(stale);
