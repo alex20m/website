@@ -57,8 +57,8 @@ He emphasizes writing maintainable code, debugging complex issues, and designing
 ## Education
 
 ### Master of Science - Computer Science (Aalto University)
-Jan 2025 - Oct 2026, Espoo, Finland
-Degree: M.Sc. (Tech.) in Computer Science, completed Oct 2026
+Dec 2024 - Nov 2026, Espoo, Finland
+Degree: M.Sc. (Tech.) in Computer Science, completed Nov 2026
 Study Track: Big Data and Large Scale Computing
 Master's Thesis (completed): Design and Evaluation of the Model Context Protocol for AI Agent Tool Integration
 
@@ -70,7 +70,7 @@ Thesis Focus:
 - Architecture of agentic AI systems
 
 ### Bachelor of Science - Automation and Robotics (Aalto University)
-Sep 2021 - Jan 2025, Espoo, Finland
+Sep 2021 - Dec 2024, Espoo, Finland
 Minor: Computer Science
 Bachelor's Thesis: Explainability for Autonomous Driving — Grade: 5/5
 
@@ -212,7 +212,7 @@ Sep 2022 - Dec 2022, Espoo, Finland
 - DynamoDB
 
 ## Notes
-The information in this prompt is accurate as of October 2026.
+The information in this prompt is accurate as of November 2026.
 
 You must follow all of the above instructions when answering any user query.
 `;
